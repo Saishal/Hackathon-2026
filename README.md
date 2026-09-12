@@ -37,7 +37,9 @@ The workforce inventory is persisted rather than derived in memory: skill critic
 
 Succession matching now compares candidates against the persisted role requirements rather than recorded skill evidence alone.
 
-Remaining: the interactive network, and the frontend that renders the persisted snapshot — roles, learning catalogue, future requirements and provenance badges — which lives on `feature/keystone-ui` and is not merged here. A reviewed read-only strategy gap preview is implemented; a real OpenAI call awaits credentials/model. This is a runnable backbone, not the finished submission.
+The dashboard has seven views: Overview, People & Risk, Skill Network, Time Machine, AI Advisor, Workforce Data and Activity Log. Reviewed development actions can be scheduled into Time Machine, and reviewed strategy requirements are saved with stable IDs and applied at their effective month.
+
+Remaining: decide whether invented catalogue entries should be marked verified (see [integration checklist](docs/INTEGRATION.md)), then rehearse the [three-minute demo](docs/DEMO.md) and record a backup.
 
 Proficiency stays compatible with existing data: 1–5, independent threshold 3, mentor minimum 4. Missing relationships are unknown, displayed as a dash. Do not mix in the earlier proposed 0–4 scale. Scores measure organizational dependency, not likelihood of departure.
 

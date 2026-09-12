@@ -5,34 +5,27 @@ import { useMemo, useState } from 'react';
 // which is unknown rather than proof that the person lacks the skill.
 const ROW = 20;
 const TOP = 24;
-const LEFT_X = 210;
-const RIGHT_X = 610;
+const LEFT_X = 190;
+const RIGHT_X = 560;
 const WIDTH = 820;
 const DASH = '—';
 
 const toneFor = (busFactor) => (busFactor === 0 ? 'uncovered' : busFactor === 1 ? 'single' : 'covered');
 
-function EvidenceTable({ rows, firstColumn }) {
+function EvidenceList({ rows }) {
   if (rows.length === 0) {
     return <p className="hint">No recorded evidence. That is unknown, not proof of absence.</p>;
   }
 
   return (
-    <div className="table-wrap compact">
-      <table>
-        <thead><tr><th>{firstColumn}</th><th>Level</th><th>Evidence</th><th>Verified</th></tr></thead>
-        <tbody>
-          {rows.map((row) => (
-            <tr key={row.key}>
-              <th scope="row">{row.label}</th>
-              <td>{row.proficiency}</td>
-              <td>{row.evidenceSource ?? DASH}</td>
-              <td className="nowrap">{row.lastVerifiedAt ?? DASH}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <ul className="evidence-list">
+      {rows.map((row) => (
+        <li key={row.key}>
+          <strong>{row.label}</strong> · level {row.proficiency}
+          <small>{row.evidenceSource ?? DASH} · verified {row.lastVerifiedAt ?? DASH}</small>
+        </li>
+      ))}
+    </ul>
   );
 }
 
@@ -67,11 +60,14 @@ export default function SkillNetwork({ workforce, risks }) {
   const edges = matrix.filter((edge) => edge.proficiency >= minProficiency
     && personY.has(edge.employeeId) && skillY.has(edge.skillId));
   const touches = (edge) => (selected.type === 'employee' ? edge.employeeId === selected.id : edge.skillId === selected.id);
-  const connected = selected
-    ? new Set(edges.filter(touches).map((edge) => (selected.type === 'employee' ? edge.skillId : edge.employeeId)))
-    : null;
+  const litEdges = selected ? edges.filter(touches) : [];
+  // Employee and skill IDs overlap numerically, so neighbours are kept per node type.
+  const litPeople = new Set(litEdges.map((edge) => edge.employeeId));
+  const litSkills = new Set(litEdges.map((edge) => edge.skillId));
 
   const isSelected = (type, id) => selected?.type === type && selected.id === id;
+  const isDimmed = (type, id) => Boolean(selected) && !isSelected(type, id)
+    && !(type === 'employee' ? selected.type === 'skill' && litPeople.has(id) : selected.type === 'employee' && litSkills.has(id));
   const toggle = (type, id) => setSelected((current) => (current?.type === type && current.id === id ? null : { type, id }));
   const nodeProps = (type, id, label) => ({
     role: 'button',
@@ -140,7 +136,7 @@ export default function SkillNetwork({ workforce, risks }) {
             <g>
               {people.map((employee) => (
                 <g key={employee.id} transform={`translate(${LEFT_X},${personY.get(employee.id)})`}
-                  className={`node person ${isSelected('employee', employee.id) ? 'selected' : ''} ${connected && !isSelected('employee', employee.id) && !connected.has(employee.id) ? 'dim' : ''}`}
+                  className={`node person ${isSelected('employee', employee.id) ? 'selected' : ''} ${isDimmed('employee', employee.id) ? 'dim' : ''}`}
                   {...nodeProps('employee', employee.id, `${employee.name}, ${employee.role}`)}>
                   <circle r="5" />
                   <text x="-12" dy="0.35em" textAnchor="end">{employee.name}</text>
@@ -150,7 +146,7 @@ export default function SkillNetwork({ workforce, risks }) {
             <g>
               {shownSkills.map((skill) => (
                 <g key={skill.id} transform={`translate(${RIGHT_X},${skillY.get(skill.id)})`}
-                  className={`node skill ${toneFor(busFactor.get(skill.id))} ${isSelected('skill', skill.id) ? 'selected' : ''} ${connected && !isSelected('skill', skill.id) && !connected.has(skill.id) ? 'dim' : ''}`}
+                  className={`node skill ${toneFor(busFactor.get(skill.id))} ${isSelected('skill', skill.id) ? 'selected' : ''} ${isDimmed('skill', skill.id) ? 'dim' : ''}`}
                   {...nodeProps('skill', skill.id, `${skill.name}, ${busFactor.get(skill.id) ?? 0} qualified holders`)}>
                   <circle r="7" />
                   <text x="14" dy="0.35em">{skill.name} · {busFactor.get(skill.id) ?? DASH}</text>
@@ -169,8 +165,8 @@ export default function SkillNetwork({ workforce, risks }) {
             <h4>{selectedEmployee.name}</h4>
             <p>{selectedEmployee.role} · {selectedEmployee.department}</p>
             <p>Mentoring capacity: {selectedEmployee.mentoringHoursPerMonth === undefined ? DASH : `${selectedEmployee.mentoringHoursPerMonth} h/month`}</p>
-            <EvidenceTable firstColumn="Skill"
-              rows={evidenceFor((edge) => edge.employeeId === selectedEmployee.id, (edge) => skillById.get(edge.skillId)?.name ?? `Skill ${edge.skillId}`)} />
+            <EvidenceList rows={evidenceFor((edge) => edge.employeeId === selectedEmployee.id,
+              (edge) => skillById.get(edge.skillId)?.name ?? `Skill ${edge.skillId}`)} />
           </>}
           {selectedSkill && <>
             <h4>{selectedSkill.name}</h4>
@@ -178,8 +174,8 @@ export default function SkillNetwork({ workforce, risks }) {
               Qualified holders {busFactor.get(selectedSkill.id) ?? DASH} of {selectedSkill.requiredHolders} required at
               level {selectedSkill.targetProficiency}+ · criticality {selectedSkill.criticality}/5
             </p>
-            <EvidenceTable firstColumn="Person"
-              rows={evidenceFor((edge) => edge.skillId === selectedSkill.id, (edge) => employeeById.get(edge.employeeId)?.name ?? `Employee ${edge.employeeId}`)} />
+            <EvidenceList rows={evidenceFor((edge) => edge.skillId === selectedSkill.id,
+              (edge) => employeeById.get(edge.employeeId)?.name ?? `Employee ${edge.employeeId}`)} />
           </>}
         </aside>
       </div>

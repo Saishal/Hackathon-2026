@@ -14,17 +14,17 @@ Branch names appear in each member specification. All four use the same JS stack
 
 1. Shared seed -> one risk -> UI (included).
 2. Liam departure -> zero billing coverage (API/basic UI included).
-3. Mason mentoring -> backup (API included; intervention UI remains).
-4. Grounded actions (OpenAI integration and labeled fallback implemented; real provider call awaits key/model).
-5. Strategy -> reviewed requirements -> read-only gaps (implemented by Matias; persistent IDs and combined departure/training simulation remain).
-6. Finish network, evidence edits, succession, capacity, and presentation.
+3. Mason mentoring -> backup (API and intervention UI included; AI actions can be scheduled into it once reviewed).
+4. Grounded actions (OpenAI integration and labeled fallback implemented; live path verified on gpt-4.1-mini).
+5. Strategy -> reviewed requirements -> saved with stable IDs -> applied by Time Machine at their effective month (included).
+6. Network, evidence, succession and capacity included; rehearsing and recording the presentation remains ([DEMO.md](DEMO.md)).
 
 ## Final checklist
 
 Verified on this branch from a clean install on 2026-09-12. Re-run before submitting.
 
-- [x] Tests/lint/build pass; both servers run from clean install. 99 tests pass (including `integration.test.js`, which runs Parts 1, 2 and 4 against the CSV-seeded database), lint and build exit 0, backend answers `/api/health`, frontend serves on 5173.
-- [ ] All five brief questions shown: inventory, concentration, gaps/succession, development, future strategy. **All five answer over HTTP, but the UI here renders only part of the snapshot.** `WorkforceSnapshot.jsx` and `Provenance.jsx` live on `feature/keystone-ui`, which is branched from `main` and does not yet contain this work. Merging that branch is what closes this box.
+- [x] Tests/lint/build pass; both servers run from clean install. 101 tests pass (including `integration.test.js`, which runs Parts 1, 2 and 4 against the CSV-seeded database), lint and build exit 0, backend answers `/api/health`, frontend serves on 5173.
+- [x] All five brief questions shown: inventory (Workforce Data, Skill Network), concentration (Overview, People & Risk), gaps/succession (People & Risk, Time Machine), development (AI Advisor, scheduled into Time Machine), future strategy (AI Advisor). Checked on `integrate/all-parts`, which combines Parts 1–4.
 - [x] Scores trace to recorded evidence and explicit requirements. Every risk entry carries `explanation`; recording a proficiency requires a non-empty `evidenceSource`.
 - [x] Actual and simulated evidence stay separate. Simulation never mutates baseline, asserted by test.
 - [x] No future deterioration without explicit assumptions. Future requirements default to `proposed` and only apply when explicitly supplied to a scenario.

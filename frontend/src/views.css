@@ -101,6 +101,22 @@
   margin: 0 0 4px;
 }
 
+.panel .evidence-list {
+  margin: 10px 0 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.evidence-list li {
+  padding: 7px 0;
+  border-top: 1px solid var(--border);
+}
+
+.evidence-list small {
+  display: block;
+  color: var(--ink-muted);
+}
+
 /* ---------- scheduling, search and comparison ---------- */
 
 .schedule-row {
