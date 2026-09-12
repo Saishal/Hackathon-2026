@@ -1,5 +1,24 @@
 # Member 3 Sync Log
 
+## 2026-09-12 (17:01 CDT, eighteenth run)
+
+**(a) What teammates changed**
+
+- `integrate/all-parts` advanced to `4913e6b` — docs-only: a new `docs/NEXT-SESSION.md` checklist for making Keystone business-ready, plus a README line. No API or code changes.
+- All other branches unchanged: `main` (`fd002fa`), `feature/workforce-data` (`9073fd1`), `feature/ai-recommendations` (merged), `fix/review-risk-ai` (`bd6c883`), `fix/docs-sync` (`9444355`), `integrate/parts-1-2-4-csv` (`c221ca2`). Merge was a no-op.
+- Between runs, a parallel Member 3 session landed `87fc366` here: Certific dark theme across the dashboard (App.css, views.css, App.jsx tweak).
+
+**(b) What I adapted**
+
+- Regenerated `frontend/src/data/activity.json` (47 commits: Member 3 23, Team 15, Member 1 9) to pick up the dark-theme and next-session commits.
+- No contract adaptation needed — the API contract is unchanged since the 16:47 adoption of the integrated frontend.
+- Build: `npm.cmd run build` passes with the dark theme (vite, 31 modules, no errors). Invariants hold: unknowns as dashes, no score recomputation, no secrets, demo fallback labeled.
+- Safety: backup tag `backup/pre-sync-20260912-1701` created at the pushed HEAD and pushed to origin.
+
+**(c) Group chat message**
+
+> Member 3 sync ✅ Dashboard is now rocking the Certific dark theme 🌒 and the Activity Log is refreshed (47 commits — Member 3 at 23!). Saw the NEXT-SESSION checklist land on integrate/all-parts — good roadmap material. Build green, pushed with backup tag. Merge integrate/all-parts → main whenever ready and I'll run final verification! 🌙
+
 ## 2026-09-12 (16:58 CDT, Certific dark theme)
 
 **(a) What teammates changed**
