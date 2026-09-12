@@ -4,7 +4,7 @@ Backend: JavaScript/CommonJS. Frontend: JavaScript/JSX ES modules. Stable intege
 
 ## GET /api/keystone/workforce
 
-Returns `{schemaVersion:1, employees, skills, roles, resources, matrix}`.
+Returns `{schemaVersion:1, employees, skills, roles, resources, futureRequirements, matrix}`.
 
 - employees: `{id,name,role,department,mentoringAvailable}`.
 - skills: `{id,name,criticality,targetProficiency,requiredHolders,demandTarget,metadataSource}`.
@@ -54,6 +54,16 @@ Body `{skillId:1}`. Returns `{mode:'demo-fallback',skillId,actions}`. Five categ
 Body `{direction:'We are expanding into e-commerce'}`, 1–2000 characters. Currently `{mode:'not-configured',direction,requirements:[],message}`. Proposed extension: matched skill ID or proposed name, rationale, proficiency, holder count, criticality, effective month, assumptions. User reviews before activation; Member 1 allocates new skill IDs, Member 2 calculates gaps.
 
 Legacy endpoints remain compatible: /api/heatmap, /api/critical-skills, /api/gap-analysis, /api/recommendations, GET/PUT /api/future-skills. Member 3 migrates views progressively.
+
+## PUT /api/keystone/employee-skills
+
+Body `{employeeId, skillId, proficiency, evidenceSource, lastVerifiedAt}`. Inserts or updates one recorded proficiency and returns the stored row. `evidenceSource` is required and non-empty, because a score has to trace back to something recorded. `lastVerifiedAt` is either null or `YYYY-MM-DD`; null means verification is unknown and is displayed as a dash, never guessed. Unknown `employeeId` or `skillId` returns 400 naming the bad id, and proficiency outside 1–5 is rejected.
+
+## GET, POST /api/keystone/future-requirements
+
+`GET` returns `[{id,skillId,skillName,requiredHolders,targetProficiency,effectiveMonth,status,provenance}]` ordered by effective month. `POST` creates one and returns 201.
+
+`effectiveMonth` is 0–60, matching the simulation horizon. `status` is `proposed` or `reviewed` and **defaults to `proposed`**, so a requirement does not tighten coverage expectations until a person reviews it — this is what keeps "no future deterioration without explicit assumptions" true. `provenance` is required and records where the requirement came from. Member 2 should treat only `reviewed` entries as active when calculating future gaps.
 
 ## Data integrity
 

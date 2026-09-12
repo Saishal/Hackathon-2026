@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 
 const keystoneRoutes = require('./routes/keystone');
+const workforceDataRoutes = require('./routes/workforce-data');
+const data = require('./data');
 const {
   initializeDatabase,
   loadWorkforce,
@@ -20,6 +22,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/keystone', keystoneRoutes(loadWorkforce));
+app.use('/api/keystone', workforceDataRoutes(data));
 
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok' });

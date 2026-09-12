@@ -224,6 +224,67 @@ test('a verified resource is reported as verified', async () => {
   assert.equal(entry.provenance, 'confirmed by team');
 });
 
+test('an employee skill edit requires evidence and a known pair', async () => {
+  await ready;
+  const snapshot = await data.getHeatmapData();
+  const employeeId = snapshot.employees[0].id;
+  const skillId = snapshot.skills[0].id;
+
+  await assert.rejects(() => data.saveEmployeeSkill({ employeeId: 9999, skillId, proficiency: 3, evidenceSource: 'review' }), { status: 400 });
+  await assert.rejects(() => data.saveEmployeeSkill({ employeeId, skillId: 9999, proficiency: 3, evidenceSource: 'review' }), { status: 400 });
+  await assert.rejects(() => data.saveEmployeeSkill({ employeeId, skillId, proficiency: 9, evidenceSource: 'review' }), { status: 400 });
+  await assert.rejects(() => data.saveEmployeeSkill({ employeeId, skillId, proficiency: 3, evidenceSource: '   ' }), { status: 400 });
+  await assert.rejects(() => data.saveEmployeeSkill({ employeeId, skillId, proficiency: 3, evidenceSource: 'review', lastVerifiedAt: 'last tuesday' }), { status: 400 });
+});
+
+test('a valid employee skill edit persists with its evidence', async () => {
+  await ready;
+  const snapshot = await data.getHeatmapData();
+  const employeeId = snapshot.employees[0].id;
+  const skillId = snapshot.skills[0].id;
+
+  await data.saveEmployeeSkill({
+    employeeId,
+    skillId,
+    proficiency: 4,
+    evidenceSource: 'manager review',
+    lastVerifiedAt: '2026-09-12',
+  });
+
+  const workforce = await data.loadWorkforce();
+  const edge = workforce.matrix.find((row) => row.employeeId === employeeId && row.skillId === skillId);
+
+  assert.equal(edge.proficiency, 4);
+  assert.equal(edge.evidenceSource, 'manager review');
+  assert.equal(edge.lastVerifiedAt, '2026-09-12');
+});
+
+test('future requirements validate and default to proposed', async () => {
+  await ready;
+  const snapshot = await data.getHeatmapData();
+  const skillId = snapshot.skills[0].id;
+
+  await assert.rejects(() => data.addFutureRequirement({ skillId: 9999, requiredHolders: 2, targetProficiency: 3, effectiveMonth: 12, provenance: 'planning' }), { status: 400 });
+  await assert.rejects(() => data.addFutureRequirement({ skillId, requiredHolders: 2, targetProficiency: 3, effectiveMonth: 99, provenance: 'planning' }), { status: 400 });
+  await assert.rejects(() => data.addFutureRequirement({ skillId, requiredHolders: 2, targetProficiency: 3, effectiveMonth: 12, provenance: '' }), { status: 400 });
+  await assert.rejects(() => data.addFutureRequirement({ skillId, requiredHolders: 2, targetProficiency: 3, effectiveMonth: 12, provenance: 'planning', status: 'active' }), { status: 400 });
+
+  const created = await data.addFutureRequirement({
+    skillId,
+    requiredHolders: 4,
+    targetProficiency: 3,
+    effectiveMonth: 12,
+    provenance: 'planning workshop',
+  });
+
+  assert.equal(created.status, 'proposed');
+
+  const workforce = await data.loadWorkforce();
+  const stored = workforce.futureRequirements.find((entry) => entry.id === created.id);
+  assert.equal(stored.effectiveMonth, 12);
+  assert.equal(stored.status, 'proposed');
+});
+
 test('re-running initialization preserves existing rows', async () => {
   await ready;
   const before = await data.getHeatmapData();

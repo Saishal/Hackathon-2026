@@ -1,5 +1,5 @@
 const { all } = require('./db');
-const { getHeatmapData } = require('./queries');
+const { getHeatmapData, getFutureRequirements } = require('./queries');
 
 // services/risk.js computes gap / requiredHolders, so publishing 0 would make
 // keystoneScore NaN and corrupt the ranking. Coverage floors at 1; genuine
@@ -57,6 +57,8 @@ async function loadWorkforce() {
     ORDER BY kind ASC, title ASC
   `);
 
+  const futureRequirements = await getFutureRequirements();
+
   const incumbentsByRole = new Map();
 
   for (const employee of snapshot.employees) {
@@ -106,6 +108,7 @@ async function loadWorkforce() {
       verified: resource.verified === 1,
       provenance: resource.provenance,
     })),
+    futureRequirements,
     matrix: snapshot.matrix.map((edge) => {
       const row = evidenceByEdge.get(`${edge.employeeId}:${edge.skillId}`);
 

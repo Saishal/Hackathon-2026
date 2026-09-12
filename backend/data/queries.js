@@ -25,6 +25,134 @@ async function assertSkillIdsExist(ids) {
   }
 }
 
+async function assertEmployeeIdsExist(ids) {
+  const unique = [...new Set(ids)];
+
+  if (unique.length === 0) {
+    return;
+  }
+
+  const placeholders = unique.map(() => '?').join(', ');
+  const rows = await all(`SELECT id FROM employees WHERE id IN (${placeholders})`, unique);
+  const known = new Set(rows.map((row) => row.id));
+  const missing = unique.filter((id) => !known.has(id));
+
+  if (missing.length > 0) {
+    throw badRequest(`Unknown employee id(s): ${missing.join(', ')}`);
+  }
+}
+
+const isCalendarDate = (value) =>
+  typeof value === 'string'
+  && /^\d{4}-\d{2}-\d{2}$/.test(value)
+  && !Number.isNaN(Date.parse(value));
+
+// Evidence is mandatory because a score has to trace back to something recorded.
+// A missing verification date stays null and is reported as unknown, never guessed.
+async function saveEmployeeSkill(edit = {}) {
+  const { employeeId, skillId, proficiency, evidenceSource, lastVerifiedAt = null } = edit;
+
+  if (!Number.isInteger(employeeId) || !Number.isInteger(skillId)) {
+    throw badRequest('employeeId and skillId must be integers');
+  }
+
+  if (!Number.isInteger(proficiency) || proficiency < 1 || proficiency > 5) {
+    throw badRequest('proficiency must be an integer between 1 and 5');
+  }
+
+  if (typeof evidenceSource !== 'string' || evidenceSource.trim() === '') {
+    throw badRequest('evidenceSource is required so a score traces to recorded evidence');
+  }
+
+  if (lastVerifiedAt !== null && !isCalendarDate(lastVerifiedAt)) {
+    throw badRequest('lastVerifiedAt must be null or a YYYY-MM-DD date');
+  }
+
+  await assertEmployeeIdsExist([employeeId]);
+  await assertSkillIdsExist([skillId]);
+
+  await run(
+    `INSERT INTO employee_skills (employee_id, skill_id, proficiency, evidence_source, last_verified_at)
+     VALUES (?, ?, ?, ?, ?)
+     ON CONFLICT(employee_id, skill_id) DO UPDATE SET
+       proficiency = excluded.proficiency,
+       evidence_source = excluded.evidence_source,
+       last_verified_at = excluded.last_verified_at`,
+    [employeeId, skillId, proficiency, evidenceSource.trim(), lastVerifiedAt],
+  );
+
+  return {
+    employeeId,
+    skillId,
+    proficiency,
+    evidenceSource: evidenceSource.trim(),
+    lastVerifiedAt,
+  };
+}
+
+async function getFutureRequirements() {
+  return all(`
+    SELECT
+      fr.id,
+      fr.skill_id AS skillId,
+      s.name AS skillName,
+      fr.required_holders AS requiredHolders,
+      fr.target_proficiency AS targetProficiency,
+      fr.effective_month AS effectiveMonth,
+      fr.status,
+      fr.provenance
+    FROM future_requirements fr
+    JOIN skills s ON s.id = fr.skill_id
+    ORDER BY fr.effective_month ASC, s.name ASC
+  `);
+}
+
+async function addFutureRequirement(input = {}) {
+  const {
+    skillId,
+    requiredHolders,
+    targetProficiency,
+    effectiveMonth,
+    provenance,
+    status = 'proposed',
+  } = input;
+
+  if (!Number.isInteger(skillId)) {
+    throw badRequest('skillId must be an integer');
+  }
+
+  if (!Number.isInteger(requiredHolders) || requiredHolders < 0) {
+    throw badRequest('requiredHolders must be a non-negative integer');
+  }
+
+  if (!Number.isInteger(targetProficiency) || targetProficiency < 1 || targetProficiency > 5) {
+    throw badRequest('targetProficiency must be an integer between 1 and 5');
+  }
+
+  if (!Number.isInteger(effectiveMonth) || effectiveMonth < 0 || effectiveMonth > 60) {
+    throw badRequest('effectiveMonth must be an integer between 0 and 60');
+  }
+
+  if (!['proposed', 'reviewed'].includes(status)) {
+    throw badRequest("status must be 'proposed' or 'reviewed'");
+  }
+
+  if (typeof provenance !== 'string' || provenance.trim() === '') {
+    throw badRequest('provenance is required so a requirement traces to a stated source');
+  }
+
+  await assertSkillIdsExist([skillId]);
+
+  const result = await run(
+    `INSERT INTO future_requirements
+       (skill_id, required_holders, target_proficiency, effective_month, status, provenance)
+     VALUES (?, ?, ?, ?, ?, ?)`,
+    [skillId, requiredHolders, targetProficiency, effectiveMonth, status, provenance.trim()],
+  );
+
+  return { id: result.lastID, skillId, requiredHolders, targetProficiency, effectiveMonth, status, provenance: provenance.trim() };
+}
+
 async function getHeatmapData() {
   const employeesRows = await all(
     'SELECT id, name, role, department FROM employees ORDER BY name ASC',
@@ -141,6 +269,10 @@ async function replaceFutureSkillTargets(targets) {
 
 module.exports = {
   assertSkillIdsExist,
+  assertEmployeeIdsExist,
+  saveEmployeeSkill,
+  getFutureRequirements,
+  addFutureRequirement,
   getHeatmapData,
   getAtRiskSkills,
   getGapAnalysis,

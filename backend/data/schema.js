@@ -88,6 +88,21 @@ async function createTables() {
       FOREIGN KEY (skill_id) REFERENCES skills(id)
     )
   `);
+
+  // Requirements that start applying at a future month. Status stays 'proposed'
+  // until a person reviews it, so nothing deteriorates without explicit review.
+  await run(`
+    CREATE TABLE IF NOT EXISTS future_requirements (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      skill_id INTEGER NOT NULL,
+      required_holders INTEGER NOT NULL CHECK (required_holders >= 0),
+      target_proficiency INTEGER NOT NULL CHECK (target_proficiency BETWEEN 1 AND 5),
+      effective_month INTEGER NOT NULL CHECK (effective_month BETWEEN 0 AND 60),
+      status TEXT NOT NULL CHECK (status IN ('proposed', 'reviewed')),
+      provenance TEXT NOT NULL,
+      FOREIGN KEY (skill_id) REFERENCES skills(id)
+    )
+  `);
 }
 
 async function columnExists(table, column) {
