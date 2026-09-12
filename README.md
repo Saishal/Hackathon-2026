@@ -41,6 +41,8 @@ The dashboard has seven views: Overview, People & Risk, Skill Network, Time Mach
 
 Remaining: decide whether invented catalogue entries should be marked verified (see [integration checklist](docs/INTEGRATION.md)), then rehearse the [three-minute demo](docs/DEMO.md) and record a backup.
 
+Next steps, decisions and the business-readiness checklist (login, audit trail, visuals, operations): [next session checklist](docs/NEXT-SESSION.md).
+
 Proficiency stays compatible with existing data: 1–5, independent threshold 3, mentor minimum 4. Missing relationships are unknown, displayed as a dash. Do not mix in the earlier proposed 0–4 scale. Scores measure organizational dependency, not likelihood of departure.
 
 Verify: `npm test --prefix backend`, `npm run lint --prefix frontend`, `npm run build --prefix frontend`.
