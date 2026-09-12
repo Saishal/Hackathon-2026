@@ -6,6 +6,10 @@ const DB_PATH = process.env.DB_PATH || path.join(__dirname, '..', 'skillsight.db
 
 const db = new sqlite3.Database(DB_PATH);
 
+// SQLite ignores FOREIGN KEY clauses unless this is set per connection, so the
+// schema's references are unenforced without it. Queued first on the connection.
+db.run('PRAGMA foreign_keys = ON');
+
 const run = (sql, params = []) =>
   new Promise((resolve, reject) => {
     db.run(sql, params, function onRun(err) {

@@ -1,5 +1,30 @@
 const { run, all } = require('./db');
 
+const badRequest = (message) => {
+  const error = new Error(message);
+  error.status = 400;
+  return error;
+};
+
+// Rejects unknown references before a write opens a transaction, so callers get
+// a 400 naming the bad ids instead of an opaque constraint failure.
+async function assertSkillIdsExist(ids) {
+  const unique = [...new Set(ids)];
+
+  if (unique.length === 0) {
+    return;
+  }
+
+  const placeholders = unique.map(() => '?').join(', ');
+  const rows = await all(`SELECT id FROM skills WHERE id IN (${placeholders})`, unique);
+  const known = new Set(rows.map((row) => row.id));
+  const missing = unique.filter((id) => !known.has(id));
+
+  if (missing.length > 0) {
+    throw badRequest(`Unknown skill id(s): ${missing.join(', ')}`);
+  }
+}
+
 async function getHeatmapData() {
   const employeesRows = await all(
     'SELECT id, name, role, department FROM employees ORDER BY name ASC',
@@ -93,6 +118,8 @@ async function getFutureSkillTargets() {
 }
 
 async function replaceFutureSkillTargets(targets) {
+  await assertSkillIdsExist(targets.map((target) => target.id));
+
   await run('BEGIN TRANSACTION');
 
   try {
@@ -113,6 +140,7 @@ async function replaceFutureSkillTargets(targets) {
 }
 
 module.exports = {
+  assertSkillIdsExist,
   getHeatmapData,
   getAtRiskSkills,
   getGapAnalysis,
