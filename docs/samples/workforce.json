@@ -2,92 +2,160 @@
   "schemaVersion": 1,
   "employees": [
     {
-      "id": 16,
+      "id": 44,
       "name": "Abigail Lewis",
-      "role": "People Manager",
-      "department": "People Ops",
-      "mentoringHoursPerMonth": 4
+      "role": "People Partner",
+      "department": "People"
     },
     {
-      "id": 10,
+      "id": 15,
+      "name": "Aisha Bello",
+      "role": "DevOps Engineer",
+      "department": "Platform"
+    },
+    {
+      "id": 8,
       "name": "Amelia Diaz",
       "role": "Frontend Engineer",
       "department": "Engineering"
     },
     {
-      "id": 1,
-      "name": "Ava Patel",
-      "role": "Frontend Engineer",
-      "department": "Engineering"
+      "id": 25,
+      "name": "Arjun Mehta",
+      "role": "Data Analyst",
+      "department": "Data & AI"
     },
     {
-      "id": 13,
+      "id": 7,
+      "name": "Ava Patel",
+      "role": "Frontend Engineer",
+      "department": "Engineering",
+      "mentoringHoursPerMonth": 3
+    },
+    {
+      "id": 12,
       "name": "Benjamin Hall",
       "role": "QA Engineer",
       "department": "Engineering"
     },
     {
-      "id": 19,
+      "id": 24,
+      "name": "Chloe Martin",
+      "role": "Data Analyst",
+      "department": "Data & AI"
+    },
+    {
+      "id": 30,
+      "name": "Daniel Okafor",
+      "role": "Product Manager",
+      "department": "Product"
+    },
+    {
+      "id": 41,
       "name": "Daniel Young",
       "role": "Support Engineer",
       "department": "Customer Success"
     },
     {
       "id": 18,
-      "name": "Ella Walker",
-      "role": "Technical Writer",
-      "department": "Operations"
+      "name": "Dmitri Volkov",
+      "role": "Site Reliability Engineer",
+      "department": "Platform",
+      "mentoringHoursPerMonth": 3
     },
     {
-      "id": 5,
+      "id": 33,
+      "name": "Elena Petrova",
+      "role": "UX Designer",
+      "department": "Design"
+    },
+    {
+      "id": 13,
+      "name": "Ella Walker",
+      "role": "Technical Writer",
+      "department": "Engineering"
+    },
+    {
+      "id": 14,
       "name": "Ethan Brooks",
       "role": "DevOps Engineer",
       "department": "Platform"
     },
     {
-      "id": 14,
+      "id": 35,
       "name": "Evelyn Scott",
       "role": "Business Analyst",
       "department": "Operations"
     },
     {
-      "id": 20,
+      "id": 39,
+      "name": "Fatima Zahra",
+      "role": "Billing Operations Specialist",
+      "department": "Finance Operations"
+    },
+    {
+      "id": 28,
       "name": "Grace King",
       "role": "AI Specialist",
-      "department": "Innovation",
-      "mentoringHoursPerMonth": 4
+      "department": "Data & AI"
     },
     {
-      "id": 12,
+      "id": 34,
       "name": "Harper White",
-      "role": "Project Lead",
-      "department": "Operations",
-      "mentoringHoursPerMonth": 4
+      "role": "Program Manager",
+      "department": "Operations"
     },
     {
-      "id": 15,
+      "id": 16,
       "name": "Henry Adams",
       "role": "Cloud Engineer",
-      "department": "Platform"
+      "department": "Platform",
+      "mentoringHoursPerMonth": 2
     },
     {
-      "id": 8,
+      "id": 21,
       "name": "Isabella Ross",
       "role": "Security Analyst",
-      "department": "Security"
+      "department": "Security",
+      "mentoringHoursPerMonth": 2
     },
     {
-      "id": 17,
+      "id": 20,
       "name": "Jack Turner",
       "role": "Solutions Architect",
+      "department": "Platform",
+      "mentoringHoursPerMonth": 4
+    },
+    {
+      "id": 26,
+      "name": "James Carter",
+      "role": "Data Scientist",
+      "department": "Data & AI",
+      "mentoringHoursPerMonth": 2
+    },
+    {
+      "id": 9,
+      "name": "Jonas Weber",
+      "role": "Frontend Engineer",
+      "department": "Engineering"
+    },
+    {
+      "id": 43,
+      "name": "Julia Novak",
+      "role": "Support Engineer",
+      "department": "Customer Success"
+    },
+    {
+      "id": 19,
+      "name": "Keiko Sato",
+      "role": "Site Reliability Engineer",
       "department": "Platform"
     },
     {
-      "id": 11,
-      "name": "James Carter",
-      "role": "Data Scientist",
-      "department": "Data",
-      "mentoringHoursPerMonth": 4
+      "id": 6,
+      "name": "Kwame Mensah",
+      "role": "Backend Engineer",
+      "department": "Engineering"
     },
     {
       "id": 2,
@@ -97,963 +165,1916 @@
       "mentoringHoursPerMonth": 4
     },
     {
-      "id": 7,
+      "id": 32,
       "name": "Lucas Kim",
       "role": "UX Designer",
-      "department": "Design"
+      "department": "Design",
+      "mentoringHoursPerMonth": 2
     },
     {
-      "id": 9,
+      "id": 36,
+      "name": "Marcus Reed",
+      "role": "Business Analyst",
+      "department": "Operations"
+    },
+    {
+      "id": 3,
       "name": "Mason Green",
       "role": "Backend Engineer",
       "department": "Engineering"
     },
     {
-      "id": 4,
+      "id": 10,
+      "name": "Mei Lin Tan",
+      "role": "Frontend Engineer",
+      "department": "Engineering"
+    },
+    {
+      "id": 29,
       "name": "Mia Thompson",
       "role": "Product Manager",
-      "department": "Product",
+      "department": "Product"
+    },
+    {
+      "id": 37,
+      "name": "Nadia Rahman",
+      "role": "Compliance Analyst",
+      "department": "Risk & Compliance",
+      "mentoringHoursPerMonth": 2
+    },
+    {
+      "id": 23,
+      "name": "Noah Rivera",
+      "role": "Data Analyst",
+      "department": "Data & AI"
+    },
+    {
+      "id": 40,
+      "name": "Oliver Grant",
+      "role": "Billing Operations Specialist",
+      "department": "Finance Operations"
+    },
+    {
+      "id": 22,
+      "name": "Omar Haddad",
+      "role": "Security Analyst",
+      "department": "Security"
+    },
+    {
+      "id": 4,
+      "name": "Priya Raman",
+      "role": "Backend Engineer",
+      "department": "Engineering",
+      "mentoringHoursPerMonth": 3
+    },
+    {
+      "id": 1,
+      "name": "Rachel Moreno",
+      "role": "Engineering Manager",
+      "department": "Engineering",
       "mentoringHoursPerMonth": 4
     },
     {
-      "id": 3,
-      "name": "Noah Rivera",
-      "role": "Data Analyst",
-      "department": "Data"
+      "id": 17,
+      "name": "Rafael Costa",
+      "role": "Cloud Engineer",
+      "department": "Platform"
     },
     {
-      "id": 6,
+      "id": 42,
+      "name": "Samuel Osei",
+      "role": "Support Engineer",
+      "department": "Customer Success"
+    },
+    {
+      "id": 31,
+      "name": "Sara Lindqvist",
+      "role": "Product Manager",
+      "department": "Product"
+    },
+    {
+      "id": 11,
       "name": "Sophia Nguyen",
       "role": "QA Engineer",
+      "department": "Engineering",
+      "mentoringHoursPerMonth": 2
+    },
+    {
+      "id": 5,
+      "name": "Tomas Herrera",
+      "role": "Backend Engineer",
       "department": "Engineering"
+    },
+    {
+      "id": 38,
+      "name": "Victor Alvarez",
+      "role": "Compliance Analyst",
+      "department": "Risk & Compliance"
+    },
+    {
+      "id": 27,
+      "name": "Yuki Tanaka",
+      "role": "Data Scientist",
+      "department": "Data & AI"
     }
   ],
   "skills": [
     {
-      "id": 15,
+      "id": 9,
       "name": "AI Governance",
-      "criticality": 3,
+      "criticality": 4,
       "targetProficiency": 3,
-      "requiredHolders": 6,
+      "requiredHolders": 2,
       "demandTarget": 6,
-      "metadataSource": "fictional demo default"
+      "metadataSource": "Fictional demo dataset"
     },
     {
-      "id": 9,
-      "name": "Cloud Architecture",
+      "id": 4,
+      "name": "API Design",
+      "criticality": 4,
+      "targetProficiency": 3,
+      "requiredHolders": 4,
+      "demandTarget": null,
+      "metadataSource": "Fictional demo dataset"
+    },
+    {
+      "id": 17,
+      "name": "Accessibility",
       "criticality": 3,
       "targetProficiency": 3,
-      "requiredHolders": 10,
-      "demandTarget": 10,
-      "metadataSource": "fictional demo default"
+      "requiredHolders": 3,
+      "demandTarget": null,
+      "metadataSource": "Fictional demo dataset"
     },
     {
       "id": 12,
-      "name": "Communication",
-      "criticality": 3,
+      "name": "Cloud Architecture",
+      "criticality": 4,
       "targetProficiency": 3,
-      "requiredHolders": 2,
-      "demandTarget": null,
-      "metadataSource": "fictional demo default"
+      "requiredHolders": 7,
+      "demandTarget": 10,
+      "metadataSource": "Fictional demo dataset"
     },
     {
-      "id": 10,
-      "name": "Cybersecurity",
-      "criticality": 3,
+      "id": 19,
+      "name": "Communication",
+      "criticality": 2,
       "targetProficiency": 3,
       "requiredHolders": 5,
-      "demandTarget": 5,
-      "metadataSource": "fictional demo default"
-    },
-    {
-      "id": 5,
-      "name": "Data Analysis",
-      "criticality": 3,
-      "targetProficiency": 3,
-      "requiredHolders": 9,
-      "demandTarget": 9,
-      "metadataSource": "fictional demo default"
-    },
-    {
-      "id": 8,
-      "name": "DevOps",
-      "criticality": 3,
-      "targetProficiency": 3,
-      "requiredHolders": 2,
       "demandTarget": null,
-      "metadataSource": "fictional demo default"
+      "metadataSource": "Fictional demo dataset"
     },
     {
       "id": 13,
+      "name": "Cybersecurity",
+      "criticality": 5,
+      "targetProficiency": 4,
+      "requiredHolders": 2,
+      "demandTarget": 5,
+      "metadataSource": "Fictional demo dataset"
+    },
+    {
+      "id": 7,
+      "name": "Data Analysis",
+      "criticality": 3,
+      "targetProficiency": 3,
+      "requiredHolders": 3,
+      "demandTarget": 9,
+      "metadataSource": "Fictional demo dataset"
+    },
+    {
+      "id": 10,
+      "name": "DevOps",
+      "criticality": 4,
+      "targetProficiency": 3,
+      "requiredHolders": 4,
+      "demandTarget": null,
+      "metadataSource": "Fictional demo dataset"
+    },
+    {
+      "id": 14,
+      "name": "Incident Response",
+      "criticality": 4,
+      "targetProficiency": 3,
+      "requiredHolders": 5,
+      "demandTarget": null,
+      "metadataSource": "Fictional demo dataset"
+    },
+    {
+      "id": 11,
+      "name": "Kubernetes",
+      "criticality": 4,
+      "targetProficiency": 3,
+      "requiredHolders": 4,
+      "demandTarget": null,
+      "metadataSource": "Fictional demo dataset"
+    },
+    {
+      "id": 20,
       "name": "Leadership",
       "criticality": 3,
       "targetProficiency": 3,
-      "requiredHolders": 8,
+      "requiredHolders": 4,
       "demandTarget": 8,
-      "metadataSource": "fictional demo default"
+      "metadataSource": "Fictional demo dataset"
     },
     {
-      "id": 16,
+      "id": 22,
       "name": "Legacy Billing Recovery",
       "criticality": 5,
       "targetProficiency": 3,
       "requiredHolders": 2,
       "demandTarget": null,
-      "metadataSource": "fictional demo default"
+      "metadataSource": "Fictional demo dataset"
     },
     {
-      "id": 11,
+      "id": 8,
       "name": "Machine Learning",
       "criticality": 3,
       "targetProficiency": 3,
-      "requiredHolders": 7,
+      "requiredHolders": 3,
       "demandTarget": 7,
-      "metadataSource": "fictional demo default"
+      "metadataSource": "Fictional demo dataset"
     },
     {
-      "id": 2,
+      "id": 3,
       "name": "Node.js",
-      "criticality": 3,
+      "criticality": 4,
       "targetProficiency": 3,
+      "requiredHolders": 6,
+      "demandTarget": null,
+      "metadataSource": "Fictional demo dataset"
+    },
+    {
+      "id": 21,
+      "name": "Payments Compliance",
+      "criticality": 5,
+      "targetProficiency": 4,
       "requiredHolders": 2,
       "demandTarget": null,
-      "metadataSource": "fictional demo default"
+      "metadataSource": "Fictional demo dataset"
     },
     {
-      "id": 6,
+      "id": 18,
       "name": "Project Management",
       "criticality": 3,
       "targetProficiency": 3,
-      "requiredHolders": 2,
+      "requiredHolders": 3,
       "demandTarget": null,
-      "metadataSource": "fictional demo default"
+      "metadataSource": "Fictional demo dataset"
     },
     {
-      "id": 4,
+      "id": 6,
       "name": "Python",
       "criticality": 3,
       "targetProficiency": 3,
-      "requiredHolders": 2,
+      "requiredHolders": 5,
       "demandTarget": null,
-      "metadataSource": "fictional demo default"
+      "metadataSource": "Fictional demo dataset"
     },
     {
       "id": 1,
       "name": "React",
       "criticality": 3,
       "targetProficiency": 3,
-      "requiredHolders": 2,
+      "requiredHolders": 4,
       "demandTarget": null,
-      "metadataSource": "fictional demo default"
+      "metadataSource": "Fictional demo dataset"
     },
     {
-      "id": 3,
-      "name": "SQLite",
-      "criticality": 3,
+      "id": 5,
+      "name": "SQL & Data Modeling",
+      "criticality": 4,
       "targetProficiency": 3,
-      "requiredHolders": 2,
+      "requiredHolders": 5,
       "demandTarget": null,
-      "metadataSource": "fictional demo default"
+      "metadataSource": "Fictional demo dataset"
     },
     {
-      "id": 14,
+      "id": 15,
       "name": "Test Automation",
       "criticality": 3,
       "targetProficiency": 3,
-      "requiredHolders": 8,
+      "requiredHolders": 3,
       "demandTarget": 8,
-      "metadataSource": "fictional demo default"
+      "metadataSource": "Fictional demo dataset"
     },
     {
-      "id": 7,
-      "name": "UX Research",
+      "id": 2,
+      "name": "TypeScript",
       "criticality": 3,
+      "targetProficiency": 3,
+      "requiredHolders": 3,
+      "demandTarget": null,
+      "metadataSource": "Fictional demo dataset"
+    },
+    {
+      "id": 16,
+      "name": "UX Research",
+      "criticality": 2,
       "targetProficiency": 3,
       "requiredHolders": 2,
       "demandTarget": null,
-      "metadataSource": "fictional demo default"
+      "metadataSource": "Fictional demo dataset"
     }
   ],
   "matrix": [
     {
       "employeeId": 1,
-      "skillId": 1,
-      "proficiency": 5,
-      "evidenceSource": "fictional seed",
+      "skillId": 3,
+      "proficiency": 3,
+      "evidenceSource": "Project delivery review",
       "lastVerifiedAt": null
     },
     {
       "employeeId": 1,
-      "skillId": 2,
+      "skillId": 10,
       "proficiency": 3,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 1,
-      "skillId": 7,
-      "proficiency": 3,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": "2026-02-24"
     },
     {
       "employeeId": 1,
       "skillId": 12,
-      "proficiency": 4,
-      "evidenceSource": "fictional seed",
+      "proficiency": 2,
+      "evidenceSource": "Training completion record",
+      "lastVerifiedAt": "2025-10-31"
+    },
+    {
+      "employeeId": 1,
+      "skillId": 18,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-06-01"
+    },
+    {
+      "employeeId": 1,
+      "skillId": 19,
+      "proficiency": 5,
+      "evidenceSource": "Project delivery review",
       "lastVerifiedAt": null
     },
     {
       "employeeId": 1,
-      "skillId": 14,
-      "proficiency": 3,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
+      "skillId": 20,
+      "proficiency": 5,
+      "evidenceSource": "Certification record",
+      "lastVerifiedAt": "2026-03-04"
     },
     {
       "employeeId": 2,
       "skillId": 2,
-      "proficiency": 5,
-      "evidenceSource": "fictional seed",
+      "proficiency": 2,
+      "evidenceSource": "Self-assessment",
       "lastVerifiedAt": null
     },
     {
       "employeeId": 2,
       "skillId": 3,
-      "proficiency": 4,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 2,
-      "skillId": 9,
-      "proficiency": 3,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 2,
-      "skillId": 12,
-      "proficiency": 3,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 2,
-      "skillId": 14,
-      "proficiency": 4,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 2,
-      "skillId": 16,
       "proficiency": 5,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": "2026-06-27"
     },
     {
       "employeeId": 2,
-      "skillId": 13,
-      "proficiency": 2,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 3,
       "skillId": 4,
       "proficiency": 4,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": "2026-03-29"
     },
     {
-      "employeeId": 3,
+      "employeeId": 2,
       "skillId": 5,
-      "proficiency": 5,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 3,
-      "skillId": 12,
       "proficiency": 4,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
+      "evidenceSource": "Technical interview panel",
+      "lastVerifiedAt": "2026-07-31"
     },
     {
-      "employeeId": 3,
+      "employeeId": 2,
       "skillId": 6,
-      "proficiency": 2,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 3,
-      "skillId": 2,
-      "proficiency": 2,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 4,
-      "skillId": 6,
-      "proficiency": 5,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 4,
-      "skillId": 12,
-      "proficiency": 5,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 4,
-      "skillId": 13,
-      "proficiency": 4,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 4,
-      "skillId": 7,
       "proficiency": 3,
-      "evidenceSource": "fictional seed",
+      "evidenceSource": "Manager assessment",
       "lastVerifiedAt": null
     },
     {
-      "employeeId": 5,
-      "skillId": 8,
-      "proficiency": 5,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 5,
-      "skillId": 9,
-      "proficiency": 4,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 5,
-      "skillId": 2,
-      "proficiency": 3,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 5,
+      "employeeId": 2,
       "skillId": 10,
       "proficiency": 2,
-      "evidenceSource": "fictional seed",
+      "evidenceSource": "Self-assessment",
+      "lastVerifiedAt": "2025-11-03"
+    },
+    {
+      "employeeId": 2,
+      "skillId": 15,
+      "proficiency": 3,
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": "2025-10-19"
+    },
+    {
+      "employeeId": 2,
+      "skillId": 22,
+      "proficiency": 5,
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": "2026-07-13"
+    },
+    {
+      "employeeId": 3,
+      "skillId": 2,
+      "proficiency": 3,
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": "2026-08-15"
+    },
+    {
+      "employeeId": 3,
+      "skillId": 3,
+      "proficiency": 3,
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": "2025-11-21"
+    },
+    {
+      "employeeId": 3,
+      "skillId": 4,
+      "proficiency": 2,
+      "evidenceSource": "Training completion record",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 3,
+      "skillId": 5,
+      "proficiency": 2,
+      "evidenceSource": "Training completion record",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 3,
+      "skillId": 7,
+      "proficiency": 2,
+      "evidenceSource": "Self-assessment",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 3,
+      "skillId": 15,
+      "proficiency": 3,
+      "evidenceSource": "Peer code review",
+      "lastVerifiedAt": "2026-05-01"
+    },
+    {
+      "employeeId": 3,
+      "skillId": 22,
+      "proficiency": 2,
+      "evidenceSource": "Self-assessment",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 4,
+      "skillId": 2,
+      "proficiency": 2,
+      "evidenceSource": "Training completion record",
+      "lastVerifiedAt": "2026-04-02"
+    },
+    {
+      "employeeId": 4,
+      "skillId": 3,
+      "proficiency": 5,
+      "evidenceSource": "Technical interview panel",
+      "lastVerifiedAt": "2026-04-01"
+    },
+    {
+      "employeeId": 4,
+      "skillId": 4,
+      "proficiency": 4,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-07-25"
+    },
+    {
+      "employeeId": 4,
+      "skillId": 5,
+      "proficiency": 3,
+      "evidenceSource": "Peer code review",
+      "lastVerifiedAt": "2026-02-19"
+    },
+    {
+      "employeeId": 4,
+      "skillId": 15,
+      "proficiency": 4,
+      "evidenceSource": "Certification record",
+      "lastVerifiedAt": "2026-05-19"
+    },
+    {
+      "employeeId": 4,
+      "skillId": 19,
+      "proficiency": 2,
+      "evidenceSource": "Self-assessment",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 4,
+      "skillId": 20,
+      "proficiency": 3,
+      "evidenceSource": "Peer code review",
+      "lastVerifiedAt": "2025-09-27"
+    },
+    {
+      "employeeId": 5,
+      "skillId": 2,
+      "proficiency": 3,
+      "evidenceSource": "Peer code review",
+      "lastVerifiedAt": "2025-12-02"
+    },
+    {
+      "employeeId": 5,
+      "skillId": 3,
+      "proficiency": 4,
+      "evidenceSource": "Technical interview panel",
+      "lastVerifiedAt": "2025-11-15"
+    },
+    {
+      "employeeId": 5,
+      "skillId": 4,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
       "lastVerifiedAt": null
     },
     {
       "employeeId": 5,
-      "skillId": 12,
-      "proficiency": 3,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
+      "skillId": 5,
+      "proficiency": 2,
+      "evidenceSource": "Self-assessment",
+      "lastVerifiedAt": "2026-04-02"
     },
     {
-      "employeeId": 6,
-      "skillId": 14,
-      "proficiency": 5,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 6,
-      "skillId": 12,
+      "employeeId": 5,
+      "skillId": 15,
       "proficiency": 4,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
+      "evidenceSource": "Technical interview panel",
+      "lastVerifiedAt": "2026-05-02"
+    },
+    {
+      "employeeId": 5,
+      "skillId": 20,
+      "proficiency": 3,
+      "evidenceSource": "Peer code review",
+      "lastVerifiedAt": "2025-11-02"
     },
     {
       "employeeId": 6,
       "skillId": 2,
-      "proficiency": 3,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
+      "proficiency": 4,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2025-10-17"
     },
     {
       "employeeId": 6,
-      "skillId": 1,
-      "proficiency": 2,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 7,
-      "skillId": 7,
-      "proficiency": 5,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 7,
-      "skillId": 12,
-      "proficiency": 4,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 7,
-      "skillId": 1,
-      "proficiency": 2,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 7,
-      "skillId": 6,
-      "proficiency": 2,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 7,
-      "skillId": 8,
-      "proficiency": 2,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 8,
-      "skillId": 10,
-      "proficiency": 5,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 8,
-      "skillId": 9,
-      "proficiency": 3,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 8,
-      "skillId": 12,
-      "proficiency": 3,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 8,
-      "skillId": 8,
-      "proficiency": 2,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 9,
-      "skillId": 2,
-      "proficiency": 5,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 9,
       "skillId": 3,
       "proficiency": 4,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
+      "evidenceSource": "Technical interview panel",
+      "lastVerifiedAt": "2026-06-24"
     },
     {
-      "employeeId": 9,
-      "skillId": 9,
-      "proficiency": 3,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 9,
-      "skillId": 12,
-      "proficiency": 3,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 9,
-      "skillId": 14,
-      "proficiency": 4,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 9,
-      "skillId": 16,
-      "proficiency": 2,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 10,
-      "skillId": 1,
-      "proficiency": 5,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 10,
-      "skillId": 2,
-      "proficiency": 3,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 10,
-      "skillId": 7,
-      "proficiency": 3,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 10,
-      "skillId": 12,
-      "proficiency": 4,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 10,
-      "skillId": 14,
-      "proficiency": 3,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 11,
+      "employeeId": 6,
       "skillId": 4,
-      "proficiency": 5,
-      "evidenceSource": "fictional seed",
+      "proficiency": 2,
+      "evidenceSource": "Training completion record",
       "lastVerifiedAt": null
     },
     {
-      "employeeId": 11,
-      "skillId": 11,
-      "proficiency": 5,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 11,
+      "employeeId": 6,
       "skillId": 5,
-      "proficiency": 4,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 11,
-      "skillId": 12,
       "proficiency": 3,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
+      "evidenceSource": "Peer code review",
+      "lastVerifiedAt": "2025-12-25"
     },
     {
-      "employeeId": 12,
-      "skillId": 13,
-      "proficiency": 5,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 12,
+      "employeeId": 6,
       "skillId": 6,
-      "proficiency": 5,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 12,
-      "skillId": 12,
-      "proficiency": 5,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 12,
-      "skillId": 5,
       "proficiency": 2,
-      "evidenceSource": "fictional seed",
+      "evidenceSource": "Training completion record",
       "lastVerifiedAt": null
     },
     {
-      "employeeId": 12,
-      "skillId": 1,
-      "proficiency": 2,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 12,
-      "skillId": 8,
-      "proficiency": 2,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 13,
-      "skillId": 14,
-      "proficiency": 5,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 13,
-      "skillId": 12,
-      "proficiency": 4,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 13,
-      "skillId": 2,
-      "proficiency": 3,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 13,
-      "skillId": 1,
-      "proficiency": 2,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 13,
-      "skillId": 13,
-      "proficiency": 2,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 14,
-      "skillId": 5,
-      "proficiency": 4,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 14,
-      "skillId": 12,
-      "proficiency": 5,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 14,
-      "skillId": 6,
-      "proficiency": 3,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 14,
-      "skillId": 13,
-      "proficiency": 2,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 14,
-      "skillId": 2,
-      "proficiency": 2,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 15,
-      "skillId": 9,
-      "proficiency": 5,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 15,
-      "skillId": 8,
-      "proficiency": 4,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 15,
-      "skillId": 2,
-      "proficiency": 3,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 15,
+      "employeeId": 6,
       "skillId": 10,
       "proficiency": 2,
-      "evidenceSource": "fictional seed",
+      "evidenceSource": "Self-assessment",
       "lastVerifiedAt": null
     },
     {
-      "employeeId": 15,
-      "skillId": 13,
-      "proficiency": 2,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 16,
-      "skillId": 13,
-      "proficiency": 5,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 16,
-      "skillId": 12,
-      "proficiency": 5,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 16,
-      "skillId": 6,
+      "employeeId": 6,
+      "skillId": 15,
       "proficiency": 3,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
+      "evidenceSource": "Peer code review",
+      "lastVerifiedAt": "2026-01-15"
     },
     {
-      "employeeId": 16,
-      "skillId": 2,
-      "proficiency": 2,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 17,
-      "skillId": 9,
+      "employeeId": 7,
+      "skillId": 1,
       "proficiency": 5,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
+      "evidenceSource": "Technical interview panel",
+      "lastVerifiedAt": "2026-08-15"
     },
     {
-      "employeeId": 17,
-      "skillId": 2,
-      "proficiency": 4,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 17,
-      "skillId": 13,
-      "proficiency": 3,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 17,
-      "skillId": 12,
-      "proficiency": 4,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 17,
-      "skillId": 3,
-      "proficiency": 3,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 18,
-      "skillId": 12,
-      "proficiency": 5,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 18,
-      "skillId": 13,
-      "proficiency": 2,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 18,
-      "skillId": 6,
-      "proficiency": 2,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 18,
-      "skillId": 4,
-      "proficiency": 2,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 19,
-      "skillId": 12,
-      "proficiency": 4,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 19,
+      "employeeId": 7,
       "skillId": 2,
       "proficiency": 3,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
+      "evidenceSource": "Peer code review",
+      "lastVerifiedAt": "2025-11-22"
     },
     {
-      "employeeId": 19,
-      "skillId": 3,
+      "employeeId": 7,
+      "skillId": 10,
       "proficiency": 2,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
+      "evidenceSource": "Training completion record",
+      "lastVerifiedAt": "2026-08-08"
     },
     {
-      "employeeId": 19,
-      "skillId": 6,
+      "employeeId": 7,
+      "skillId": 12,
       "proficiency": 2,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2025-09-20"
     },
     {
-      "employeeId": 19,
-      "skillId": 13,
-      "proficiency": 2,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 20,
-      "skillId": 4,
-      "proficiency": 5,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 20,
-      "skillId": 11,
-      "proficiency": 5,
-      "evidenceSource": "fictional seed",
-      "lastVerifiedAt": null
-    },
-    {
-      "employeeId": 20,
+      "employeeId": 7,
       "skillId": 15,
       "proficiency": 2,
-      "evidenceSource": "fictional seed",
+      "evidenceSource": "Self-assessment",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 7,
+      "skillId": 16,
+      "proficiency": 1,
+      "evidenceSource": "Self-assessment",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 7,
+      "skillId": 17,
+      "proficiency": 4,
+      "evidenceSource": "Technical interview panel",
+      "lastVerifiedAt": "2026-01-17"
+    },
+    {
+      "employeeId": 8,
+      "skillId": 1,
+      "proficiency": 4,
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": "2026-05-29"
+    },
+    {
+      "employeeId": 8,
+      "skillId": 2,
+      "proficiency": 2,
+      "evidenceSource": "Training completion record",
+      "lastVerifiedAt": "2025-09-15"
+    },
+    {
+      "employeeId": 8,
+      "skillId": 7,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 8,
+      "skillId": 15,
+      "proficiency": 3,
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": "2025-10-29"
+    },
+    {
+      "employeeId": 8,
+      "skillId": 16,
+      "proficiency": 2,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2025-09-13"
+    },
+    {
+      "employeeId": 8,
+      "skillId": 17,
+      "proficiency": 4,
+      "evidenceSource": "Technical interview panel",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 9,
+      "skillId": 1,
+      "proficiency": 5,
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": "2026-07-12"
+    },
+    {
+      "employeeId": 9,
+      "skillId": 2,
+      "proficiency": 3,
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": "2026-01-06"
+    },
+    {
+      "employeeId": 9,
+      "skillId": 12,
+      "proficiency": 2,
+      "evidenceSource": "Training completion record",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 9,
+      "skillId": 15,
+      "proficiency": 2,
+      "evidenceSource": "Self-assessment",
+      "lastVerifiedAt": "2026-03-08"
+    },
+    {
+      "employeeId": 9,
+      "skillId": 16,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-08-27"
+    },
+    {
+      "employeeId": 9,
+      "skillId": 17,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-05-17"
+    },
+    {
+      "employeeId": 9,
+      "skillId": 19,
+      "proficiency": 3,
+      "evidenceSource": "Peer code review",
+      "lastVerifiedAt": "2026-04-18"
+    },
+    {
+      "employeeId": 10,
+      "skillId": 1,
+      "proficiency": 5,
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 10,
+      "skillId": 2,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-08-18"
+    },
+    {
+      "employeeId": 10,
+      "skillId": 7,
+      "proficiency": 2,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2025-12-14"
+    },
+    {
+      "employeeId": 10,
+      "skillId": 10,
+      "proficiency": 2,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-06-21"
+    },
+    {
+      "employeeId": 10,
+      "skillId": 15,
+      "proficiency": 1,
+      "evidenceSource": "Training completion record",
+      "lastVerifiedAt": "2026-04-24"
+    },
+    {
+      "employeeId": 10,
+      "skillId": 16,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2025-10-11"
+    },
+    {
+      "employeeId": 10,
+      "skillId": 17,
+      "proficiency": 4,
+      "evidenceSource": "Certification record",
+      "lastVerifiedAt": "2025-12-31"
+    },
+    {
+      "employeeId": 11,
+      "skillId": 2,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2025-11-08"
+    },
+    {
+      "employeeId": 11,
+      "skillId": 7,
+      "proficiency": 2,
+      "evidenceSource": "Training completion record",
+      "lastVerifiedAt": "2026-07-14"
+    },
+    {
+      "employeeId": 11,
+      "skillId": 12,
+      "proficiency": 2,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-08-01"
+    },
+    {
+      "employeeId": 11,
+      "skillId": 15,
+      "proficiency": 5,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2025-09-30"
+    },
+    {
+      "employeeId": 11,
+      "skillId": 19,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-01-29"
+    },
+    {
+      "employeeId": 12,
+      "skillId": 2,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-06-13"
+    },
+    {
+      "employeeId": 12,
+      "skillId": 12,
+      "proficiency": 2,
+      "evidenceSource": "Self-assessment",
+      "lastVerifiedAt": "2026-07-24"
+    },
+    {
+      "employeeId": 12,
+      "skillId": 15,
+      "proficiency": 4,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-07-27"
+    },
+    {
+      "employeeId": 12,
+      "skillId": 19,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2025-09-04"
+    },
+    {
+      "employeeId": 12,
+      "skillId": 20,
+      "proficiency": 2,
+      "evidenceSource": "Self-assessment",
+      "lastVerifiedAt": "2025-10-19"
+    },
+    {
+      "employeeId": 13,
+      "skillId": 4,
+      "proficiency": 2,
+      "evidenceSource": "Self-assessment",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 13,
+      "skillId": 10,
+      "proficiency": 2,
+      "evidenceSource": "Training completion record",
+      "lastVerifiedAt": "2026-04-15"
+    },
+    {
+      "employeeId": 13,
+      "skillId": 18,
+      "proficiency": 2,
+      "evidenceSource": "Self-assessment",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 13,
+      "skillId": 19,
+      "proficiency": 4,
+      "evidenceSource": "Certification record",
+      "lastVerifiedAt": "2025-09-02"
+    },
+    {
+      "employeeId": 14,
+      "skillId": 10,
+      "proficiency": 4,
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": "2026-01-01"
+    },
+    {
+      "employeeId": 14,
+      "skillId": 11,
+      "proficiency": 2,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-01-08"
+    },
+    {
+      "employeeId": 14,
+      "skillId": 12,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-06-05"
+    },
+    {
+      "employeeId": 14,
+      "skillId": 14,
+      "proficiency": 3,
+      "evidenceSource": "Peer code review",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 14,
+      "skillId": 19,
+      "proficiency": 3,
+      "evidenceSource": "Peer code review",
+      "lastVerifiedAt": "2026-05-10"
+    },
+    {
+      "employeeId": 15,
+      "skillId": 3,
+      "proficiency": 2,
+      "evidenceSource": "Self-assessment",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 15,
+      "skillId": 10,
+      "proficiency": 4,
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": "2026-04-08"
+    },
+    {
+      "employeeId": 15,
+      "skillId": 11,
+      "proficiency": 3,
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": "2025-10-08"
+    },
+    {
+      "employeeId": 15,
+      "skillId": 12,
+      "proficiency": 4,
+      "evidenceSource": "Certification record",
+      "lastVerifiedAt": "2026-03-17"
+    },
+    {
+      "employeeId": 15,
+      "skillId": 14,
+      "proficiency": 3,
+      "evidenceSource": "Peer code review",
+      "lastVerifiedAt": "2026-06-27"
+    },
+    {
+      "employeeId": 15,
+      "skillId": 20,
+      "proficiency": 2,
+      "evidenceSource": "Training completion record",
+      "lastVerifiedAt": "2025-10-14"
+    },
+    {
+      "employeeId": 16,
+      "skillId": 10,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2025-11-30"
+    },
+    {
+      "employeeId": 16,
+      "skillId": 12,
+      "proficiency": 4,
+      "evidenceSource": "Certification record",
+      "lastVerifiedAt": "2026-06-11"
+    },
+    {
+      "employeeId": 16,
+      "skillId": 13,
+      "proficiency": 2,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2025-11-03"
+    },
+    {
+      "employeeId": 16,
+      "skillId": 19,
+      "proficiency": 2,
+      "evidenceSource": "Self-assessment",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 17,
+      "skillId": 3,
+      "proficiency": 2,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2025-10-11"
+    },
+    {
+      "employeeId": 17,
+      "skillId": 10,
+      "proficiency": 2,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-01-20"
+    },
+    {
+      "employeeId": 17,
+      "skillId": 12,
+      "proficiency": 5,
+      "evidenceSource": "Technical interview panel",
+      "lastVerifiedAt": "2025-09-27"
+    },
+    {
+      "employeeId": 17,
+      "skillId": 13,
+      "proficiency": 2,
+      "evidenceSource": "Self-assessment",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 18,
+      "skillId": 10,
+      "proficiency": 3,
+      "evidenceSource": "Peer code review",
+      "lastVerifiedAt": "2025-10-22"
+    },
+    {
+      "employeeId": 18,
+      "skillId": 11,
+      "proficiency": 5,
+      "evidenceSource": "Certification record",
+      "lastVerifiedAt": "2025-10-18"
+    },
+    {
+      "employeeId": 18,
+      "skillId": 12,
+      "proficiency": 2,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-03-24"
+    },
+    {
+      "employeeId": 18,
+      "skillId": 14,
+      "proficiency": 5,
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": "2026-03-27"
+    },
+    {
+      "employeeId": 18,
+      "skillId": 19,
+      "proficiency": 2,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-04-26"
+    },
+    {
+      "employeeId": 19,
+      "skillId": 10,
+      "proficiency": 3,
+      "evidenceSource": "Peer code review",
+      "lastVerifiedAt": "2026-01-05"
+    },
+    {
+      "employeeId": 19,
+      "skillId": 11,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2025-09-24"
+    },
+    {
+      "employeeId": 19,
+      "skillId": 12,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 19,
+      "skillId": 13,
+      "proficiency": 2,
+      "evidenceSource": "Training completion record",
+      "lastVerifiedAt": "2026-01-12"
+    },
+    {
+      "employeeId": 19,
+      "skillId": 14,
+      "proficiency": 4,
+      "evidenceSource": "Technical interview panel",
       "lastVerifiedAt": null
     },
     {
       "employeeId": 20,
+      "skillId": 4,
+      "proficiency": 5,
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": "2026-04-13"
+    },
+    {
+      "employeeId": 20,
       "skillId": 12,
-      "proficiency": 3,
-      "evidenceSource": "fictional seed",
+      "proficiency": 5,
+      "evidenceSource": "Technical interview panel",
+      "lastVerifiedAt": "2026-02-27"
+    },
+    {
+      "employeeId": 20,
+      "skillId": 13,
+      "proficiency": 2,
+      "evidenceSource": "Manager assessment",
       "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 20,
+      "skillId": 19,
+      "proficiency": 4,
+      "evidenceSource": "Certification record",
+      "lastVerifiedAt": "2026-06-25"
+    },
+    {
+      "employeeId": 21,
+      "skillId": 10,
+      "proficiency": 2,
+      "evidenceSource": "Training completion record",
+      "lastVerifiedAt": "2026-02-11"
+    },
+    {
+      "employeeId": 21,
+      "skillId": 11,
+      "proficiency": 2,
+      "evidenceSource": "Training completion record",
+      "lastVerifiedAt": "2025-12-17"
+    },
+    {
+      "employeeId": 21,
+      "skillId": 12,
+      "proficiency": 1,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-07-14"
+    },
+    {
+      "employeeId": 21,
+      "skillId": 13,
+      "proficiency": 5,
+      "evidenceSource": "Certification record",
+      "lastVerifiedAt": "2026-08-06"
+    },
+    {
+      "employeeId": 21,
+      "skillId": 14,
+      "proficiency": 4,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-07-16"
+    },
+    {
+      "employeeId": 22,
+      "skillId": 10,
+      "proficiency": 2,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 22,
+      "skillId": 11,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-02-22"
+    },
+    {
+      "employeeId": 22,
+      "skillId": 12,
+      "proficiency": 2,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2025-09-15"
+    },
+    {
+      "employeeId": 22,
+      "skillId": 13,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-01-22"
+    },
+    {
+      "employeeId": 22,
+      "skillId": 14,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2025-10-08"
+    },
+    {
+      "employeeId": 23,
+      "skillId": 5,
+      "proficiency": 4,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-02-05"
+    },
+    {
+      "employeeId": 23,
+      "skillId": 6,
+      "proficiency": 2,
+      "evidenceSource": "Self-assessment",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 23,
+      "skillId": 7,
+      "proficiency": 4,
+      "evidenceSource": "Certification record",
+      "lastVerifiedAt": "2026-04-14"
+    },
+    {
+      "employeeId": 23,
+      "skillId": 18,
+      "proficiency": 2,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-04-06"
+    },
+    {
+      "employeeId": 23,
+      "skillId": 19,
+      "proficiency": 3,
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": "2025-09-05"
+    },
+    {
+      "employeeId": 24,
+      "skillId": 5,
+      "proficiency": 3,
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": "2026-04-16"
+    },
+    {
+      "employeeId": 24,
+      "skillId": 6,
+      "proficiency": 1,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2025-09-23"
+    },
+    {
+      "employeeId": 24,
+      "skillId": 7,
+      "proficiency": 4,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-01-02"
+    },
+    {
+      "employeeId": 24,
+      "skillId": 12,
+      "proficiency": 2,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-02-08"
+    },
+    {
+      "employeeId": 24,
+      "skillId": 19,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2025-10-01"
+    },
+    {
+      "employeeId": 25,
+      "skillId": 5,
+      "proficiency": 4,
+      "evidenceSource": "Certification record",
+      "lastVerifiedAt": "2026-07-26"
+    },
+    {
+      "employeeId": 25,
+      "skillId": 6,
+      "proficiency": 2,
+      "evidenceSource": "Self-assessment",
+      "lastVerifiedAt": "2026-08-09"
+    },
+    {
+      "employeeId": 25,
+      "skillId": 7,
+      "proficiency": 5,
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": "2026-05-21"
+    },
+    {
+      "employeeId": 25,
+      "skillId": 18,
+      "proficiency": 2,
+      "evidenceSource": "Training completion record",
+      "lastVerifiedAt": "2026-08-05"
+    },
+    {
+      "employeeId": 25,
+      "skillId": 19,
+      "proficiency": 2,
+      "evidenceSource": "Self-assessment",
+      "lastVerifiedAt": "2025-09-28"
+    },
+    {
+      "employeeId": 25,
+      "skillId": 20,
+      "proficiency": 3,
+      "evidenceSource": "Peer code review",
+      "lastVerifiedAt": "2026-02-05"
+    },
+    {
+      "employeeId": 26,
+      "skillId": 6,
+      "proficiency": 5,
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": "2025-10-15"
+    },
+    {
+      "employeeId": 26,
+      "skillId": 7,
+      "proficiency": 4,
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": "2026-07-23"
+    },
+    {
+      "employeeId": 26,
+      "skillId": 8,
+      "proficiency": 4,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-02-03"
+    },
+    {
+      "employeeId": 26,
+      "skillId": 19,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-07-02"
+    },
+    {
+      "employeeId": 27,
+      "skillId": 6,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-06-30"
+    },
+    {
+      "employeeId": 27,
+      "skillId": 7,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-04-14"
+    },
+    {
+      "employeeId": 27,
+      "skillId": 8,
+      "proficiency": 5,
+      "evidenceSource": "Technical interview panel",
+      "lastVerifiedAt": "2025-09-09"
+    },
+    {
+      "employeeId": 27,
+      "skillId": 20,
+      "proficiency": 3,
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": "2026-05-09"
+    },
+    {
+      "employeeId": 28,
+      "skillId": 6,
+      "proficiency": 5,
+      "evidenceSource": "Certification record",
+      "lastVerifiedAt": "2025-09-30"
+    },
+    {
+      "employeeId": 28,
+      "skillId": 8,
+      "proficiency": 5,
+      "evidenceSource": "Certification record",
+      "lastVerifiedAt": "2025-11-01"
+    },
+    {
+      "employeeId": 28,
+      "skillId": 9,
+      "proficiency": 2,
+      "evidenceSource": "Self-assessment",
+      "lastVerifiedAt": "2025-09-26"
+    },
+    {
+      "employeeId": 28,
+      "skillId": 20,
+      "proficiency": 2,
+      "evidenceSource": "Training completion record",
+      "lastVerifiedAt": "2026-01-04"
+    },
+    {
+      "employeeId": 29,
+      "skillId": 5,
+      "proficiency": 2,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-04-26"
+    },
+    {
+      "employeeId": 29,
+      "skillId": 16,
+      "proficiency": 3,
+      "evidenceSource": "Peer code review",
+      "lastVerifiedAt": "2025-12-21"
+    },
+    {
+      "employeeId": 29,
+      "skillId": 17,
+      "proficiency": 2,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-05-11"
+    },
+    {
+      "employeeId": 29,
+      "skillId": 18,
+      "proficiency": 4,
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": "2026-05-25"
+    },
+    {
+      "employeeId": 29,
+      "skillId": 19,
+      "proficiency": 3,
+      "evidenceSource": "Peer code review",
+      "lastVerifiedAt": "2026-03-04"
+    },
+    {
+      "employeeId": 29,
+      "skillId": 20,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-07-09"
+    },
+    {
+      "employeeId": 30,
+      "skillId": 7,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-04-11"
+    },
+    {
+      "employeeId": 30,
+      "skillId": 16,
+      "proficiency": 4,
+      "evidenceSource": "Technical interview panel",
+      "lastVerifiedAt": "2026-04-25"
+    },
+    {
+      "employeeId": 30,
+      "skillId": 18,
+      "proficiency": 4,
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": "2026-06-13"
+    },
+    {
+      "employeeId": 30,
+      "skillId": 19,
+      "proficiency": 4,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2025-11-14"
+    },
+    {
+      "employeeId": 30,
+      "skillId": 20,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-03-25"
+    },
+    {
+      "employeeId": 31,
+      "skillId": 5,
+      "proficiency": 3,
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": "2025-09-24"
+    },
+    {
+      "employeeId": 31,
+      "skillId": 16,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2025-12-01"
+    },
+    {
+      "employeeId": 31,
+      "skillId": 18,
+      "proficiency": 4,
+      "evidenceSource": "Certification record",
+      "lastVerifiedAt": "2026-05-18"
+    },
+    {
+      "employeeId": 31,
+      "skillId": 19,
+      "proficiency": 4,
+      "evidenceSource": "Certification record",
+      "lastVerifiedAt": "2026-05-21"
+    },
+    {
+      "employeeId": 31,
+      "skillId": 20,
+      "proficiency": 2,
+      "evidenceSource": "Self-assessment",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 32,
+      "skillId": 1,
+      "proficiency": 2,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-01-18"
+    },
+    {
+      "employeeId": 32,
+      "skillId": 16,
+      "proficiency": 5,
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": "2026-06-12"
+    },
+    {
+      "employeeId": 32,
+      "skillId": 17,
+      "proficiency": 3,
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": "2026-07-03"
+    },
+    {
+      "employeeId": 32,
+      "skillId": 18,
+      "proficiency": 3,
+      "evidenceSource": "Peer code review",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 32,
+      "skillId": 19,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2025-12-14"
+    },
+    {
+      "employeeId": 33,
+      "skillId": 16,
+      "proficiency": 4,
+      "evidenceSource": "Certification record",
+      "lastVerifiedAt": "2026-01-02"
+    },
+    {
+      "employeeId": 33,
+      "skillId": 17,
+      "proficiency": 3,
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": "2026-01-28"
+    },
+    {
+      "employeeId": 33,
+      "skillId": 18,
+      "proficiency": 2,
+      "evidenceSource": "Self-assessment",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 33,
+      "skillId": 19,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2025-10-17"
+    },
+    {
+      "employeeId": 34,
+      "skillId": 5,
+      "proficiency": 2,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-04-10"
+    },
+    {
+      "employeeId": 34,
+      "skillId": 18,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-06-16"
+    },
+    {
+      "employeeId": 34,
+      "skillId": 19,
+      "proficiency": 4,
+      "evidenceSource": "Certification record",
+      "lastVerifiedAt": "2026-06-03"
+    },
+    {
+      "employeeId": 34,
+      "skillId": 20,
+      "proficiency": 4,
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": "2025-11-01"
+    },
+    {
+      "employeeId": 35,
+      "skillId": 5,
+      "proficiency": 2,
+      "evidenceSource": "Self-assessment",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 35,
+      "skillId": 6,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-01-28"
+    },
+    {
+      "employeeId": 35,
+      "skillId": 7,
+      "proficiency": 2,
+      "evidenceSource": "Training completion record",
+      "lastVerifiedAt": "2026-03-04"
+    },
+    {
+      "employeeId": 35,
+      "skillId": 19,
+      "proficiency": 4,
+      "evidenceSource": "Technical interview panel",
+      "lastVerifiedAt": "2025-11-27"
+    },
+    {
+      "employeeId": 36,
+      "skillId": 5,
+      "proficiency": 2,
+      "evidenceSource": "Self-assessment",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 36,
+      "skillId": 6,
+      "proficiency": 2,
+      "evidenceSource": "Training completion record",
+      "lastVerifiedAt": "2026-03-08"
+    },
+    {
+      "employeeId": 36,
+      "skillId": 7,
+      "proficiency": 4,
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 36,
+      "skillId": 19,
+      "proficiency": 4,
+      "evidenceSource": "Certification record",
+      "lastVerifiedAt": "2026-04-24"
+    },
+    {
+      "employeeId": 37,
+      "skillId": 5,
+      "proficiency": 2,
+      "evidenceSource": "Training completion record",
+      "lastVerifiedAt": "2026-05-06"
+    },
+    {
+      "employeeId": 37,
+      "skillId": 7,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-02-27"
+    },
+    {
+      "employeeId": 37,
+      "skillId": 9,
+      "proficiency": 2,
+      "evidenceSource": "Self-assessment",
+      "lastVerifiedAt": "2025-10-29"
+    },
+    {
+      "employeeId": 37,
+      "skillId": 13,
+      "proficiency": 2,
+      "evidenceSource": "Self-assessment",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 37,
+      "skillId": 19,
+      "proficiency": 4,
+      "evidenceSource": "Technical interview panel",
+      "lastVerifiedAt": "2026-03-03"
+    },
+    {
+      "employeeId": 37,
+      "skillId": 21,
+      "proficiency": 5,
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": "2026-01-20"
+    },
+    {
+      "employeeId": 38,
+      "skillId": 5,
+      "proficiency": 2,
+      "evidenceSource": "Self-assessment",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 38,
+      "skillId": 7,
+      "proficiency": 2,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2025-10-06"
+    },
+    {
+      "employeeId": 38,
+      "skillId": 18,
+      "proficiency": 2,
+      "evidenceSource": "Training completion record",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 38,
+      "skillId": 19,
+      "proficiency": 3,
+      "evidenceSource": "Peer code review",
+      "lastVerifiedAt": "2025-10-24"
+    },
+    {
+      "employeeId": 38,
+      "skillId": 21,
+      "proficiency": 3,
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": "2025-12-14"
+    },
+    {
+      "employeeId": 39,
+      "skillId": 5,
+      "proficiency": 2,
+      "evidenceSource": "Self-assessment",
+      "lastVerifiedAt": "2025-12-29"
+    },
+    {
+      "employeeId": 39,
+      "skillId": 7,
+      "proficiency": 2,
+      "evidenceSource": "Self-assessment",
+      "lastVerifiedAt": "2026-04-01"
+    },
+    {
+      "employeeId": 39,
+      "skillId": 18,
+      "proficiency": 2,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-05-29"
+    },
+    {
+      "employeeId": 39,
+      "skillId": 19,
+      "proficiency": 4,
+      "evidenceSource": "Project delivery review",
+      "lastVerifiedAt": "2026-06-27"
+    },
+    {
+      "employeeId": 39,
+      "skillId": 21,
+      "proficiency": 3,
+      "evidenceSource": "Peer code review",
+      "lastVerifiedAt": "2026-02-21"
+    },
+    {
+      "employeeId": 39,
+      "skillId": 22,
+      "proficiency": 2,
+      "evidenceSource": "Training completion record",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 40,
+      "skillId": 7,
+      "proficiency": 2,
+      "evidenceSource": "Self-assessment",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 40,
+      "skillId": 18,
+      "proficiency": 2,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-01-27"
+    },
+    {
+      "employeeId": 40,
+      "skillId": 19,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-01-30"
+    },
+    {
+      "employeeId": 40,
+      "skillId": 21,
+      "proficiency": 2,
+      "evidenceSource": "Self-assessment",
+      "lastVerifiedAt": "2026-04-08"
+    },
+    {
+      "employeeId": 41,
+      "skillId": 5,
+      "proficiency": 2,
+      "evidenceSource": "Training completion record",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 41,
+      "skillId": 14,
+      "proficiency": 2,
+      "evidenceSource": "Training completion record",
+      "lastVerifiedAt": "2026-04-04"
+    },
+    {
+      "employeeId": 41,
+      "skillId": 18,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-04-13"
+    },
+    {
+      "employeeId": 41,
+      "skillId": 19,
+      "proficiency": 4,
+      "evidenceSource": "Certification record",
+      "lastVerifiedAt": "2026-01-08"
+    },
+    {
+      "employeeId": 42,
+      "skillId": 5,
+      "proficiency": 2,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2025-09-25"
+    },
+    {
+      "employeeId": 42,
+      "skillId": 6,
+      "proficiency": 2,
+      "evidenceSource": "Self-assessment",
+      "lastVerifiedAt": "2026-03-22"
+    },
+    {
+      "employeeId": 42,
+      "skillId": 14,
+      "proficiency": 2,
+      "evidenceSource": "Training completion record",
+      "lastVerifiedAt": "2026-03-14"
+    },
+    {
+      "employeeId": 42,
+      "skillId": 19,
+      "proficiency": 5,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-01-16"
+    },
+    {
+      "employeeId": 43,
+      "skillId": 5,
+      "proficiency": 2,
+      "evidenceSource": "Training completion record",
+      "lastVerifiedAt": "2026-06-02"
+    },
+    {
+      "employeeId": 43,
+      "skillId": 14,
+      "proficiency": 3,
+      "evidenceSource": "Peer code review",
+      "lastVerifiedAt": "2025-11-22"
+    },
+    {
+      "employeeId": 43,
+      "skillId": 18,
+      "proficiency": 3,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-01-27"
+    },
+    {
+      "employeeId": 43,
+      "skillId": 19,
+      "proficiency": 4,
+      "evidenceSource": "Certification record",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 44,
+      "skillId": 18,
+      "proficiency": 2,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-07-12"
+    },
+    {
+      "employeeId": 44,
+      "skillId": 19,
+      "proficiency": 4,
+      "evidenceSource": "Certification record",
+      "lastVerifiedAt": "2026-02-28"
+    },
+    {
+      "employeeId": 44,
+      "skillId": 20,
+      "proficiency": 4,
+      "evidenceSource": "Manager assessment",
+      "lastVerifiedAt": "2026-05-16"
     }
   ],
   "roles": [
     {
-      "id": 1,
+      "id": 13,
       "name": "AI Specialist",
       "criticality": 3,
-      "metadataSource": "fictional demo default",
+      "metadataSource": "Fictional demo dataset",
       "incumbentIds": [
-        20
+        28
       ],
       "requirements": [
-        {
-          "skillId": 4,
-          "minimumProficiency": 5
-        },
-        {
-          "skillId": 11,
-          "minimumProficiency": 5
-        },
-        {
-          "skillId": 12,
-          "minimumProficiency": 3
-        },
-        {
-          "skillId": 15,
-          "minimumProficiency": 2
-        }
-      ]
-    },
-    {
-      "id": 2,
-      "name": "Backend Engineer",
-      "criticality": 3,
-      "metadataSource": "fictional demo default",
-      "incumbentIds": [
-        2,
-        9
-      ],
-      "requirements": [
-        {
-          "skillId": 2,
-          "minimumProficiency": 5
-        },
-        {
-          "skillId": 3,
-          "minimumProficiency": 4
-        },
-        {
-          "skillId": 9,
-          "minimumProficiency": 3
-        },
-        {
-          "skillId": 12,
-          "minimumProficiency": 3
-        },
-        {
-          "skillId": 14,
-          "minimumProficiency": 4
-        }
-      ]
-    },
-    {
-      "id": 3,
-      "name": "Business Analyst",
-      "criticality": 3,
-      "metadataSource": "fictional demo default",
-      "incumbentIds": [
-        14
-      ],
-      "requirements": [
-        {
-          "skillId": 5,
-          "minimumProficiency": 4
-        },
         {
           "skillId": 6,
-          "minimumProficiency": 3
-        },
-        {
-          "skillId": 12,
-          "minimumProficiency": 5
-        },
-        {
-          "skillId": 13,
-          "minimumProficiency": 2
-        }
-      ]
-    },
-    {
-      "id": 4,
-      "name": "Cloud Engineer",
-      "criticality": 3,
-      "metadataSource": "fictional demo default",
-      "incumbentIds": [
-        15
-      ],
-      "requirements": [
-        {
-          "skillId": 2,
-          "minimumProficiency": 3
+          "minimumProficiency": 4
         },
         {
           "skillId": 8,
@@ -1061,74 +2082,20 @@
         },
         {
           "skillId": 9,
-          "minimumProficiency": 5
-        },
-        {
-          "skillId": 10,
-          "minimumProficiency": 2
-        }
-      ]
-    },
-    {
-      "id": 5,
-      "name": "Data Analyst",
-      "criticality": 3,
-      "metadataSource": "fictional demo default",
-      "incumbentIds": [
-        3
-      ],
-      "requirements": [
-        {
-          "skillId": 4,
-          "minimumProficiency": 4
-        },
-        {
-          "skillId": 5,
-          "minimumProficiency": 5
-        },
-        {
-          "skillId": 6,
-          "minimumProficiency": 2
-        },
-        {
-          "skillId": 12,
-          "minimumProficiency": 4
-        }
-      ]
-    },
-    {
-      "id": 6,
-      "name": "Data Scientist",
-      "criticality": 3,
-      "metadataSource": "fictional demo default",
-      "incumbentIds": [
-        11
-      ],
-      "requirements": [
-        {
-          "skillId": 4,
-          "minimumProficiency": 5
-        },
-        {
-          "skillId": 5,
-          "minimumProficiency": 4
-        },
-        {
-          "skillId": 11,
-          "minimumProficiency": 5
-        },
-        {
-          "skillId": 12,
           "minimumProficiency": 3
         }
       ]
     },
     {
-      "id": 7,
-      "name": "DevOps Engineer",
-      "criticality": 3,
-      "metadataSource": "fictional demo default",
+      "id": 2,
+      "name": "Backend Engineer",
+      "criticality": 4,
+      "metadataSource": "Fictional demo dataset",
       "incumbentIds": [
+        6,
+        2,
+        3,
+        4,
         5
       ],
       "requirements": [
@@ -1137,112 +2104,55 @@
           "minimumProficiency": 3
         },
         {
-          "skillId": 8,
-          "minimumProficiency": 5
-        },
-        {
-          "skillId": 9,
+          "skillId": 3,
           "minimumProficiency": 4
         },
         {
-          "skillId": 10,
+          "skillId": 4,
+          "minimumProficiency": 3
+        },
+        {
+          "skillId": 5,
+          "minimumProficiency": 3
+        },
+        {
+          "skillId": 15,
+          "minimumProficiency": 3
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "name": "Billing Operations Specialist",
+      "criticality": 4,
+      "metadataSource": "Fictional demo dataset",
+      "incumbentIds": [
+        39,
+        40
+      ],
+      "requirements": [
+        {
+          "skillId": 7,
           "minimumProficiency": 2
         },
         {
-          "skillId": 12,
+          "skillId": 19,
           "minimumProficiency": 3
+        },
+        {
+          "skillId": 21,
+          "minimumProficiency": 2
         }
       ]
     },
     {
-      "id": 8,
-      "name": "Frontend Engineer",
-      "criticality": 3,
-      "metadataSource": "fictional demo default",
+      "id": 17,
+      "name": "Business Analyst",
+      "criticality": 2,
+      "metadataSource": "Fictional demo dataset",
       "incumbentIds": [
-        10,
-        1
-      ],
-      "requirements": [
-        {
-          "skillId": 1,
-          "minimumProficiency": 5
-        },
-        {
-          "skillId": 2,
-          "minimumProficiency": 3
-        },
-        {
-          "skillId": 7,
-          "minimumProficiency": 3
-        },
-        {
-          "skillId": 12,
-          "minimumProficiency": 4
-        },
-        {
-          "skillId": 14,
-          "minimumProficiency": 3
-        }
-      ]
-    },
-    {
-      "id": 9,
-      "name": "People Manager",
-      "criticality": 3,
-      "metadataSource": "fictional demo default",
-      "incumbentIds": [
-        16
-      ],
-      "requirements": [
-        {
-          "skillId": 6,
-          "minimumProficiency": 3
-        },
-        {
-          "skillId": 12,
-          "minimumProficiency": 5
-        },
-        {
-          "skillId": 13,
-          "minimumProficiency": 5
-        }
-      ]
-    },
-    {
-      "id": 10,
-      "name": "Product Manager",
-      "criticality": 3,
-      "metadataSource": "fictional demo default",
-      "incumbentIds": [
-        4
-      ],
-      "requirements": [
-        {
-          "skillId": 6,
-          "minimumProficiency": 5
-        },
-        {
-          "skillId": 7,
-          "minimumProficiency": 3
-        },
-        {
-          "skillId": 12,
-          "minimumProficiency": 5
-        },
-        {
-          "skillId": 13,
-          "minimumProficiency": 4
-        }
-      ]
-    },
-    {
-      "id": 11,
-      "name": "Project Lead",
-      "criticality": 3,
-      "metadataSource": "fictional demo default",
-      "incumbentIds": [
-        12
+        35,
+        36
       ],
       "requirements": [
         {
@@ -1250,94 +2160,28 @@
           "minimumProficiency": 2
         },
         {
-          "skillId": 6,
-          "minimumProficiency": 5
-        },
-        {
-          "skillId": 12,
-          "minimumProficiency": 5
-        },
-        {
-          "skillId": 13,
-          "minimumProficiency": 5
-        }
-      ]
-    },
-    {
-      "id": 12,
-      "name": "QA Engineer",
-      "criticality": 3,
-      "metadataSource": "fictional demo default",
-      "incumbentIds": [
-        13,
-        6
-      ],
-      "requirements": [
-        {
-          "skillId": 1,
-          "minimumProficiency": 2
-        },
-        {
-          "skillId": 2,
+          "skillId": 7,
           "minimumProficiency": 3
         },
         {
-          "skillId": 12,
+          "skillId": 19,
           "minimumProficiency": 4
-        },
-        {
-          "skillId": 14,
-          "minimumProficiency": 5
         }
       ]
     },
     {
-      "id": 13,
-      "name": "Security Analyst",
-      "criticality": 3,
-      "metadataSource": "fictional demo default",
+      "id": 7,
+      "name": "Cloud Engineer",
+      "criticality": 4,
+      "metadataSource": "Fictional demo dataset",
       "incumbentIds": [
-        8
-      ],
-      "requirements": [
-        {
-          "skillId": 8,
-          "minimumProficiency": 2
-        },
-        {
-          "skillId": 9,
-          "minimumProficiency": 3
-        },
-        {
-          "skillId": 10,
-          "minimumProficiency": 5
-        },
-        {
-          "skillId": 12,
-          "minimumProficiency": 3
-        }
-      ]
-    },
-    {
-      "id": 14,
-      "name": "Solutions Architect",
-      "criticality": 3,
-      "metadataSource": "fictional demo default",
-      "incumbentIds": [
+        16,
         17
       ],
       "requirements": [
         {
-          "skillId": 2,
-          "minimumProficiency": 4
-        },
-        {
-          "skillId": 3,
+          "skillId": 10,
           "minimumProficiency": 3
-        },
-        {
-          "skillId": 9,
-          "minimumProficiency": 5
         },
         {
           "skillId": 12,
@@ -1345,72 +2189,48 @@
         },
         {
           "skillId": 13,
-          "minimumProficiency": 3
+          "minimumProficiency": 2
         }
       ]
     },
     {
-      "id": 15,
-      "name": "Support Engineer",
-      "criticality": 3,
-      "metadataSource": "fictional demo default",
+      "id": 18,
+      "name": "Compliance Analyst",
+      "criticality": 5,
+      "metadataSource": "Fictional demo dataset",
       "incumbentIds": [
-        19
+        37,
+        38
       ],
       "requirements": [
         {
-          "skillId": 2,
+          "skillId": 7,
+          "minimumProficiency": 2
+        },
+        {
+          "skillId": 19,
           "minimumProficiency": 3
         },
         {
-          "skillId": 3,
-          "minimumProficiency": 2
-        },
-        {
-          "skillId": 6,
-          "minimumProficiency": 2
-        },
-        {
-          "skillId": 12,
+          "skillId": 21,
           "minimumProficiency": 4
         }
       ]
     },
     {
-      "id": 16,
-      "name": "Technical Writer",
+      "id": 11,
+      "name": "Data Analyst",
       "criticality": 3,
-      "metadataSource": "fictional demo default",
+      "metadataSource": "Fictional demo dataset",
       "incumbentIds": [
-        18
+        25,
+        24,
+        23
       ],
       "requirements": [
         {
-          "skillId": 6,
-          "minimumProficiency": 2
-        },
-        {
-          "skillId": 12,
-          "minimumProficiency": 5
-        },
-        {
-          "skillId": 13,
-          "minimumProficiency": 2
-        }
-      ]
-    },
-    {
-      "id": 17,
-      "name": "UX Designer",
-      "criticality": 3,
-      "metadataSource": "fictional demo default",
-      "incumbentIds": [
-        7
-      ],
-      "requirements": [
-        {
-          "skillId": 1,
-          "minimumProficiency": 2
+          "skillId": 5,
+          "minimumProficiency": 3
         },
         {
           "skillId": 6,
@@ -1418,11 +2238,366 @@
         },
         {
           "skillId": 7,
-          "minimumProficiency": 5
+          "minimumProficiency": 4
+        },
+        {
+          "skillId": 19,
+          "minimumProficiency": 3
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Data Scientist",
+      "criticality": 3,
+      "metadataSource": "Fictional demo dataset",
+      "incumbentIds": [
+        26,
+        27
+      ],
+      "requirements": [
+        {
+          "skillId": 6,
+          "minimumProficiency": 4
+        },
+        {
+          "skillId": 7,
+          "minimumProficiency": 3
+        },
+        {
+          "skillId": 8,
+          "minimumProficiency": 4
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "DevOps Engineer",
+      "criticality": 4,
+      "metadataSource": "Fictional demo dataset",
+      "incumbentIds": [
+        15,
+        14
+      ],
+      "requirements": [
+        {
+          "skillId": 10,
+          "minimumProficiency": 4
+        },
+        {
+          "skillId": 11,
+          "minimumProficiency": 3
+        },
+        {
+          "skillId": 12,
+          "minimumProficiency": 3
+        },
+        {
+          "skillId": 14,
+          "minimumProficiency": 3
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "name": "Engineering Manager",
+      "criticality": 4,
+      "metadataSource": "Fictional demo dataset",
+      "incumbentIds": [
+        1
+      ],
+      "requirements": [
+        {
+          "skillId": 3,
+          "minimumProficiency": 3
+        },
+        {
+          "skillId": 18,
+          "minimumProficiency": 3
+        },
+        {
+          "skillId": 19,
+          "minimumProficiency": 4
+        },
+        {
+          "skillId": 20,
+          "minimumProficiency": 4
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Frontend Engineer",
+      "criticality": 3,
+      "metadataSource": "Fictional demo dataset",
+      "incumbentIds": [
+        8,
+        7,
+        9,
+        10
+      ],
+      "requirements": [
+        {
+          "skillId": 1,
+          "minimumProficiency": 4
+        },
+        {
+          "skillId": 2,
+          "minimumProficiency": 3
+        },
+        {
+          "skillId": 15,
+          "minimumProficiency": 2
+        },
+        {
+          "skillId": 16,
+          "minimumProficiency": 2
+        },
+        {
+          "skillId": 17,
+          "minimumProficiency": 3
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "name": "People Partner",
+      "criticality": 2,
+      "metadataSource": "Fictional demo dataset",
+      "incumbentIds": [
+        44
+      ],
+      "requirements": [
+        {
+          "skillId": 19,
+          "minimumProficiency": 4
+        },
+        {
+          "skillId": 20,
+          "minimumProficiency": 3
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "Product Manager",
+      "criticality": 3,
+      "metadataSource": "Fictional demo dataset",
+      "incumbentIds": [
+        30,
+        29,
+        31
+      ],
+      "requirements": [
+        {
+          "skillId": 16,
+          "minimumProficiency": 3
+        },
+        {
+          "skillId": 18,
+          "minimumProficiency": 4
+        },
+        {
+          "skillId": 19,
+          "minimumProficiency": 4
+        },
+        {
+          "skillId": 20,
+          "minimumProficiency": 3
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "name": "Program Manager",
+      "criticality": 3,
+      "metadataSource": "Fictional demo dataset",
+      "incumbentIds": [
+        34
+      ],
+      "requirements": [
+        {
+          "skillId": 18,
+          "minimumProficiency": 4
+        },
+        {
+          "skillId": 19,
+          "minimumProficiency": 4
+        },
+        {
+          "skillId": 20,
+          "minimumProficiency": 4
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "QA Engineer",
+      "criticality": 3,
+      "metadataSource": "Fictional demo dataset",
+      "incumbentIds": [
+        12,
+        11
+      ],
+      "requirements": [
+        {
+          "skillId": 2,
+          "minimumProficiency": 3
+        },
+        {
+          "skillId": 15,
+          "minimumProficiency": 4
+        },
+        {
+          "skillId": 19,
+          "minimumProficiency": 3
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Security Analyst",
+      "criticality": 5,
+      "metadataSource": "Fictional demo dataset",
+      "incumbentIds": [
+        21,
+        22
+      ],
+      "requirements": [
+        {
+          "skillId": 12,
+          "minimumProficiency": 2
+        },
+        {
+          "skillId": 13,
+          "minimumProficiency": 4
+        },
+        {
+          "skillId": 14,
+          "minimumProficiency": 3
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Site Reliability Engineer",
+      "criticality": 4,
+      "metadataSource": "Fictional demo dataset",
+      "incumbentIds": [
+        18,
+        19
+      ],
+      "requirements": [
+        {
+          "skillId": 10,
+          "minimumProficiency": 3
+        },
+        {
+          "skillId": 11,
+          "minimumProficiency": 4
+        },
+        {
+          "skillId": 12,
+          "minimumProficiency": 3
+        },
+        {
+          "skillId": 14,
+          "minimumProficiency": 4
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Solutions Architect",
+      "criticality": 4,
+      "metadataSource": "Fictional demo dataset",
+      "incumbentIds": [
+        20
+      ],
+      "requirements": [
+        {
+          "skillId": 4,
+          "minimumProficiency": 4
         },
         {
           "skillId": 12,
           "minimumProficiency": 4
+        },
+        {
+          "skillId": 19,
+          "minimumProficiency": 4
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "name": "Support Engineer",
+      "criticality": 3,
+      "metadataSource": "Fictional demo dataset",
+      "incumbentIds": [
+        41,
+        43,
+        42
+      ],
+      "requirements": [
+        {
+          "skillId": 5,
+          "minimumProficiency": 2
+        },
+        {
+          "skillId": 14,
+          "minimumProficiency": 2
+        },
+        {
+          "skillId": 19,
+          "minimumProficiency": 4
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Technical Writer",
+      "criticality": 2,
+      "metadataSource": "Fictional demo dataset",
+      "incumbentIds": [
+        13
+      ],
+      "requirements": [
+        {
+          "skillId": 4,
+          "minimumProficiency": 2
+        },
+        {
+          "skillId": 18,
+          "minimumProficiency": 2
+        },
+        {
+          "skillId": 19,
+          "minimumProficiency": 4
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "name": "UX Designer",
+      "criticality": 3,
+      "metadataSource": "Fictional demo dataset",
+      "incumbentIds": [
+        33,
+        32
+      ],
+      "requirements": [
+        {
+          "skillId": 16,
+          "minimumProficiency": 4
+        },
+        {
+          "skillId": 17,
+          "minimumProficiency": 3
+        },
+        {
+          "skillId": 19,
+          "minimumProficiency": 3
         }
       ]
     }
@@ -1430,111 +2605,200 @@
   "learningResources": [
     {
       "id": "cert-billing-recovery",
-      "title": "Billing Recovery Practitioner Assessment (fictional)",
+      "title": "Billing Recovery Practitioner Assessment",
       "category": "certification",
       "verified": true,
-      "provenance": "fictional demo entry",
+      "provenance": "Fictional demo dataset",
       "skillIds": [
-        16
+        22
       ]
     },
     {
       "id": "cert-cloud-foundations",
-      "title": "Cloud Foundations Certificate (fictional)",
+      "title": "Cloud Foundations Certificate",
       "category": "certification",
       "verified": true,
-      "provenance": "fictional demo entry",
+      "provenance": "Fictional demo dataset",
       "skillIds": [
-        9,
-        8
-      ]
-    },
-    {
-      "id": "cert-ai-governance",
-      "title": "Responsible AI Oversight Certificate (fictional)",
-      "category": "certification",
-      "verified": true,
-      "provenance": "fictional demo entry",
-      "skillIds": [
-        15
-      ]
-    },
-    {
-      "id": "cert-security-analyst",
-      "title": "Security Analyst Credential (fictional)",
-      "category": "certification",
-      "verified": true,
-      "provenance": "fictional demo entry",
-      "skillIds": [
+        12,
         10
       ]
     },
     {
-      "id": "rot-platform-team",
-      "title": "Platform team rotation placement (fictional)",
-      "category": "job_rotation",
+      "id": "cert-payments-compliance",
+      "title": "Payments Compliance Practitioner Assessment",
+      "category": "certification",
       "verified": true,
-      "provenance": "fictional demo entry",
+      "provenance": "Fictional demo dataset",
       "skillIds": [
-        9,
-        8,
+        21
+      ]
+    },
+    {
+      "id": "cert-ai-governance",
+      "title": "Responsible AI Oversight Certificate",
+      "category": "certification",
+      "verified": true,
+      "provenance": "Fictional demo dataset",
+      "skillIds": [
+        9
+      ]
+    },
+    {
+      "id": "cert-security-analyst",
+      "title": "Security Analyst Credential",
+      "category": "certification",
+      "verified": true,
+      "provenance": "Fictional demo dataset",
+      "skillIds": [
+        13
+      ]
+    },
+    {
+      "id": "doc-incident-runbooks",
+      "title": "Incident Response Runbook Library",
+      "category": "documentation",
+      "verified": true,
+      "provenance": "Fictional demo dataset",
+      "skillIds": [
         14
       ]
     },
     {
-      "id": "proj-billing-shadow",
-      "title": "Supervised billing remediation project (fictional)",
+      "id": "rot-data-platform",
+      "title": "Data Platform Rotation",
+      "category": "job_rotation",
+      "verified": true,
+      "provenance": "Fictional demo dataset",
+      "skillIds": [
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "id": "rot-platform-team",
+      "title": "Platform Team Rotation",
+      "category": "job_rotation",
+      "verified": true,
+      "provenance": "Fictional demo dataset",
+      "skillIds": [
+        12,
+        10,
+        15
+      ]
+    },
+    {
+      "id": "proj-api-design-guild",
+      "title": "API Design Guild Project",
       "category": "project_experience",
       "verified": true,
-      "provenance": "fictional demo entry",
+      "provenance": "Fictional demo dataset",
       "skillIds": [
+        4,
+        3,
+        2
+      ]
+    },
+    {
+      "id": "proj-billing-shadow",
+      "title": "Supervised Billing Remediation Project",
+      "category": "project_experience",
+      "verified": true,
+      "provenance": "Fictional demo dataset",
+      "skillIds": [
+        22
+      ]
+    },
+    {
+      "id": "train-accessible-interfaces",
+      "title": "Accessible Interface Design Lab",
+      "category": "training",
+      "verified": true,
+      "provenance": "Fictional demo dataset",
+      "skillIds": [
+        17,
+        1,
         16
       ]
     },
     {
       "id": "train-data-analysis",
-      "title": "Applied data analysis workshop (fictional)",
+      "title": "Applied Data Analysis Workshop",
       "category": "training",
       "verified": true,
-      "provenance": "fictional demo entry",
+      "provenance": "Fictional demo dataset",
       "skillIds": [
-        5,
-        11
+        7,
+        8
       ]
     },
     {
       "id": "train-billing-internal",
-      "title": "Internal billing systems walkthrough (fictional)",
+      "title": "Billing Platform Internals Walkthrough",
       "category": "training",
       "verified": true,
-      "provenance": "fictional demo entry",
+      "provenance": "Fictional demo dataset",
       "skillIds": [
-        16
+        22
+      ]
+    },
+    {
+      "id": "train-kubernetes-operations",
+      "title": "Kubernetes Operations Bootcamp",
+      "category": "training",
+      "verified": true,
+      "provenance": "Fictional demo dataset",
+      "skillIds": [
+        11,
+        10
+      ]
+    },
+    {
+      "id": "train-ml-foundations",
+      "title": "Machine Learning Foundations Course",
+      "category": "training",
+      "verified": true,
+      "provenance": "Fictional demo dataset",
+      "skillIds": [
+        8,
+        6
       ]
     },
     {
       "id": "train-secure-coding",
-      "title": "Secure coding clinic (fictional)",
+      "title": "Secure Coding Clinic",
       "category": "training",
       "verified": true,
-      "provenance": "fictional demo entry",
+      "provenance": "Fictional demo dataset",
       "skillIds": [
-        10,
-        14
+        13,
+        15
       ]
     }
   ],
   "futureRequirements": [
     {
       "id": 1,
-      "skillId": 16,
-      "skillName": "Legacy Billing Recovery",
+      "skillId": 9,
+      "skillName": "AI Governance",
       "requiredHolders": 3,
       "targetProficiency": 3,
+      "criticality": 4,
+      "effectiveMonth": 9,
+      "status": "proposed",
+      "provenance": "Fictional demo dataset"
+    },
+    {
+      "id": 2,
+      "skillId": 21,
+      "skillName": "Payments Compliance",
+      "requiredHolders": 3,
+      "targetProficiency": 4,
       "criticality": 5,
       "effectiveMonth": 12,
       "status": "proposed",
-      "provenance": "fictional demo entry"
+      "provenance": "Fictional demo dataset"
     }
   ]
 }

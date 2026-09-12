@@ -18,7 +18,7 @@ npm start --prefix backend
 
 In a second terminal: `npm run dev --prefix frontend`. Open http://localhost:5173; API health is http://localhost:4000/api/health.
 
-Optional environment: backend `PORT`, `DB_PATH`; frontend `VITE_API_BASE_URL` in `frontend/.env.local`. A fresh database seeds 20 fictional employees and 16 skills including Legacy Billing Recovery (Liam Chen expert, Mason Green learner). Existing DBs are preserved; point `DB_PATH` at a new file for fresh demo data. No API credentials are needed for the starter.
+Optional environment: backend `PORT`, `DB_PATH`, `KEYSTONE_SEED_DIR`; frontend `VITE_API_BASE_URL` in `frontend/.env.local`. A fresh database is seeded from the CSV files in [`backend/data/demo/`](backend/data/demo/README.md): 44 fictional employees across 21 roles, 22 skills and a 16-entry learning catalogue, including Legacy Billing Recovery (Liam Chen expert, Mason Green learner). Existing DBs are preserved; after editing a CSV, stop the backend and run `npm run seed:reset --prefix backend`. No API credentials are needed for the starter.
 
 ## Four member assignments
 

@@ -32,6 +32,25 @@ function App() {
     return new Map(heatmap.matrix.map((entry) => [`${entry.employeeId}:${entry.skillId}`, entry.proficiency]));
   }, [heatmap]);
 
+  // Fewest intermediate-or-above holders first, so the most concentrated skills are visible
+  // without scrolling the table sideways.
+  const skillColumns = useMemo(() => {
+    if (!heatmap?.skills) {
+      return [];
+    }
+
+    const holders = new Map();
+    for (const entry of heatmap.matrix) {
+      if (entry.proficiency >= 3) {
+        holders.set(entry.skillId, (holders.get(entry.skillId) || 0) + 1);
+      }
+    }
+
+    return [...heatmap.skills].sort(
+      (a, b) => (holders.get(a.id) || 0) - (holders.get(b.id) || 0) || a.name.localeCompare(b.name),
+    );
+  }, [heatmap]);
+
   const loadData = async () => {
     try {
       const [heatmapRes, criticalRes, gapsRes, recommendationsRes, targetsRes] = await Promise.all([
@@ -141,12 +160,13 @@ function App() {
 
       <section className="panel">
         <h2>Skills Heat Map</h2>
+        <p>Skills run from the fewest to the most people at intermediate level or above.</p>
         <div className="table-wrap">
           <table>
             <thead>
               <tr>
                 <th>Employee</th>
-                {heatmap.skills.map((skill) => (
+                {skillColumns.map((skill) => (
                   <th key={skill.id}>{skill.name}</th>
                 ))}
               </tr>
@@ -160,7 +180,7 @@ function App() {
                       {employee.role} · {employee.department}
                     </small>
                   </th>
-                  {heatmap.skills.map((skill) => {
+                  {skillColumns.map((skill) => {
                     const proficiency = matrixLookup.get(`${employee.id}:${skill.id}`) || 0;
                     return (
                       <td key={skill.id} className={`p-${proficiency}`} title={proficiencyLabel[proficiency]}>
@@ -178,7 +198,7 @@ function App() {
       <div className="two-col">
         <section className="panel">
           <h2>Critical Skills at Risk</h2>
-          <p>Skills held at intermediate level or above by fewer than 2 people.</p>
+          <p>Skills held at or above their target proficiency by fewer than 2 people.</p>
           {critical.length === 0 ? (
             <p>No critical skill concentration risks detected.</p>
           ) : (

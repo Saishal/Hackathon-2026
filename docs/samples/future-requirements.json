@@ -1,13 +1,24 @@
 [
   {
     "id": 1,
-    "skillId": 16,
-    "skillName": "Legacy Billing Recovery",
+    "skillId": 9,
+    "skillName": "AI Governance",
     "requiredHolders": 3,
     "targetProficiency": 3,
+    "criticality": 4,
+    "effectiveMonth": 9,
+    "status": "proposed",
+    "provenance": "Fictional demo dataset"
+  },
+  {
+    "id": 2,
+    "skillId": 21,
+    "skillName": "Payments Compliance",
+    "requiredHolders": 3,
+    "targetProficiency": 4,
     "criticality": 5,
     "effectiveMonth": 12,
     "status": "proposed",
-    "provenance": "fictional demo entry"
+    "provenance": "Fictional demo dataset"
   }
 ]

@@ -7,8 +7,10 @@ shape. `docs/API.md` is the authoritative contract; these are worked examples of
 - `risks.json` — `GET /api/keystone/risks`.
 - `future-requirements.json` — `GET /api/keystone/future-requirements`.
 
-All people, skills, proficiencies and resources in these files are fictional demo
-data. `metadataSource`, `evidenceSource` and `provenance` say so on each record.
+All people, skills, proficiencies, evidence and resources in these files are fictional
+demo data seeded from `backend/data/demo/*.csv`. `metadataSource` and `provenance` say so
+on each record; `evidenceSource` names a kind of evidence (such as `Manager assessment`)
+and is equally invented.
 
 ## Prefer the fixture in tests
 
