@@ -11,15 +11,14 @@ import demoWorkforce from '../data/workforce.json';
 import demoRisks from '../data/risks.json';
 import demoFutureRequirements from '../data/future-requirements.json';
 
-export default function KeystoneStarter() {
+// view: 'overview' | 'people' | 'timemachine' | 'ai' | 'data'
+// The dashboard shell (App.jsx) owns navigation; this component owns the data
+// and renders the section for the active view.
+export default function KeystoneStarter({ view = 'overview', embedded = false }) {
   const [workforce, setWorkforce] = useState(null);
   const [risks, setRisks] = useState(null);
   const [demoMode, setDemoMode] = useState(false);
   const [error, setError] = useState('');
-  async function refresh() {
-    const [data, analysis] = await Promise.all([keystoneApi.workforce(), keystoneApi.risks()]);
-    setWorkforce(data); setRisks(analysis); setDemoMode(false);
-  }
   useEffect(() => {
     let active = true;
     Promise.all([keystoneApi.workforce(), keystoneApi.risks()]).then(([data, analysis]) => {
@@ -34,20 +33,37 @@ export default function KeystoneStarter() {
     });
     return () => { active = false; };
   }, []);
+
+  const summary = risks && <>
+    <p><strong>{risks.singleHolder}</strong> single-holder skills · <strong>{risks.uncovered}</strong> skills without recorded independent coverage</p>
+    <ul>{risks.skills.slice(0, 3).map((skill) => <li key={skill.id}><strong>{skill.name}</strong> — Bus Factor {skill.busFactor}, Keystone Score {skill.keystoneScore}/100. {skill.explanation}</li>)}</ul>
+  </>;
+
+  if (embedded) {
+    return (
+      <div>
+        {demoMode && <p className="demo-banner" role="status">
+          DEMO DATA — backend unreachable ({error}). Rendering Member 1's labeled sample payloads; live endpoints are disabled.
+        </p>}
+        {!demoMode && error && <p role="alert">{error}</p>}
+        {view === 'overview' && summary}
+        {view === 'people' && <KeystonePeople />}
+        {view === 'timemachine' && <TimeMachine workforce={workforce} />}
+        {view === 'ai' && <AIWorkbench workforce={workforce} />}
+        {view === 'data' && workforce && <WorkforceSnapshot workforce={workforce} fallbackRequirements={demoMode ? demoFutureRequirements : null} />}
+      </div>
+    );
+  }
+
+  // Standalone fallback (kept for direct component use)
   return <section className="panel">
     <h2>Keystone foundation</h2>
     <p>Demo data · Organizational dependency, not an employee departure prediction.</p>
-    {demoMode && <p className="demo-banner" role="status">
-      DEMO DATA — backend unreachable ({error}). Rendering Member 1's labeled sample payloads; live endpoints are disabled.
-    </p>}
-    {!demoMode && error && <p role="alert">{error}</p>}
-    {risks && <>
-      <p><strong>{risks.singleHolder}</strong> single-holder skills · <strong>{risks.uncovered}</strong> skills without recorded independent coverage</p>
-      <ul>{risks.skills.slice(0, 3).map((skill) => <li key={skill.id}><strong>{skill.name}</strong> — Bus Factor {skill.busFactor}, Keystone Score {skill.keystoneScore}/100. {skill.explanation}</li>)}</ul>
-    </>}
-    {workforce && <WorkforceSnapshot workforce={workforce} fallbackRequirements={demoMode ? demoFutureRequirements : null} />}
+    {demoMode && <p className="demo-banner" role="status">DEMO DATA — backend unreachable.</p>}
+    {summary}
+    <WorkforceSnapshot workforce={workforce} fallbackRequirements={demoMode ? demoFutureRequirements : null} />
     <KeystonePeople />
     <TimeMachine workforce={workforce} />
-    <AIWorkbench workforce={workforce} onRequirementsSaved={refresh} />
+    <AIWorkbench workforce={workforce} />
   </section>;
 }
