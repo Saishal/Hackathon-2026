@@ -157,6 +157,8 @@ async function dropSupersededResources() {
 
 // Gives every row the values loadWorkforce previously computed in memory, so the
 // published snapshot is unchanged while the source of truth moves into the database.
+// Forecast-only skills are skipped: saveEmployeeSkill promotes them using their reviewed
+// future requirement, and a default row written first would silently win on restart.
 async function backfillDefaults() {
   await run(`
     UPDATE employee_skills
@@ -176,7 +178,8 @@ async function backfillDefaults() {
       'fictional demo default'
     FROM skills s
     LEFT JOIN future_skill_targets fst ON fst.skill_id = s.id
-    WHERE s.id NOT IN (SELECT skill_id FROM skill_requirements)
+    WHERE s.future_only = 0
+      AND s.id NOT IN (SELECT skill_id FROM skill_requirements)
   `);
 }
 

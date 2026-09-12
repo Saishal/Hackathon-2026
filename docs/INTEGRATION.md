@@ -23,10 +23,10 @@ Branch names appear in each member specification. All four use the same JS stack
 
 Verified on this branch from a clean install on 2026-09-12. Re-run before submitting.
 
-- [x] Tests/lint/build pass; both servers run from clean install. 89 tests pass, lint and build exit 0, backend answers `/api/health`, frontend serves on 5173.
+- [x] Tests/lint/build pass; both servers run from clean install. 99 tests pass (including `integration.test.js`, which runs Parts 1, 2 and 4 against the CSV-seeded database), lint and build exit 0, backend answers `/api/health`, frontend serves on 5173.
 - [ ] All five brief questions shown: inventory, concentration, gaps/succession, development, future strategy. **All five answer over HTTP, but the UI here renders only part of the snapshot.** `WorkforceSnapshot.jsx` and `Provenance.jsx` live on `feature/keystone-ui`, which is branched from `main` and does not yet contain this work. Merging that branch is what closes this box.
 - [x] Scores trace to recorded evidence and explicit requirements. Every risk entry carries `explanation`; recording a proficiency requires a non-empty `evidenceSource`.
 - [x] Actual and simulated evidence stay separate. Simulation never mutates baseline, asserted by test.
 - [x] No future deterioration without explicit assumptions. Future requirements default to `proposed` and only apply when explicitly supplied to a scenario.
-- [ ] No invented employee IDs, credentials, courses, forecasts. IDs and forecasts are clean. **Open question: the learning catalogue contains invented course and credential names** — each suffixed "(fictional)" but stored with `verified: true`. The label is the mitigation; the team should decide whether that reads honestly to a judge before submitting.
+- [ ] No invented employee IDs, credentials, courses, forecasts. IDs and forecasts are clean. **Open question: the learning catalogue contains invented course and credential names** stored with `verified: true`. Titles no longer carry a "(fictional)" suffix; instead every row's `provenance` is `Fictional demo dataset` and `backend/data/demo/README.md` states the whole dataset is invented. `verified` is now a per-row CSV column, so it can be switched off, but AI plans then offer no course or certification. The team should decide before submitting.
 - [x] Demo works without AI credentials. Confirmed with no key set: `ai-status` reports `configured:false, reason:missing_api_key`, and development and strategy both return labelled `demo-fallback` results.

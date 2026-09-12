@@ -1,0 +1,17 @@
+slug,title,kind,skills,verified,url,provenance
+cert-billing-recovery,Billing Recovery Practitioner Assessment,certification,Legacy Billing Recovery,true,,Fictional demo dataset
+cert-cloud-foundations,Cloud Foundations Certificate,certification,Cloud Architecture;DevOps,true,,Fictional demo dataset
+cert-security-analyst,Security Analyst Credential,certification,Cybersecurity,true,,Fictional demo dataset
+cert-ai-governance,Responsible AI Oversight Certificate,certification,AI Governance,true,,Fictional demo dataset
+cert-payments-compliance,Payments Compliance Practitioner Assessment,certification,Payments Compliance,true,,Fictional demo dataset
+train-billing-internal,Billing Platform Internals Walkthrough,training,Legacy Billing Recovery,true,,Fictional demo dataset
+train-data-analysis,Applied Data Analysis Workshop,training,Data Analysis;Machine Learning,true,,Fictional demo dataset
+train-secure-coding,Secure Coding Clinic,training,Cybersecurity;Test Automation,true,,Fictional demo dataset
+train-kubernetes-operations,Kubernetes Operations Bootcamp,training,Kubernetes;DevOps,true,,Fictional demo dataset
+train-accessible-interfaces,Accessible Interface Design Lab,training,Accessibility;React;UX Research,true,,Fictional demo dataset
+train-ml-foundations,Machine Learning Foundations Course,training,Machine Learning;Python,true,,Fictional demo dataset
+doc-incident-runbooks,Incident Response Runbook Library,documentation,Incident Response,true,,Fictional demo dataset
+proj-billing-shadow,Supervised Billing Remediation Project,project_experience,Legacy Billing Recovery,true,,Fictional demo dataset
+proj-api-design-guild,API Design Guild Project,project_experience,API Design;Node.js;TypeScript,true,,Fictional demo dataset
+rot-platform-team,Platform Team Rotation,job_rotation,Cloud Architecture;DevOps;Test Automation,true,,Fictional demo dataset
+rot-data-platform,Data Platform Rotation,job_rotation,SQL & Data Modeling;Python;Data Analysis,true,,Fictional demo dataset

@@ -10,6 +10,7 @@ fs.rmSync(DB_FILE, { force: true });
 process.env.DB_PATH = DB_FILE;
 
 const data = require('../data');
+const { readSeedDataset } = require('../data/dataset');
 
 const ready = data.initializeDatabase();
 
@@ -17,12 +18,14 @@ test.after(() => {
   data.db.close();
 });
 
-test('fresh database seeds the documented demo fixture', async () => {
+test('fresh database seeds every row of the CSV demo dataset', async () => {
   await ready;
+  const dataset = readSeedDataset();
   const snapshot = await data.getHeatmapData();
 
-  assert.equal(snapshot.employees.length, 20);
-  assert.equal(snapshot.skills.length, 16);
+  assert.equal(snapshot.employees.length, dataset.employees.length);
+  assert.equal(snapshot.skills.length, dataset.skills.length);
+  assert.equal(snapshot.matrix.length, dataset.employeeSkills.length);
 
   const billing = snapshot.skills.find((skill) => skill.name === 'Legacy Billing Recovery');
   const proficiencyFor = (name) => {
@@ -127,13 +130,14 @@ test('loadWorkforce serves criticality from the database, not hardcoded values',
   assert.equal(restored.skills.find((skill) => skill.name === 'Legacy Billing Recovery').criticality, 5);
 });
 
-test('snapshot carries evidence and mentoring fields, with unknown dates left null', async () => {
+test('snapshot carries recorded evidence, with unknown verification dates left null', async () => {
   await ready;
   const workforce = await data.loadWorkforce();
 
   assert.equal(workforce.schemaVersion, 1);
-  assert.ok(workforce.matrix.every((edge) => edge.evidenceSource === 'fictional seed'));
-  assert.ok(workforce.matrix.every((edge) => edge.lastVerifiedAt === null));
+  assert.ok(workforce.matrix.every((edge) => typeof edge.evidenceSource === 'string' && edge.evidenceSource !== ''));
+  assert.ok(workforce.matrix.every((edge) => edge.lastVerifiedAt === null || /^\d{4}-\d{2}-\d{2}$/.test(edge.lastVerifiedAt)));
+  assert.ok(workforce.matrix.some((edge) => edge.lastVerifiedAt === null), 'blank CSV dates must stay unknown');
 });
 
 test('zero legacy demand is reported without zeroing Keystone coverage', async () => {
@@ -206,8 +210,8 @@ test('the persisted catalogue keeps the shape AI grounding filters on', async ()
     assert.equal(typeof resource.verified, 'boolean');
     assert.ok(Array.isArray(resource.skillIds));
     assert.ok(resource.skillIds.every((id) => skillIds.has(id)));
-    assert.match(resource.title, /\(fictional\)/);
-    assert.equal(resource.provenance, 'fictional demo entry');
+    // Titles read like a real catalogue; the stored provenance is what says they are invented.
+    assert.match(resource.provenance, /fictional/i);
   }
 });
 
