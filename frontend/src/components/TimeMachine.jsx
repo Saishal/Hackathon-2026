@@ -5,10 +5,14 @@ const HORIZONS = [[0, 'Baseline'], [12, '1 year'], [36, '3 years'], [60, '5 year
 const emptyDeparture = { employeeId: '', month: 9 };
 const emptyIntervention = { employeeId: '', skillId: '', mentorId: '', startMonth: 0, completionMonth: 6, targetProficiency: 3, assumeVerified: true };
 
-export default function TimeMachine({ workforce }) {
+// Planned development can be owned by a parent (KeystoneStarter) so actions scheduled from the
+// AI advisor survive switching views; standalone use keeps its own state.
+export default function TimeMachine({ workforce, interventions: sharedInterventions, onInterventionsChange }) {
   const [horizonMonths, setHorizonMonths] = useState(12);
   const [departures, setDepartures] = useState([]);
-  const [interventions, setInterventions] = useState([]);
+  const [localInterventions, setLocalInterventions] = useState([]);
+  const interventions = sharedInterventions ?? localInterventions;
+  const setInterventions = onInterventionsChange ?? setLocalInterventions;
   const [departureDraft, setDepartureDraft] = useState(emptyDeparture);
   const [interventionDraft, setInterventionDraft] = useState(emptyIntervention);
   const [result, setResult] = useState(null);
@@ -31,11 +35,16 @@ export default function TimeMachine({ workforce }) {
     setInterventionDraft(emptyIntervention); stale();
   }
   const removeAt = (setter, index) => { setter((current) => current.filter((_item, i) => i !== index)); stale(); };
+  const setVerified = (index, assumeVerified) => {
+    setInterventions((current) => current.map((item, i) => (i === index ? { ...item, assumeVerified } : item))); stale();
+  };
   function reset() { setDepartures([]); setInterventions([]); setDepartureDraft(emptyDeparture); setInterventionDraft(emptyIntervention); stale(); }
 
   async function run() {
     setBusy(true); setError('');
-    try { setResult(await keystoneApi.simulate({ horizonMonths, departures, interventions })); }
+    // `source` only labels where a scheduled action came from; the simulation does not take it.
+    const planned = interventions.map(({ source: _source, ...item }) => item);
+    try { setResult(await keystoneApi.simulate({ horizonMonths, departures, interventions: planned })); }
     catch (err) { setError(err.message); setResult(null); }
     finally { setBusy(false); }
   }
@@ -59,6 +68,7 @@ export default function TimeMachine({ workforce }) {
     return { id, name: projected?.name ?? none?.name ?? base?.name,
       base: base?.busFactor ?? 0, none: none?.busFactor ?? 0, projected: projected?.busFactor ?? 0 };
   }).filter((row) => row.base !== row.none || row.base !== row.projected) : [];
+  const maxHolders = Math.max(1, ...changed.flatMap((row) => [row.base, row.none, row.projected]));
 
   return <>
     <h3>Time Machine</h3>
@@ -126,7 +136,10 @@ export default function TimeMachine({ workforce }) {
       {interventions.map((item, index) => <li key={`${item.employeeId}-${item.skillId}-${index}`}>
         <strong>{employeeName(item.employeeId)}</strong> reaches {skillName(item.skillId)} level {item.targetProficiency} by month {item.completionMonth}
         {item.mentorId === null ? ' with no mentor' : `, mentored by ${employeeName(item.mentorId)} from month ${item.startMonth}`}
-        {item.assumeVerified ? '' : ' (not assumed verified, so it does not change coverage)'}{' '}
+        {item.source ? ` · scheduled from the AI advisor (${item.source})` : ''}
+        {item.assumeVerified ? '' : ' (not assumed verified, so it does not change coverage)'}
+        <label className="inline-check"><input type="checkbox" checked={item.assumeVerified}
+          onChange={(event) => setVerified(index, event.target.checked)} /> Verified at completion</label>{' '}
         <button type="button" onClick={() => removeAt(setInterventions, index)}>Remove</button>
       </li>)}
     </ul>}
@@ -151,9 +164,19 @@ export default function TimeMachine({ workforce }) {
 
       {changed.length > 0 && <>
         <h3>Skills that move</h3>
+        <ul className="legend" aria-label="Bar legend">
+          <li><span className="swatch today" /> Today</li>
+          <li><span className="swatch none" /> Without development</li>
+          <li><span className="swatch with" /> With development</li>
+        </ul>
         <ul>{changed.map((row) => <li key={row.id}>
           <strong>{row.name}</strong> — recorded holders {row.base} today → {row.none} without development → {row.projected} with it
           {row.none === 0 && row.projected > 0 ? <span> · development prevents the loss of coverage</span> : ''}
+          <div className="bars" aria-hidden="true">
+            {[['today', row.base], ['none', row.none], ['with', row.projected]].map(([kind, value]) => (
+              <span key={kind} className={`bar ${kind}`} style={{ width: `${(value / maxHolders) * 100}%` }}>{value}</span>
+            ))}
+          </div>
         </li>)}</ul>
       </>}
       {changed.length === 0 && <p>No skill changes recorded coverage under this scenario.</p>}

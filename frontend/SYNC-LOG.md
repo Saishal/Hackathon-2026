@@ -1,5 +1,29 @@
 # Member 3 Sync Log
 
+## 2026-09-12 (16:47 CDT, seventeenth run)
+
+**(a) What teammates changed**
+
+- Big integration push: new branches `integrate/parts-1-2-4-csv` and `integrate/all-parts`, plus five new commits on `fix/docs-sync` (head `9444355`).
+- `67af2e8` seeds the demo workforce **from CSV files** (`backend/data/demo/*.csv`) — demo data, provenance strings (`'Fictional demo dataset'`), and sample payloads all changed.
+- `c221ca2` makes the legacy panels agree with Keystone risk and surfaces concentrated skills (touched `App.jsx`, `KeystoneStarter.jsx` on their branch).
+- `integrate/all-parts` merged **our** `feature/keystone-ui` (`5f449ac`) and added `ab0405c` (new `SkillNetwork.jsx`, inventory search, scheduling of reviewed actions, `views.css`) and `12cd5ff` (demo run sheet, network panel tidy).
+- `docs/API.md` changes are provenance-wording only (CSV-sourced demo data; `metadataSource` now `'Fictional demo dataset'` — still caught by our `/fictional/i` badge). No new endpoints beyond the ones we already wrap.
+- A parallel Member 3 session also landed `75ae3b7` here: the People panel now tolerates both `successors` and `skillBackups` shapes, so it survives old main or the integrated backend.
+- `origin/main` itself unchanged; merge was a no-op.
+
+**(b) What I adapted**
+
+- Adopted the `integrate/all-parts` frontend wholesale (`git checkout origin/integrate/all-parts -- frontend/`), keeping only my own `SYNC-LOG.md` history: new `SkillNetwork.jsx` + `views.css`, refreshed components (App, KeystoneStarter, KeystonePeople, TimeMachine, AIWorkbench, WorkforceSnapshot), and re-seeded CSV-based demo payloads under `frontend/src/data/`.
+- Regenerated `activity.json` after the checkout (45 commits: Member 3 21, Team 15, Member 1 9).
+- Verified invariants on the adopted code: DEMO DATA banner/pill in offline mode, unknowns as dashes ("unknown, not proof of absence" copy in SkillNetwork), no score recomputation, no secrets, no new API calls (`keystone.js` identical).
+- Build: `npm.cmd run build` passes (vite, 31 modules, no errors).
+- Safety: backup tag `backup/pre-sync-20260912-1647` created at the pushed HEAD and pushed to origin.
+
+**(c) Group chat message**
+
+> Member 3 sync ✅ Big pull this round: our branch now carries the full integrated frontend — skill network graph, inventory search, scheduling of reviewed actions, and the CSV-seeded demo data. Verified the honest-demo rules survived (DEMO DATA banner, dashes for unknowns, fictional-data badges all intact) and the build is green (31 modules). Pushed with backup tag `backup/pre-sync-20260912-1647`. We are ONE merge away from a demo: someone land integrate/all-parts on main and I'll do the final verification pass! 🏁
+
 ## 2026-09-12 (16:29 CDT, live verification)
 
 **(a) What teammates changed**

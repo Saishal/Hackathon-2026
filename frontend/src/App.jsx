@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import './App.css';
+import './views.css';
 import { keystoneApi } from './api/keystone';
 import KeystoneStarter from './components/KeystoneStarter';
 import ActivityLog from './components/ActivityLog';
@@ -7,11 +8,12 @@ import demoRisks from './data/risks.json';
 
 // Dashboard shell — sidebar navigation in the style of the Certific template
 // (light SaaS dashboard), trimmed to exactly the views Keystone needs:
-// Overview, People & Risk, Time Machine, AI Advisor, Workforce Data, Activity.
+// Overview, People & Risk, Skill Network, Time Machine, AI Advisor, Workforce Data, Activity.
 
 const NAV = [
   ['overview', '📊', 'Overview'],
   ['people', '👥', 'People & Risk'],
+  ['network', '🕸️', 'Skill Network'],
   ['timemachine', '⏳', 'Time Machine'],
   ['ai', '🤖', 'AI Advisor'],
   ['data', '🗂️', 'Workforce Data'],
@@ -20,6 +22,7 @@ const NAV = [
 
 const pageTitles = {
   overview: 'Dashboard overview', people: 'People your coverage depends on',
+  network: 'Employee-skill network',
   timemachine: 'Workforce Time Machine', ai: 'AI development advisor',
   data: 'Workforce data & evidence', activity: 'Team activity log',
 };
