@@ -1,5 +1,22 @@
 # Member 3 Sync Log
 
+## 2026-09-12 (15:01 CDT, fourth run)
+
+**(a) What teammates changed**
+
+- No new remote changes: `origin/main`, `feature/workforce-data` (`9073fd1`), `feature/ai-recommendations` (merged), and `fix/review-risk-ai` (`bd6c883`) are all unchanged since 14:51. Merge was a no-op.
+- Between runs, a parallel Member 3 session landed and pushed `0d7c353` + `1b8faeb` on this branch: new `WorkforceSnapshot.jsx` (renders roles, learning catalogue, future requirements, `demandTarget`, mentoring capacity, evidence verification), new `Provenance.jsx` badge, and vendored offline demo payloads under `frontend/src/data/` with a labeled DEMO DATA banner in `KeystoneStarter.jsx`.
+
+**(b) What I adapted**
+
+- No changes needed. I re-verified the new components against the contract and invariants: unknowns render as dashes (`mentoringHoursPerMonth` absent, `lastVerifiedAt` null, `demandTarget` 0/null), no Keystone score recomputation in the frontend, no secrets, offline fallback explicitly labeled "DEMO DATA — backend unreachable". All field usage matches Member 1's extended contract.
+- Build: `npm.cmd run build` passes (vite, 27 modules, no errors).
+- Safety: backup tag `backup/pre-sync-20260912-1501` created at the pushed HEAD and pushed to origin.
+
+**(c) Group chat message**
+
+> Member 3 sync ✅ No new teammate commits this round. The new workforce snapshot UI (roles, catalogue, future requirements, mentoring capacity, evidence verification) is in and verified against the contract — every unknown renders as a dash and the offline demo mode is clearly labeled. Build green, branch + backup tag pushed. Ready to demo the snapshot section whenever Member 1's branch merges to main! 📸
+
 ## 2026-09-12 (14:51 CDT, third run)
 
 **(a) What teammates changed**
