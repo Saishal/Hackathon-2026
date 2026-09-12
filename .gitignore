@@ -10,6 +10,7 @@ backend/dist/
 # Local env files
 .env
 .env.*
+!backend/.env.example
 
 # SQLite runtime files
 backend/*.db

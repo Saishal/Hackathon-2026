@@ -15,8 +15,8 @@ Branch names appear in each member specification. All four use the same JS stack
 1. Shared seed -> one risk -> UI (included).
 2. Liam departure -> zero billing coverage (API/basic UI included).
 3. Mason mentoring -> backup (API included; intervention UI remains).
-4. Grounded actions (fallback included; live AI remains).
-5. Strategy -> reviewed requirements -> gaps (endpoint boundary included; feature remains).
+4. Grounded actions (OpenAI integration and labeled fallback implemented; real provider call awaits key/model).
+5. Strategy -> reviewed requirements -> read-only gaps (implemented by Matias; persistent IDs and combined departure/training simulation remain).
 6. Finish network, evidence edits, succession, capacity, and presentation.
 
 ## Final checklist
