@@ -264,3 +264,22 @@
 **(c) Group chat message**
 
 > @Member1 — your snapshot fields are now rendered ✅ Frontend has: skills table with demandTarget shown SEPARATELY from requiredHolders, roles & succession panel, resource catalogue with verified flags, future requirements with proposed/reviewed status, and the evidence matrix. Your two rules are implemented exactly: absent mentoringHoursPerMonth renders as a dash (header notes only 6 of 20 have it), lastVerifiedAt null renders as a dash — never 0 or "never verified". Provenance is surfaced via a badge that labels anything 'fictional demo' on screen so the demo never overclaims. Bonus: I vendored your docs/samples into the frontend, so the whole UI runs offline under a labeled DEMO DATA banner — backup demo is safe even if the backend dies mid-presentation. 🎤
+
+## 2026-09-12 (16:12 CDT) — Dashboard redesign (Certific-style) + Activity Log
+
+**(a) What triggered this**
+
+- Owner asked for a dashboard template like certific.ui-layouts.com — light SaaS shell, only the views Keystone needs — plus an activity log of every member change with date/time.
+
+**(b) What I changed**
+
+- `frontend/src/App.jsx`: new dashboard shell — left sidebar (Overview / People & Risk / Time Machine / AI Advisor / Workforce Data / Activity Log), KPI stat cards (single-holder skills, uncovered, skills tracked, top dependency), topbar with DEMO DATA pill. Removed the legacy scaffold-era heatmap/gap sections (redundant with the risks API).
+- `frontend/src/App.css`: full rewrite to the light Certific-style theme (white cards, subtle borders, indigo accent). All component class names preserved.
+- `frontend/src/components/KeystoneStarter.jsx`: view-aware — renders the section for the active sidebar tab; standalone fallback kept.
+- NEW `frontend/src/components/ActivityLog.jsx` + `frontend/scripts/generate-activity.mjs` + `frontend/src/data/activity.json`: activity log generated from git history across ALL origin branches. Attribution = commit's originating branch (Member 1: 9 commits, Member 3: 16, merged-to-main/team: 15 currently), each with full date+time and relative time.
+- Sync automation updated: regenerates activity.json after every fetch, so the log stays current without anyone touching it.
+- Build: `npm.cmd run build` passes. Pushed `a473813`, backup tag created.
+
+**(c) Group chat message**
+
+> Team — Member 3 here 👋 Two updates: (1) The frontend got a full dashboard redesign — clean light theme with sidebar nav (Overview / People / Time Machine / AI Advisor / Workforce Data) and KPI cards up top. Same components underneath, new shell. (2) NEW: Activity Log tab 📜 — every commit from all our branches with who did it and exact date/time, auto-updating as we push. Check it out on feature/keystone-ui. If anything looks off after the restyle, ping me — build is green. 🚀
