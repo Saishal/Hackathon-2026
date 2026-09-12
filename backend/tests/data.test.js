@@ -164,6 +164,37 @@ test('no published skill can make risk scoring divide by zero', async () => {
   }
 });
 
+test('every employee role is represented as a critical role with incumbents', async () => {
+  await ready;
+  const snapshot = await data.getHeatmapData();
+  const workforce = await data.loadWorkforce();
+  const employeeRoles = new Set(snapshot.employees.map((employee) => employee.role));
+
+  assert.equal(workforce.roles.length, employeeRoles.size);
+
+  for (const role of workforce.roles) {
+    assert.ok(employeeRoles.has(role.name));
+    assert.ok(role.incumbentIds.length > 0);
+    assert.ok(role.criticality >= 1 && role.criticality <= 5);
+  }
+});
+
+test('role requirements reference real skills and usable proficiencies', async () => {
+  await ready;
+  const workforce = await data.loadWorkforce();
+  const skillIds = new Set(workforce.skills.map((skill) => skill.id));
+  const backend = workforce.roles.find((role) => role.name === 'Backend Engineer');
+
+  assert.ok(backend.requirements.length > 0);
+
+  for (const role of workforce.roles) {
+    for (const requirement of role.requirements) {
+      assert.ok(skillIds.has(requirement.skillId));
+      assert.ok(requirement.minimumProficiency >= 1 && requirement.minimumProficiency <= 5);
+    }
+  }
+});
+
 test('re-running initialization preserves existing rows', async () => {
   await ready;
   const before = await data.getHeatmapData();

@@ -43,6 +43,22 @@ async function loadWorkforce() {
   const demand = await all('SELECT skill_id, target_people FROM future_skill_targets');
   const demandBySkill = new Map(demand.map((row) => [row.skill_id, row.target_people]));
 
+  const roles = await all(
+    'SELECT id, name, criticality, metadata_source FROM critical_roles ORDER BY name ASC',
+  );
+  const roleRequirements = await all(`
+    SELECT role_id, skill_id, minimum_proficiency
+    FROM role_skill_requirements
+    ORDER BY role_id ASC, skill_id ASC
+  `);
+  const incumbentsByRole = new Map();
+
+  for (const employee of snapshot.employees) {
+    const current = incumbentsByRole.get(employee.role) ?? [];
+    current.push(employee.id);
+    incumbentsByRole.set(employee.role, current);
+  }
+
   return {
     schemaVersion: 1,
     ...snapshot,
@@ -62,6 +78,19 @@ async function loadWorkforce() {
         metadataSource: requirement.metadata_source,
       };
     }),
+    roles: roles.map((role) => ({
+      id: role.id,
+      name: role.name,
+      criticality: role.criticality,
+      metadataSource: role.metadata_source,
+      incumbentIds: incumbentsByRole.get(role.name) ?? [],
+      requirements: roleRequirements
+        .filter((requirement) => requirement.role_id === role.id)
+        .map((requirement) => ({
+          skillId: requirement.skill_id,
+          minimumProficiency: requirement.minimum_proficiency,
+        })),
+    })),
     matrix: snapshot.matrix.map((edge) => {
       const row = evidenceByEdge.get(`${edge.employeeId}:${edge.skillId}`);
 

@@ -4,11 +4,14 @@ Backend: JavaScript/CommonJS. Frontend: JavaScript/JSX ES modules. Stable intege
 
 ## GET /api/keystone/workforce
 
-Returns `{schemaVersion:1, employees, skills, matrix}`.
+Returns `{schemaVersion:1, employees, skills, roles, matrix}`.
 
 - employees: `{id,name,role,department,mentoringAvailable}`.
 - skills: `{id,name,criticality,targetProficiency,requiredHolders,demandTarget,metadataSource}`.
+- roles: `{id,name,criticality,metadataSource,incumbentIds,requirements}`, where requirements is `[{skillId,minimumProficiency}]`.
 - matrix: `{employeeId,skillId,proficiency,evidenceSource,lastVerifiedAt}`.
+
+Roles carry the succession inputs: `incumbentIds` are the employees currently in the role and `requirements` are the skills a successor must already hold. Roles and their requirements are derived from the fictional demo role profiles, so criticality starts at a neutral 3 and is meant to be edited rather than read as a finding. Deciding who actually qualifies as a successor is Member 2's calculation, not a stored value.
 
 Recorded proficiency 1–5; absent edge means unknown. Criticality 1–5, requiredHolders >=1.
 

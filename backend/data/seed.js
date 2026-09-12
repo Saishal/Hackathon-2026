@@ -229,6 +229,44 @@ async function seedDemoData() {
   }
 }
 
+// Roles and their skill requirements are derived from the existing fictional role
+// profiles, not invented. Criticality starts neutral and is meant to be edited.
+async function backfillRoles() {
+  const roles = await all('SELECT DISTINCT role FROM employees ORDER BY role ASC');
+
+  for (const { role } of roles) {
+    await run(
+      "INSERT OR IGNORE INTO critical_roles (name, criticality, metadata_source) VALUES (?, 3, 'fictional demo default')",
+      [role],
+    );
+  }
+
+  const dbRoles = await all('SELECT id, name FROM critical_roles');
+  const dbSkills = await all('SELECT id, name FROM skills');
+  const skillIdByName = new Map(dbSkills.map((skill) => [skill.name, skill.id]));
+
+  for (const dbRole of dbRoles) {
+    const profile = roleSkillProfiles[dbRole.name];
+
+    if (!profile) {
+      continue;
+    }
+
+    for (const [skillName, proficiency] of Object.entries(profile)) {
+      const skillId = skillIdByName.get(skillName);
+
+      if (!skillId) {
+        continue;
+      }
+
+      await run(
+        'INSERT OR IGNORE INTO role_skill_requirements (role_id, skill_id, minimum_proficiency) VALUES (?, ?, ?)',
+        [dbRole.id, skillId, proficiency],
+      );
+    }
+  }
+}
+
 module.exports = {
   employees,
   skills,
@@ -237,4 +275,5 @@ module.exports = {
   futureTargets,
   profileForEmployee,
   seedDemoData,
+  backfillRoles,
 };

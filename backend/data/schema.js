@@ -48,6 +48,28 @@ async function createTables() {
       FOREIGN KEY (skill_id) REFERENCES skills(id)
     )
   `);
+
+  // Succession asks who could step into a role, so roles need their own
+  // criticality and the skills a successor must already hold.
+  await run(`
+    CREATE TABLE IF NOT EXISTS critical_roles (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL UNIQUE,
+      criticality INTEGER NOT NULL CHECK (criticality BETWEEN 1 AND 5),
+      metadata_source TEXT NOT NULL
+    )
+  `);
+
+  await run(`
+    CREATE TABLE IF NOT EXISTS role_skill_requirements (
+      role_id INTEGER NOT NULL,
+      skill_id INTEGER NOT NULL,
+      minimum_proficiency INTEGER NOT NULL CHECK (minimum_proficiency BETWEEN 1 AND 5),
+      PRIMARY KEY (role_id, skill_id),
+      FOREIGN KEY (role_id) REFERENCES critical_roles(id),
+      FOREIGN KEY (skill_id) REFERENCES skills(id)
+    )
+  `);
 }
 
 async function columnExists(table, column) {
