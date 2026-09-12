@@ -1,4 +1,45 @@
-# SkillSight — Talent Readiness & Skills Intelligence
+# Keystone — shared team backbone
+
+**Find your keystones before they walk out the door.**
+
+Keystone identifies critical knowledge dependencies and simulates whether development reduces them. This backbone preserves the existing SkillSight implementation below and adds a Keystone service layer and starter UI.
+
+## Start here
+
+Use **Node.js 24 LTS**, JavaScript throughout: React/Vite frontend, Express/CommonJS backend, SQLite. The earlier Python/Streamlit proposal referred to a separate prototype and is superseded by this repository's existing stack.
+
+From repository root:
+
+```sh
+npm ci --prefix backend
+npm ci --prefix frontend
+npm start --prefix backend
+```
+
+In a second terminal: `npm run dev --prefix frontend`. Open http://localhost:5173; API health is http://localhost:4000/api/health.
+
+Optional environment: backend `PORT`, `DB_PATH`; frontend `VITE_API_BASE_URL` in `frontend/.env.local`. A fresh database seeds 20 fictional employees and 16 skills including Legacy Billing Recovery (Liam Chen expert, Mason Green learner). Existing DBs are preserved; point `DB_PATH` at a new file for fresh demo data. No API credentials are needed for the starter.
+
+## Four member assignments
+
+1. [Data and shared contracts](docs/member-1-data.md)
+2. [Risk, succession, Time Machine](docs/member-2-risk.md)
+3. [Frontend and integration](docs/member-3-frontend.md)
+4. [Matias: AI and strategic skill needs](docs/member-4-ai.md)
+
+Read [API contracts](docs/API.md) and [integration workflow](docs/INTEGRATION.md) before changing shared interfaces.
+
+## Implemented vs remaining
+
+Working: existing heat map/gaps/targets, new workforce/risk APIs, explainable skill Bus Factor and Keystone Score, dated departure and verified-intervention simulation, starter departure UI, and explicit development fallback. Strategy returns `not-configured` rather than pretending to forecast.
+
+Remaining: interactive network, persisted evidence/criticality/roles, employee scores, succession, mentor capacity, intervention editor, live AI, reviewed future-skill requirements and their simulation. This is a runnable backbone, not the finished submission.
+
+Proficiency stays compatible with existing data: 1–5, independent threshold 3, mentor minimum 4. Missing relationships are unknown, displayed as a dash. Do not mix in the earlier proposed 0–4 scale. Scores measure organizational dependency, not likelihood of departure.
+
+Verify: `npm test --prefix backend`, `npm run lint --prefix frontend`, `npm run build --prefix frontend`.
+
+## Original foundation notes (historical)
 
 SkillSight is a hackathon web app that helps teams understand current skill coverage and future readiness.
 

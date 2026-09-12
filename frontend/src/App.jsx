@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import './App.css';
+import KeystoneStarter from './components/KeystoneStarter';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000';
 
 const proficiencyLabel = {
-  0: 'None',
+  0: 'Not recorded',
   1: 'Beginner',
   2: 'Novice+',
   3: 'Intermediate',
@@ -21,6 +22,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [savingTargets, setSavingTargets] = useState(false);
   const [error, setError] = useState('');
+  const [riskRevision, setRiskRevision] = useState(0);
 
   const matrixLookup = useMemo(() => {
     if (!heatmap?.matrix) {
@@ -58,7 +60,7 @@ function App() {
       setRecommendations(recommendationData);
       setTargets(targetData);
     } catch (fetchError) {
-      setError(fetchError.message || 'Unable to load SkillSight data');
+      setError(fetchError.message || 'Unable to load Keystone data');
     } finally {
       setLoading(false);
     }
@@ -100,6 +102,7 @@ function App() {
 
       const updatedGaps = await response.json();
       setGaps(updatedGaps);
+      setRiskRevision((revision) => revision + 1);
 
       const recommendationRes = await fetch(`${API_BASE}/api/recommendations`);
       setRecommendations(await recommendationRes.json());
@@ -113,7 +116,7 @@ function App() {
   if (loading) {
     return (
       <main className="app-shell">
-        <h1>SkillSight</h1>
+        <h1>Keystone</h1>
         <p>Loading talent readiness data...</p>
       </main>
     );
@@ -122,7 +125,7 @@ function App() {
   if (error) {
     return (
       <main className="app-shell">
-        <h1>SkillSight</h1>
+        <h1>Keystone</h1>
         <p className="error">{error}</p>
       </main>
     );
@@ -131,9 +134,10 @@ function App() {
   return (
     <main className="app-shell">
       <header>
-        <h1>SkillSight</h1>
-        <p>Talent Readiness &amp; Skills Intelligence Dashboard</p>
+        <h1>Keystone</h1>
+        <p>Find your keystones before they walk out the door.</p>
       </header>
+      <KeystoneStarter key={riskRevision} />
 
       <section className="panel">
         <h2>Skills Heat Map</h2>
@@ -160,7 +164,7 @@ function App() {
                     const proficiency = matrixLookup.get(`${employee.id}:${skill.id}`) || 0;
                     return (
                       <td key={skill.id} className={`p-${proficiency}`} title={proficiencyLabel[proficiency]}>
-                        {proficiency}
+                        {proficiency || '—'}
                       </td>
                     );
                   })}

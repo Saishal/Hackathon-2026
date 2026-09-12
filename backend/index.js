@@ -4,8 +4,9 @@ const path = require('path');
 const sqlite3 = require('sqlite3').verbose();
 
 const app = express();
+const keystoneRoutes = require('./routes/keystone');
 const PORT = process.env.PORT || 4000;
-const DB_PATH = path.join(__dirname, 'skillsight.db');
+const DB_PATH = process.env.DB_PATH || path.join(__dirname, 'skillsight.db');
 
 app.use(cors());
 app.use(express.json());
@@ -84,6 +85,7 @@ const skills = [
   'Leadership',
   'Test Automation',
   'AI Governance',
+  'Legacy Billing Recovery',
 ];
 
 const roleSkillProfiles = {
@@ -197,6 +199,8 @@ const adjacencySkills = ['React', 'Node.js', 'Python', 'Communication', 'Leaders
 
 const profileForEmployee = (employee) => {
   const base = { ...(roleSkillProfiles[employee.role] || {}) };
+  if (employee.name === 'Liam Chen') base['Legacy Billing Recovery'] = 5;
+  if (employee.name === 'Mason Green') base['Legacy Billing Recovery'] = 2;
   const charTotal = employee.name.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
 
   adjacencySkills.forEach((skill, index) => {
@@ -387,6 +391,22 @@ async function getRecommendations() {
     });
 }
 
+// Member 1 owns this adapter; existing endpoints remain compatible.
+async function loadWorkforce() {
+  const snapshot = await getHeatmapData();
+  const targets = await all('SELECT skill_id, target_people FROM future_skill_targets');
+  return { schemaVersion: 1, ...snapshot,
+    skills: snapshot.skills.map((skill) => ({ ...skill,
+      criticality: skill.name === 'Legacy Billing Recovery' ? 5 : 3,
+      targetProficiency: 3,
+      requiredHolders: Math.max(1, targets.find((target) => target.skill_id === skill.id)?.target_people ?? 2),
+      metadataSource: 'demo defaults; Member 1 to add editable persisted requirements',
+    })),
+    matrix: snapshot.matrix.map((edge) => ({ ...edge, evidenceSource: 'fictional seed', lastVerifiedAt: null })),
+  };
+}
+app.use('/api/keystone', keystoneRoutes(loadWorkforce));
+
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok' });
 });
@@ -461,13 +481,13 @@ app.put('/api/future-skills', async (req, res) => {
 
 app.use((err, _req, res, _next) => {
   console.error(err);
-  res.status(500).json({ error: 'Unexpected server error' });
+  res.status(err.status || 500).json({ error: err.status === 400 ? err.message : 'Unexpected server error' });
 });
 
 initializeDatabase()
   .then(() => {
     app.listen(PORT, () => {
-      console.log(`SkillSight backend listening on port ${PORT}`);
+      console.log(`Keystone backend listening on port ${PORT}`);
     });
   })
   .catch((error) => {
