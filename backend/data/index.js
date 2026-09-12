@@ -3,6 +3,7 @@ const { createTables, migrate, backfillDefaults } = require('./schema');
 const { seedDemoData, backfillRoles, backfillResources } = require('./seed');
 const queries = require('./queries');
 const { loadWorkforce } = require('./workforce');
+const { createWorkforceFixture } = require('./fixture');
 
 async function initializeDatabase() {
   await createTables();
@@ -21,5 +22,6 @@ module.exports = {
   DB_PATH,
   initializeDatabase,
   loadWorkforce,
+  createWorkforceFixture,
   ...queries,
 };

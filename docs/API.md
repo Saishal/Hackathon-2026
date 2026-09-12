@@ -2,6 +2,8 @@
 
 Backend: JavaScript/CommonJS. Frontend: JavaScript/JSX ES modules. Stable integer IDs come from SQLite. Errors: HTTP 400 with `{error:message}` for invalid input, 500 for unexpected failure. Use `frontend/src/api/keystone.js` from React.
 
+Worked examples live in [`docs/samples/`](samples/README.md). For unit tests, import `createWorkforceFixture()` from `backend/data/fixture.js` rather than touching SQLite — it returns a fresh deep copy each call, and the test suite fails if its shape drifts from this contract.
+
 ## GET /api/keystone/workforce
 
 Returns `{schemaVersion:1, employees, skills, roles, resources, futureRequirements, matrix}`.

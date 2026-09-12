@@ -1,0 +1,1503 @@
+{
+  "schemaVersion": 1,
+  "employees": [
+    {
+      "id": 16,
+      "name": "Abigail Lewis",
+      "role": "People Manager",
+      "department": "People Ops",
+      "mentoringAvailable": true
+    },
+    {
+      "id": 10,
+      "name": "Amelia Diaz",
+      "role": "Frontend Engineer",
+      "department": "Engineering",
+      "mentoringAvailable": true
+    },
+    {
+      "id": 1,
+      "name": "Ava Patel",
+      "role": "Frontend Engineer",
+      "department": "Engineering",
+      "mentoringAvailable": true
+    },
+    {
+      "id": 13,
+      "name": "Benjamin Hall",
+      "role": "QA Engineer",
+      "department": "Engineering",
+      "mentoringAvailable": true
+    },
+    {
+      "id": 19,
+      "name": "Daniel Young",
+      "role": "Support Engineer",
+      "department": "Customer Success",
+      "mentoringAvailable": true
+    },
+    {
+      "id": 18,
+      "name": "Ella Walker",
+      "role": "Technical Writer",
+      "department": "Operations",
+      "mentoringAvailable": true
+    },
+    {
+      "id": 5,
+      "name": "Ethan Brooks",
+      "role": "DevOps Engineer",
+      "department": "Platform",
+      "mentoringAvailable": true
+    },
+    {
+      "id": 14,
+      "name": "Evelyn Scott",
+      "role": "Business Analyst",
+      "department": "Operations",
+      "mentoringAvailable": true
+    },
+    {
+      "id": 20,
+      "name": "Grace King",
+      "role": "AI Specialist",
+      "department": "Innovation",
+      "mentoringAvailable": true
+    },
+    {
+      "id": 12,
+      "name": "Harper White",
+      "role": "Project Lead",
+      "department": "Operations",
+      "mentoringAvailable": true
+    },
+    {
+      "id": 15,
+      "name": "Henry Adams",
+      "role": "Cloud Engineer",
+      "department": "Platform",
+      "mentoringAvailable": true
+    },
+    {
+      "id": 8,
+      "name": "Isabella Ross",
+      "role": "Security Analyst",
+      "department": "Security",
+      "mentoringAvailable": true
+    },
+    {
+      "id": 17,
+      "name": "Jack Turner",
+      "role": "Solutions Architect",
+      "department": "Platform",
+      "mentoringAvailable": true
+    },
+    {
+      "id": 11,
+      "name": "James Carter",
+      "role": "Data Scientist",
+      "department": "Data",
+      "mentoringAvailable": true
+    },
+    {
+      "id": 2,
+      "name": "Liam Chen",
+      "role": "Backend Engineer",
+      "department": "Engineering",
+      "mentoringAvailable": true
+    },
+    {
+      "id": 7,
+      "name": "Lucas Kim",
+      "role": "UX Designer",
+      "department": "Design",
+      "mentoringAvailable": true
+    },
+    {
+      "id": 9,
+      "name": "Mason Green",
+      "role": "Backend Engineer",
+      "department": "Engineering",
+      "mentoringAvailable": true
+    },
+    {
+      "id": 4,
+      "name": "Mia Thompson",
+      "role": "Product Manager",
+      "department": "Product",
+      "mentoringAvailable": true
+    },
+    {
+      "id": 3,
+      "name": "Noah Rivera",
+      "role": "Data Analyst",
+      "department": "Data",
+      "mentoringAvailable": true
+    },
+    {
+      "id": 6,
+      "name": "Sophia Nguyen",
+      "role": "QA Engineer",
+      "department": "Engineering",
+      "mentoringAvailable": true
+    }
+  ],
+  "skills": [
+    {
+      "id": 15,
+      "name": "AI Governance",
+      "criticality": 3,
+      "targetProficiency": 3,
+      "requiredHolders": 6,
+      "demandTarget": 6,
+      "metadataSource": "fictional demo default"
+    },
+    {
+      "id": 9,
+      "name": "Cloud Architecture",
+      "criticality": 3,
+      "targetProficiency": 3,
+      "requiredHolders": 10,
+      "demandTarget": 10,
+      "metadataSource": "fictional demo default"
+    },
+    {
+      "id": 12,
+      "name": "Communication",
+      "criticality": 3,
+      "targetProficiency": 3,
+      "requiredHolders": 2,
+      "demandTarget": null,
+      "metadataSource": "fictional demo default"
+    },
+    {
+      "id": 10,
+      "name": "Cybersecurity",
+      "criticality": 3,
+      "targetProficiency": 3,
+      "requiredHolders": 5,
+      "demandTarget": 5,
+      "metadataSource": "fictional demo default"
+    },
+    {
+      "id": 5,
+      "name": "Data Analysis",
+      "criticality": 3,
+      "targetProficiency": 3,
+      "requiredHolders": 9,
+      "demandTarget": 9,
+      "metadataSource": "fictional demo default"
+    },
+    {
+      "id": 8,
+      "name": "DevOps",
+      "criticality": 3,
+      "targetProficiency": 3,
+      "requiredHolders": 2,
+      "demandTarget": null,
+      "metadataSource": "fictional demo default"
+    },
+    {
+      "id": 13,
+      "name": "Leadership",
+      "criticality": 3,
+      "targetProficiency": 3,
+      "requiredHolders": 8,
+      "demandTarget": 8,
+      "metadataSource": "fictional demo default"
+    },
+    {
+      "id": 16,
+      "name": "Legacy Billing Recovery",
+      "criticality": 5,
+      "targetProficiency": 3,
+      "requiredHolders": 2,
+      "demandTarget": null,
+      "metadataSource": "fictional demo default"
+    },
+    {
+      "id": 11,
+      "name": "Machine Learning",
+      "criticality": 3,
+      "targetProficiency": 3,
+      "requiredHolders": 7,
+      "demandTarget": 7,
+      "metadataSource": "fictional demo default"
+    },
+    {
+      "id": 2,
+      "name": "Node.js",
+      "criticality": 3,
+      "targetProficiency": 3,
+      "requiredHolders": 2,
+      "demandTarget": null,
+      "metadataSource": "fictional demo default"
+    },
+    {
+      "id": 6,
+      "name": "Project Management",
+      "criticality": 3,
+      "targetProficiency": 3,
+      "requiredHolders": 2,
+      "demandTarget": null,
+      "metadataSource": "fictional demo default"
+    },
+    {
+      "id": 4,
+      "name": "Python",
+      "criticality": 3,
+      "targetProficiency": 3,
+      "requiredHolders": 2,
+      "demandTarget": null,
+      "metadataSource": "fictional demo default"
+    },
+    {
+      "id": 1,
+      "name": "React",
+      "criticality": 3,
+      "targetProficiency": 3,
+      "requiredHolders": 2,
+      "demandTarget": null,
+      "metadataSource": "fictional demo default"
+    },
+    {
+      "id": 3,
+      "name": "SQLite",
+      "criticality": 3,
+      "targetProficiency": 3,
+      "requiredHolders": 2,
+      "demandTarget": null,
+      "metadataSource": "fictional demo default"
+    },
+    {
+      "id": 14,
+      "name": "Test Automation",
+      "criticality": 3,
+      "targetProficiency": 3,
+      "requiredHolders": 8,
+      "demandTarget": 8,
+      "metadataSource": "fictional demo default"
+    },
+    {
+      "id": 7,
+      "name": "UX Research",
+      "criticality": 3,
+      "targetProficiency": 3,
+      "requiredHolders": 2,
+      "demandTarget": null,
+      "metadataSource": "fictional demo default"
+    }
+  ],
+  "matrix": [
+    {
+      "employeeId": 1,
+      "skillId": 1,
+      "proficiency": 5,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 1,
+      "skillId": 2,
+      "proficiency": 3,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 1,
+      "skillId": 7,
+      "proficiency": 3,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 1,
+      "skillId": 12,
+      "proficiency": 4,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 1,
+      "skillId": 14,
+      "proficiency": 3,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 2,
+      "skillId": 2,
+      "proficiency": 5,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 2,
+      "skillId": 3,
+      "proficiency": 4,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 2,
+      "skillId": 9,
+      "proficiency": 3,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 2,
+      "skillId": 12,
+      "proficiency": 3,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 2,
+      "skillId": 14,
+      "proficiency": 4,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 2,
+      "skillId": 16,
+      "proficiency": 5,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 2,
+      "skillId": 13,
+      "proficiency": 2,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 3,
+      "skillId": 4,
+      "proficiency": 4,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 3,
+      "skillId": 5,
+      "proficiency": 5,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 3,
+      "skillId": 12,
+      "proficiency": 4,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 3,
+      "skillId": 6,
+      "proficiency": 2,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 3,
+      "skillId": 2,
+      "proficiency": 2,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 4,
+      "skillId": 6,
+      "proficiency": 5,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 4,
+      "skillId": 12,
+      "proficiency": 5,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 4,
+      "skillId": 13,
+      "proficiency": 4,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 4,
+      "skillId": 7,
+      "proficiency": 3,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 5,
+      "skillId": 8,
+      "proficiency": 5,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 5,
+      "skillId": 9,
+      "proficiency": 4,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 5,
+      "skillId": 2,
+      "proficiency": 3,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 5,
+      "skillId": 10,
+      "proficiency": 2,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 5,
+      "skillId": 12,
+      "proficiency": 3,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 6,
+      "skillId": 14,
+      "proficiency": 5,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 6,
+      "skillId": 12,
+      "proficiency": 4,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 6,
+      "skillId": 2,
+      "proficiency": 3,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 6,
+      "skillId": 1,
+      "proficiency": 2,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 7,
+      "skillId": 7,
+      "proficiency": 5,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 7,
+      "skillId": 12,
+      "proficiency": 4,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 7,
+      "skillId": 1,
+      "proficiency": 2,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 7,
+      "skillId": 6,
+      "proficiency": 2,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 7,
+      "skillId": 8,
+      "proficiency": 2,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 8,
+      "skillId": 10,
+      "proficiency": 5,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 8,
+      "skillId": 9,
+      "proficiency": 3,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 8,
+      "skillId": 12,
+      "proficiency": 3,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 8,
+      "skillId": 8,
+      "proficiency": 2,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 9,
+      "skillId": 2,
+      "proficiency": 5,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 9,
+      "skillId": 3,
+      "proficiency": 4,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 9,
+      "skillId": 9,
+      "proficiency": 3,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 9,
+      "skillId": 12,
+      "proficiency": 3,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 9,
+      "skillId": 14,
+      "proficiency": 4,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 9,
+      "skillId": 16,
+      "proficiency": 2,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 10,
+      "skillId": 1,
+      "proficiency": 5,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 10,
+      "skillId": 2,
+      "proficiency": 3,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 10,
+      "skillId": 7,
+      "proficiency": 3,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 10,
+      "skillId": 12,
+      "proficiency": 4,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 10,
+      "skillId": 14,
+      "proficiency": 3,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 11,
+      "skillId": 4,
+      "proficiency": 5,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 11,
+      "skillId": 11,
+      "proficiency": 5,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 11,
+      "skillId": 5,
+      "proficiency": 4,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 11,
+      "skillId": 12,
+      "proficiency": 3,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 12,
+      "skillId": 13,
+      "proficiency": 5,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 12,
+      "skillId": 6,
+      "proficiency": 5,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 12,
+      "skillId": 12,
+      "proficiency": 5,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 12,
+      "skillId": 5,
+      "proficiency": 2,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 12,
+      "skillId": 1,
+      "proficiency": 2,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 12,
+      "skillId": 8,
+      "proficiency": 2,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 13,
+      "skillId": 14,
+      "proficiency": 5,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 13,
+      "skillId": 12,
+      "proficiency": 4,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 13,
+      "skillId": 2,
+      "proficiency": 3,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 13,
+      "skillId": 1,
+      "proficiency": 2,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 13,
+      "skillId": 13,
+      "proficiency": 2,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 14,
+      "skillId": 5,
+      "proficiency": 4,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 14,
+      "skillId": 12,
+      "proficiency": 5,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 14,
+      "skillId": 6,
+      "proficiency": 3,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 14,
+      "skillId": 13,
+      "proficiency": 2,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 14,
+      "skillId": 2,
+      "proficiency": 2,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 15,
+      "skillId": 9,
+      "proficiency": 5,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 15,
+      "skillId": 8,
+      "proficiency": 4,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 15,
+      "skillId": 2,
+      "proficiency": 3,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 15,
+      "skillId": 10,
+      "proficiency": 2,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 15,
+      "skillId": 13,
+      "proficiency": 2,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 16,
+      "skillId": 13,
+      "proficiency": 5,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 16,
+      "skillId": 12,
+      "proficiency": 5,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 16,
+      "skillId": 6,
+      "proficiency": 3,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 16,
+      "skillId": 2,
+      "proficiency": 2,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 17,
+      "skillId": 9,
+      "proficiency": 5,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 17,
+      "skillId": 2,
+      "proficiency": 4,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 17,
+      "skillId": 13,
+      "proficiency": 3,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 17,
+      "skillId": 12,
+      "proficiency": 4,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 17,
+      "skillId": 3,
+      "proficiency": 3,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 18,
+      "skillId": 12,
+      "proficiency": 5,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 18,
+      "skillId": 13,
+      "proficiency": 2,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 18,
+      "skillId": 6,
+      "proficiency": 2,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 18,
+      "skillId": 4,
+      "proficiency": 2,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 19,
+      "skillId": 12,
+      "proficiency": 4,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 19,
+      "skillId": 2,
+      "proficiency": 3,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 19,
+      "skillId": 3,
+      "proficiency": 2,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 19,
+      "skillId": 6,
+      "proficiency": 2,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 19,
+      "skillId": 13,
+      "proficiency": 2,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 20,
+      "skillId": 4,
+      "proficiency": 5,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 20,
+      "skillId": 11,
+      "proficiency": 5,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 20,
+      "skillId": 15,
+      "proficiency": 2,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    },
+    {
+      "employeeId": 20,
+      "skillId": 12,
+      "proficiency": 3,
+      "evidenceSource": "fictional seed",
+      "lastVerifiedAt": null
+    }
+  ],
+  "roles": [
+    {
+      "id": 1,
+      "name": "AI Specialist",
+      "criticality": 3,
+      "metadataSource": "fictional demo default",
+      "incumbentIds": [
+        20
+      ],
+      "requirements": [
+        {
+          "skillId": 4,
+          "minimumProficiency": 5
+        },
+        {
+          "skillId": 11,
+          "minimumProficiency": 5
+        },
+        {
+          "skillId": 12,
+          "minimumProficiency": 3
+        },
+        {
+          "skillId": 15,
+          "minimumProficiency": 2
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Backend Engineer",
+      "criticality": 3,
+      "metadataSource": "fictional demo default",
+      "incumbentIds": [
+        2,
+        9
+      ],
+      "requirements": [
+        {
+          "skillId": 2,
+          "minimumProficiency": 5
+        },
+        {
+          "skillId": 3,
+          "minimumProficiency": 4
+        },
+        {
+          "skillId": 9,
+          "minimumProficiency": 3
+        },
+        {
+          "skillId": 12,
+          "minimumProficiency": 3
+        },
+        {
+          "skillId": 14,
+          "minimumProficiency": 4
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Business Analyst",
+      "criticality": 3,
+      "metadataSource": "fictional demo default",
+      "incumbentIds": [
+        14
+      ],
+      "requirements": [
+        {
+          "skillId": 5,
+          "minimumProficiency": 4
+        },
+        {
+          "skillId": 6,
+          "minimumProficiency": 3
+        },
+        {
+          "skillId": 12,
+          "minimumProficiency": 5
+        },
+        {
+          "skillId": 13,
+          "minimumProficiency": 2
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Cloud Engineer",
+      "criticality": 3,
+      "metadataSource": "fictional demo default",
+      "incumbentIds": [
+        15
+      ],
+      "requirements": [
+        {
+          "skillId": 2,
+          "minimumProficiency": 3
+        },
+        {
+          "skillId": 8,
+          "minimumProficiency": 4
+        },
+        {
+          "skillId": 9,
+          "minimumProficiency": 5
+        },
+        {
+          "skillId": 10,
+          "minimumProficiency": 2
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Data Analyst",
+      "criticality": 3,
+      "metadataSource": "fictional demo default",
+      "incumbentIds": [
+        3
+      ],
+      "requirements": [
+        {
+          "skillId": 4,
+          "minimumProficiency": 4
+        },
+        {
+          "skillId": 5,
+          "minimumProficiency": 5
+        },
+        {
+          "skillId": 6,
+          "minimumProficiency": 2
+        },
+        {
+          "skillId": 12,
+          "minimumProficiency": 4
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Data Scientist",
+      "criticality": 3,
+      "metadataSource": "fictional demo default",
+      "incumbentIds": [
+        11
+      ],
+      "requirements": [
+        {
+          "skillId": 4,
+          "minimumProficiency": 5
+        },
+        {
+          "skillId": 5,
+          "minimumProficiency": 4
+        },
+        {
+          "skillId": 11,
+          "minimumProficiency": 5
+        },
+        {
+          "skillId": 12,
+          "minimumProficiency": 3
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "DevOps Engineer",
+      "criticality": 3,
+      "metadataSource": "fictional demo default",
+      "incumbentIds": [
+        5
+      ],
+      "requirements": [
+        {
+          "skillId": 2,
+          "minimumProficiency": 3
+        },
+        {
+          "skillId": 8,
+          "minimumProficiency": 5
+        },
+        {
+          "skillId": 9,
+          "minimumProficiency": 4
+        },
+        {
+          "skillId": 10,
+          "minimumProficiency": 2
+        },
+        {
+          "skillId": 12,
+          "minimumProficiency": 3
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Frontend Engineer",
+      "criticality": 3,
+      "metadataSource": "fictional demo default",
+      "incumbentIds": [
+        10,
+        1
+      ],
+      "requirements": [
+        {
+          "skillId": 1,
+          "minimumProficiency": 5
+        },
+        {
+          "skillId": 2,
+          "minimumProficiency": 3
+        },
+        {
+          "skillId": 7,
+          "minimumProficiency": 3
+        },
+        {
+          "skillId": 12,
+          "minimumProficiency": 4
+        },
+        {
+          "skillId": 14,
+          "minimumProficiency": 3
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "People Manager",
+      "criticality": 3,
+      "metadataSource": "fictional demo default",
+      "incumbentIds": [
+        16
+      ],
+      "requirements": [
+        {
+          "skillId": 6,
+          "minimumProficiency": 3
+        },
+        {
+          "skillId": 12,
+          "minimumProficiency": 5
+        },
+        {
+          "skillId": 13,
+          "minimumProficiency": 5
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Product Manager",
+      "criticality": 3,
+      "metadataSource": "fictional demo default",
+      "incumbentIds": [
+        4
+      ],
+      "requirements": [
+        {
+          "skillId": 6,
+          "minimumProficiency": 5
+        },
+        {
+          "skillId": 7,
+          "minimumProficiency": 3
+        },
+        {
+          "skillId": 12,
+          "minimumProficiency": 5
+        },
+        {
+          "skillId": 13,
+          "minimumProficiency": 4
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Project Lead",
+      "criticality": 3,
+      "metadataSource": "fictional demo default",
+      "incumbentIds": [
+        12
+      ],
+      "requirements": [
+        {
+          "skillId": 5,
+          "minimumProficiency": 2
+        },
+        {
+          "skillId": 6,
+          "minimumProficiency": 5
+        },
+        {
+          "skillId": 12,
+          "minimumProficiency": 5
+        },
+        {
+          "skillId": 13,
+          "minimumProficiency": 5
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "QA Engineer",
+      "criticality": 3,
+      "metadataSource": "fictional demo default",
+      "incumbentIds": [
+        13,
+        6
+      ],
+      "requirements": [
+        {
+          "skillId": 1,
+          "minimumProficiency": 2
+        },
+        {
+          "skillId": 2,
+          "minimumProficiency": 3
+        },
+        {
+          "skillId": 12,
+          "minimumProficiency": 4
+        },
+        {
+          "skillId": 14,
+          "minimumProficiency": 5
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Security Analyst",
+      "criticality": 3,
+      "metadataSource": "fictional demo default",
+      "incumbentIds": [
+        8
+      ],
+      "requirements": [
+        {
+          "skillId": 8,
+          "minimumProficiency": 2
+        },
+        {
+          "skillId": 9,
+          "minimumProficiency": 3
+        },
+        {
+          "skillId": 10,
+          "minimumProficiency": 5
+        },
+        {
+          "skillId": 12,
+          "minimumProficiency": 3
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "Solutions Architect",
+      "criticality": 3,
+      "metadataSource": "fictional demo default",
+      "incumbentIds": [
+        17
+      ],
+      "requirements": [
+        {
+          "skillId": 2,
+          "minimumProficiency": 4
+        },
+        {
+          "skillId": 3,
+          "minimumProficiency": 3
+        },
+        {
+          "skillId": 9,
+          "minimumProficiency": 5
+        },
+        {
+          "skillId": 12,
+          "minimumProficiency": 4
+        },
+        {
+          "skillId": 13,
+          "minimumProficiency": 3
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "name": "Support Engineer",
+      "criticality": 3,
+      "metadataSource": "fictional demo default",
+      "incumbentIds": [
+        19
+      ],
+      "requirements": [
+        {
+          "skillId": 2,
+          "minimumProficiency": 3
+        },
+        {
+          "skillId": 3,
+          "minimumProficiency": 2
+        },
+        {
+          "skillId": 6,
+          "minimumProficiency": 2
+        },
+        {
+          "skillId": 12,
+          "minimumProficiency": 4
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "name": "Technical Writer",
+      "criticality": 3,
+      "metadataSource": "fictional demo default",
+      "incumbentIds": [
+        18
+      ],
+      "requirements": [
+        {
+          "skillId": 6,
+          "minimumProficiency": 2
+        },
+        {
+          "skillId": 12,
+          "minimumProficiency": 5
+        },
+        {
+          "skillId": 13,
+          "minimumProficiency": 2
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "name": "UX Designer",
+      "criticality": 3,
+      "metadataSource": "fictional demo default",
+      "incumbentIds": [
+        7
+      ],
+      "requirements": [
+        {
+          "skillId": 1,
+          "minimumProficiency": 2
+        },
+        {
+          "skillId": 6,
+          "minimumProficiency": 2
+        },
+        {
+          "skillId": 7,
+          "minimumProficiency": 5
+        },
+        {
+          "skillId": 12,
+          "minimumProficiency": 4
+        }
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "id": 5,
+      "skillId": null,
+      "title": "Runbook and documentation walkthrough",
+      "kind": "documentation",
+      "url": null,
+      "verified": false,
+      "provenance": "fictional demo entry"
+    },
+    {
+      "id": 4,
+      "skillId": null,
+      "title": "Rotation into an owning team",
+      "kind": "job_rotation",
+      "url": null,
+      "verified": false,
+      "provenance": "fictional demo entry"
+    },
+    {
+      "id": 1,
+      "skillId": null,
+      "title": "Internal mentoring pairing",
+      "kind": "mentoring",
+      "url": null,
+      "verified": false,
+      "provenance": "fictional demo entry"
+    },
+    {
+      "id": 3,
+      "skillId": null,
+      "title": "Paired delivery on a live project",
+      "kind": "project_experience",
+      "url": null,
+      "verified": false,
+      "provenance": "fictional demo entry"
+    },
+    {
+      "id": 2,
+      "skillId": null,
+      "title": "Internal workshop series",
+      "kind": "training",
+      "url": null,
+      "verified": false,
+      "provenance": "fictional demo entry"
+    }
+  ],
+  "futureRequirements": [
+    {
+      "id": 1,
+      "skillId": 16,
+      "skillName": "Legacy Billing Recovery",
+      "requiredHolders": 3,
+      "targetProficiency": 3,
+      "effectiveMonth": 12,
+      "status": "proposed",
+      "provenance": "fictional demo entry"
+    }
+  ]
+}

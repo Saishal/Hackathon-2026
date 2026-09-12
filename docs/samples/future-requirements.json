@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "skillId": 16,
+    "skillName": "Legacy Billing Recovery",
+    "requiredHolders": 3,
+    "targetProficiency": 3,
+    "effectiveMonth": 12,
+    "status": "proposed",
+    "provenance": "fictional demo entry"
+  }
+]

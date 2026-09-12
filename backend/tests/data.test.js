@@ -285,6 +285,33 @@ test('future requirements validate and default to proposed', async () => {
   assert.equal(stored.status, 'proposed');
 });
 
+test('fixture matches the live snapshot shape so it cannot drift silently', async () => {
+  await ready;
+  const live = await data.loadWorkforce();
+  const fixture = data.createWorkforceFixture();
+  const keys = (value) => Object.keys(value).sort();
+
+  assert.deepEqual(keys(fixture), keys(live));
+
+  for (const section of ['employees', 'skills', 'roles', 'resources', 'matrix']) {
+    assert.ok(fixture[section].length > 0, `fixture ${section} is empty`);
+    assert.deepEqual(keys(fixture[section][0]), keys(live[section][0]), `${section} shape drifted`);
+  }
+});
+
+test('fixture is independent between calls and drives the demo story', async () => {
+  const { analyze } = require('../services/risk');
+  const first = data.createWorkforceFixture();
+  first.skills[0].criticality = 1;
+
+  assert.equal(data.createWorkforceFixture().skills[0].criticality, 5);
+
+  const billing = analyze(data.createWorkforceFixture()).skills.find((skill) => skill.id === 1);
+  assert.equal(billing.busFactor, 1);
+  assert.deepEqual(billing.holderIds, [1]);
+  assert.equal(billing.gap, 1);
+});
+
 test('re-running initialization preserves existing rows', async () => {
   await ready;
   const before = await data.getHeatmapData();
