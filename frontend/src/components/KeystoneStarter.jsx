@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { keystoneApi } from '../api/keystone';
 import AIWorkbench from './AIWorkbench';
 import KeystonePeople from './KeystonePeople';
+import SkillNetwork from './SkillNetwork';
 import TimeMachine from './TimeMachine';
 import WorkforceSnapshot from './WorkforceSnapshot';
 // Vendored from Member 1's docs/samples (frontend/src/data/). Used ONLY when
@@ -11,7 +12,7 @@ import demoWorkforce from '../data/workforce.json';
 import demoRisks from '../data/risks.json';
 import demoFutureRequirements from '../data/future-requirements.json';
 
-// view: 'overview' | 'people' | 'timemachine' | 'ai' | 'data'
+// view: 'overview' | 'people' | 'network' | 'timemachine' | 'ai' | 'data'
 // The dashboard shell (App.jsx) owns navigation; this component owns the data
 // and renders the section for the active view.
 export default function KeystoneStarter({ view = 'overview', embedded = false }) {
@@ -19,6 +20,9 @@ export default function KeystoneStarter({ view = 'overview', embedded = false })
   const [risks, setRisks] = useState(null);
   const [demoMode, setDemoMode] = useState(false);
   const [error, setError] = useState('');
+  // Planned development lives here rather than in TimeMachine so actions scheduled from the
+  // AI advisor are still there after switching to the Time Machine view.
+  const [interventions, setInterventions] = useState([]);
   // Reloads after the AI workbench saves reviewed requirements, so Time Machine and the
   // snapshot see the new stable skill IDs without a page refresh.
   async function refresh() {
@@ -48,6 +52,9 @@ export default function KeystoneStarter({ view = 'overview', embedded = false })
     <ul>{(concentrated.length ? concentrated : risks.skills.slice(0, 3)).map((skill) => <li key={skill.id}><strong>{skill.name}</strong> — Bus Factor {skill.busFactor}, Keystone Score {skill.keystoneScore}/100. {skill.explanation}</li>)}</ul>
   </>;
   const onRequirementsSaved = demoMode ? undefined : refresh;
+  const schedule = (item) => setInterventions((current) => [...current, item]);
+  const timeMachine = <TimeMachine workforce={workforce} interventions={interventions} onInterventionsChange={setInterventions} />;
+  const workbench = <AIWorkbench workforce={workforce} onRequirementsSaved={onRequirementsSaved} onSchedule={schedule} />;
 
   if (embedded) {
     return (
@@ -58,8 +65,9 @@ export default function KeystoneStarter({ view = 'overview', embedded = false })
         {!demoMode && error && <p role="alert">{error}</p>}
         {view === 'overview' && summary}
         {view === 'people' && <KeystonePeople />}
-        {view === 'timemachine' && <TimeMachine workforce={workforce} />}
-        {view === 'ai' && <AIWorkbench workforce={workforce} onRequirementsSaved={onRequirementsSaved} />}
+        {view === 'network' && <SkillNetwork workforce={workforce} risks={risks} />}
+        {view === 'timemachine' && timeMachine}
+        {view === 'ai' && workbench}
         {view === 'data' && workforce && <WorkforceSnapshot workforce={workforce} fallbackRequirements={demoMode ? demoFutureRequirements : null} />}
       </div>
     );
@@ -73,7 +81,8 @@ export default function KeystoneStarter({ view = 'overview', embedded = false })
     {summary}
     <WorkforceSnapshot workforce={workforce} fallbackRequirements={demoMode ? demoFutureRequirements : null} />
     <KeystonePeople />
-    <TimeMachine workforce={workforce} />
-    <AIWorkbench workforce={workforce} onRequirementsSaved={onRequirementsSaved} />
+    <SkillNetwork workforce={workforce} risks={risks} />
+    {timeMachine}
+    {workbench}
   </section>;
 }

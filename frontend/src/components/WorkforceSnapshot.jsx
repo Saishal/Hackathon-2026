@@ -19,6 +19,7 @@ const dash = (value) => (value === null || value === undefined || value === '' ?
 export default function WorkforceSnapshot({ workforce, fallbackRequirements = null }) {
   const [futureRequirements, setFutureRequirements] = useState(null);
   const [reqError, setReqError] = useState('');
+  const [query, setQuery] = useState('');
 
   useEffect(() => {
     let active = true;
@@ -38,6 +39,13 @@ export default function WorkforceSnapshot({ workforce, fallbackRequirements = nu
   const employeeName = (id) => employees.find((e) => e.id === id)?.name ?? `Employee ${id}`;
   const skillName = (id) => skills.find((s) => s.id === id)?.name ?? `Skill ${id}`;
 
+  // One search filters the inventory tables (skills, people, evidence) by any visible name.
+  const needle = query.trim().toLowerCase();
+  const matches = (...values) => !needle || values.some((value) => String(value ?? '').toLowerCase().includes(needle));
+  const shownSkills = skills.filter((skill) => matches(skill.name));
+  const shownEmployees = employees.filter((employee) => matches(employee.name, employee.role, employee.department));
+  const shownMatrix = matrix.filter((edge) => matches(employeeName(edge.employeeId), skillName(edge.skillId), edge.evidenceSource));
+
   return (
     <div className="snapshot">
       <h3>Workforce snapshot</h3>
@@ -45,6 +53,16 @@ export default function WorkforceSnapshot({ workforce, fallbackRequirements = nu
         Coverage requirement (<code>requiredHolders</code>) and legacy hiring demand (<code>demandTarget</code>) are
         reported separately — a skill can need coverage with zero hiring demand.
       </p>
+
+      <form className="search" role="search" onSubmit={(event) => event.preventDefault()}>
+        <label>Search the inventory
+          <input type="search" value={query} onChange={(event) => setQuery(event.target.value)}
+            placeholder="Person, role, department, skill or evidence" />
+        </label>
+      </form>
+      {needle && <p className="hint" role="status">
+        Showing {shownSkills.length} of {skills.length} skills, {shownEmployees.length} of {employees.length} people and {shownMatrix.length} of {matrix.length} evidence records.
+      </p>}
 
       <div className="table-wrap compact">
         <table>
@@ -55,7 +73,7 @@ export default function WorkforceSnapshot({ workforce, fallbackRequirements = nu
             </tr>
           </thead>
           <tbody>
-            {skills.map((skill) => (
+            {shownSkills.map((skill) => (
               <tr key={skill.id}>
                 <th scope="row">{skill.name}</th>
                 <td>{dash(skill.criticality)}</td>
@@ -144,7 +162,7 @@ export default function WorkforceSnapshot({ workforce, fallbackRequirements = nu
         <table>
           <thead><tr><th>Person</th><th>Role</th><th>Department</th><th>Mentoring hrs/month</th></tr></thead>
           <tbody>
-            {employees.map((employee) => (
+            {shownEmployees.map((employee) => (
               <tr key={employee.id}>
                 <th scope="row">{employee.name}</th>
                 <td>{dash(employee.role)}</td>
@@ -162,7 +180,7 @@ export default function WorkforceSnapshot({ workforce, fallbackRequirements = nu
         <table>
           <thead><tr><th>Person</th><th>Skill</th><th>Proficiency</th><th>Evidence source</th><th>Last verified</th></tr></thead>
           <tbody>
-            {matrix.map((edge) => (
+            {shownMatrix.map((edge) => (
               <tr key={`${edge.employeeId}-${edge.skillId}`}>
                 <th scope="row">{employeeName(edge.employeeId)}</th>
                 <td>{skillName(edge.skillId)}</td>

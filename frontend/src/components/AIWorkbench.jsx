@@ -4,9 +4,25 @@ import { keystoneApi } from '../api/keystone';
 const labels = { training: 'Training', mentoring: 'Mentoring', certification: 'Certification', job_rotation: 'Job rotation', project_experience: 'Project experience' };
 const editableRequirements = (requirements) => requirements.map(({ requirementId: _id, coverage: _coverage, ...requirement }) => requirement);
 
-export default function AIWorkbench({ workforce, onRequirementsSaved }) {
+// A reviewed action becomes planned development in Time Machine, not completed training:
+// it is scheduled as unverified, so projected coverage only changes once someone marks the
+// outcome verified there.
+const toIntervention = (action) => ({
+  employeeId: action.employeeId,
+  skillId: action.skillId,
+  mentorId: action.mentorId,
+  startMonth: 0,
+  completionMonth: Math.min(60, action.estimatedDurationMonths ?? 6),
+  targetProficiency: action.targetProficiency,
+  assumeVerified: false,
+  source: labels[action.category],
+});
+
+export default function AIWorkbench({ workforce, onRequirementsSaved, onSchedule }) {
   const [skillId, setSkillId] = useState('');
   const [plan, setPlan] = useState(null);
+  const [reviewedActions, setReviewedActions] = useState(new Set());
+  const [scheduledActions, setScheduledActions] = useState(new Set());
   const [direction, setDirection] = useState('');
   const [proposal, setProposal] = useState(null);
   const [draft, setDraft] = useState([]);
@@ -19,6 +35,20 @@ export default function AIWorkbench({ workforce, onRequirementsSaved }) {
   async function run(action) {
     setBusy(true); setError('');
     try { await action(); } catch (err) { setError(err.message); } finally { setBusy(false); }
+  }
+  function clearPlan() {
+    setPlan(null); setReviewedActions(new Set()); setScheduledActions(new Set());
+  }
+  function toggleReviewed(id, checked) {
+    setReviewedActions((current) => {
+      const next = new Set(current);
+      if (checked) next.add(id); else next.delete(id);
+      return next;
+    });
+  }
+  function schedule(action) {
+    onSchedule(toIntervention(action));
+    setScheduledActions((current) => new Set(current).add(action.id));
   }
   function update(index, field, value) {
     setDraft((current) => current.map((item, i) => i === index ? { ...item, [field]: Number(value) } : item));
@@ -49,14 +79,17 @@ export default function AIWorkbench({ workforce, onRequirementsSaved }) {
     <h3>Development advisor</h3>
     <p>Generate reviewable actions for a skill. Without provider configuration, this uses labeled demo rules.</p>
     {error && <p role="alert" className="error">{error}</p>}
-    <form onSubmit={(event) => { event.preventDefault(); setPlan(null); run(async () => setPlan(await keystoneApi.developmentPlan(Number(skillId)))); }}>
-      <label>Skill to develop <select disabled={busy} value={skillId} onChange={(event) => { setSkillId(event.target.value); setPlan(null); }}>
+    <form onSubmit={(event) => { event.preventDefault(); clearPlan(); run(async () => setPlan(await keystoneApi.developmentPlan(Number(skillId)))); }}>
+      <label>Skill to develop <select disabled={busy} value={skillId} onChange={(event) => { setSkillId(event.target.value); clearPlan(); }}>
         <option value="">Select a skill</option>
         {workforce?.skills.map((skill) => <option key={skill.id} value={skill.id}>{skill.name}</option>)}
       </select></label>{' '}<button disabled={busy || !skillId}>Generate development plan</button>
     </form>
     {plan && <div aria-live="polite">
       <p><strong>{plan.mode === 'live-ai' ? 'AI draft' : 'Demo fallback'}</strong> · {plan.message}</p>
+      {onSchedule && scheduledActions.size > 0 && <p role="status">
+        Scheduled {scheduledActions.size} action(s) in Time Machine as unverified: they change projected coverage only after you mark the outcome verified there.
+      </p>}
       <div className="two-col">{plan.actions.map((action) => <article className="panel" key={action.id}>
         <h4>{labels[action.category]} · {action.status.replaceAll('_', ' ')}</h4>
         <p>{action.rationale}</p><p>{action.action}</p>
@@ -66,6 +99,13 @@ export default function AIWorkbench({ workforce, onRequirementsSaved }) {
         <p><strong>Milestone:</strong> {action.milestone}</p>
         <p><strong>Verification:</strong> {action.verificationMethod}</p>
         <details><summary>Assumptions</summary><ul>{action.assumptions.map((assumption, i) => <li key={i}>{assumption}</li>)}</ul></details>
+        {onSchedule && action.status !== 'not_applicable' && action.employeeId !== null && <div className="schedule-row">
+          <label><input type="checkbox" disabled={scheduledActions.has(action.id)} checked={reviewedActions.has(action.id)}
+            onChange={(event) => toggleReviewed(action.id, event.target.checked)} /> I reviewed this action</label>
+          <button type="button" disabled={!reviewedActions.has(action.id) || scheduledActions.has(action.id)} onClick={() => schedule(action)}>
+            {scheduledActions.has(action.id) ? 'Scheduled in Time Machine' : 'Schedule in Time Machine'}
+          </button>
+        </div>}
       </article>)}</div>
     </div>}
     <h3>Future strategy</h3>
