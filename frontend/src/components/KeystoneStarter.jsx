@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { keystoneApi } from '../api/keystone';
 import AIWorkbench from './AIWorkbench';
+import KeystonePeople from './KeystonePeople';
 
 export default function KeystoneStarter() {
   const [workforce, setWorkforce] = useState(null);
@@ -29,6 +30,7 @@ export default function KeystoneStarter() {
       <p><strong>{risks.singleHolder}</strong> single-holder skills · <strong>{risks.uncovered}</strong> skills without recorded independent coverage</p>
       <ul>{risks.skills.slice(0, 3).map((skill) => <li key={skill.id}><strong>{skill.name}</strong> — Bus Factor {skill.busFactor}, Keystone Score {skill.keystoneScore}/100. {skill.explanation}</li>)}</ul>
     </>}
+    <KeystonePeople />
     <h3>Time Machine — starter</h3>
     <label>Simulated departure at month 1 <select value={employeeId} onChange={(event) => setEmployeeId(event.target.value)}>
       <option value="">No departure</option>

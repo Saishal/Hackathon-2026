@@ -20,6 +20,20 @@ Bus Factor = recorded holders meeting targetProficiency. gap = max(0,requiredHol
 
 score = round(100 * criticality/5 * (0.6/max(1,busFactor) + 0.4*gap/requiredHolders)). This is a demo prioritization heuristic, not a probability.
 
+## GET /api/keystone/employee-risks
+
+Returns `{employees, soleCoverageHolders, methodology}`. Additive; `analyze(workforce)` and `GET /risks` are unchanged.
+
+Each employee: `{id,name,role,department,keystoneScore,capped,recordedSkills,newlyUncovered,affectedSkills,explanation}`, sorted by score then id.
+
+score = min(100, round(100 * Σ over affected skills of `criticality/5 * (0.6*becomesUncovered + 0.4*(gapAfter-gapBefore)/requiredHolders)`)). An affected skill is one where this person is a recorded holder at or above target, so removing them lowers its Bus Factor. The sum means sole coverage of several critical skills scores higher than one; `capped` is true if the uncapped value exceeded 100. Same 0.6/0.4 weighting as the skill score so the two read consistently.
+
+Each entry in `affectedSkills` carries `{id,name,criticality,targetProficiency,requiredHolders,busFactorBefore,busFactorAfter,gapBefore,gapAfter,becomesUncovered,successors}`.
+
+`successors` lists up to three other employees with recorded proficiency in that skill, ranked by proficiency, each `{employeeId,name,proficiency,shortfall,status}` where status is `ready` (already at target without this person) or `developable`. **Member 1's role requirements do not exist yet, so matching uses recorded skill evidence as a stand-in.** An empty `successors` array means no evidence on file — never proof that nobody else is capable.
+
+This scores organizational dependency on a person. It is not a prediction that anyone will leave, and it must not be presented as one.
+
 ## POST /api/keystone/simulate
 
 ```json
