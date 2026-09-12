@@ -10,6 +10,7 @@ async function request(path, body, method = 'POST') {
 export const keystoneApi = {
   workforce: () => request('/workforce'), risks: () => request('/risks'),
   employeeRisks: () => request('/employee-risks'),
+  succession: () => request('/succession'),
   simulate: (scenario) => request('/simulate', scenario),
   developmentPlan: (skillId) => request('/development-plan', { skillId }),
   strategy: (direction) => request('/strategy', { direction }),

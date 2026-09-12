@@ -1,5 +1,31 @@
 # Member 3 Sync Log
 
+## 2026-09-12 (15:06 CDT, fifth run)
+
+**(a) What teammates changed**
+
+- `origin/main`, `feature/workforce-data`, `feature/ai-recommendations` unchanged; merge was a no-op.
+- **New branch `integrate/parts-2-4-data`** (Members 2+4 integration, head `0c0df44`) merges the persisted data layer with the risk/AI fixes and evolves the contract in `docs/API.md`:
+  - **Renamed field (breaking):** `employee-risks` → `affectedSkills[].successors` is now `skillBackups`; employee-level `successors` is a separate role-based comparison with statuses `ready` / `developable` / `evidence_missing` / `unknown` plus `metCount`/`requirementCount`/`unknownCount`.
+  - **New endpoint:** `GET /api/keystone/succession` (role-level succession readiness from `roles[].requirements`).
+  - `simulate` now auto-loads saved **reviewed** future requirements when the request omits `requirements`, and returns `requirementsSource`; `future-requirements` rows include `criticality`, and POST assigns stable positive IDs to new skills.
+  - The integration branch also contains its own frontend adaptations (it touched `frontend/src/api/keystone.js`, `AIWorkbench.jsx`, `KeystonePeople.jsx`, `KeystoneStarter.jsx`, `TimeMachine.jsx`).
+
+**(b) What I adapted**
+
+- `frontend/src/api/keystone.js`: added `succession()` wrapper (the rest of the client had already converged with theirs).
+- `KeystonePeople.jsx` + `AIWorkbench.jsx`: adopted the integration branch's versions verbatim (skillBackups rename, role-level successor readiness block, "Save reviewed requirements" flow with stable IDs) to avoid merge conflicts when their branch lands on main.
+- `TimeMachine.jsx`: applied their hunks onto our version — union-of-skills comparison (covers new skills that only exist under future requirements), `requirementsApplied` section, updated intro copy — while keeping our mentoring-capacity labels in the mentor picker.
+- `KeystoneStarter.jsx`: added their `refresh()` and `onRequirementsSaved` wiring; a successful refresh also clears the DEMO DATA banner.
+- Re-vendored `frontend/src/data/workforce.json` and `future-requirements.json` from their updated `docs/samples` (future requirements now carry `criticality`).
+- Invariants re-verified: unknowns render as dashes, no score recomputation in the frontend, no secrets, demo/offline fallback stays labeled.
+- Build: `npm.cmd run build` passes (vite, 27 modules, no errors).
+- Safety: backup tag `backup/pre-sync-20260912-1506` created at the pushed HEAD and pushed to origin.
+
+**(c) Group chat message**
+
+> Member 3 sync ✅ Saw the new integrate/parts-2-4-data branch — nice work @Member2 @Member4! I've adapted our frontend to match: Keystone People now uses the renamed `skillBackups` field and shows role-level successor readiness, Time Machine lists future requirements as they come into effect, the strategy workbench can save reviewed requirements (stable IDs!), and I added the `succession()` API wrapper. Build is green and pushed. ⚠️ Heads up: this UI now expects the integrated backend — running it against old main will break the People panel until your branch merges. Want me to open the PR for feature/keystone-ui once integrate lands? 🚀
+
 ## 2026-09-12 (15:01 CDT, fourth run)
 
 **(a) What teammates changed**

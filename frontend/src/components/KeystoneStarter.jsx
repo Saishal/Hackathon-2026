@@ -16,6 +16,10 @@ export default function KeystoneStarter() {
   const [risks, setRisks] = useState(null);
   const [demoMode, setDemoMode] = useState(false);
   const [error, setError] = useState('');
+  async function refresh() {
+    const [data, analysis] = await Promise.all([keystoneApi.workforce(), keystoneApi.risks()]);
+    setWorkforce(data); setRisks(analysis); setDemoMode(false);
+  }
   useEffect(() => {
     let active = true;
     Promise.all([keystoneApi.workforce(), keystoneApi.risks()]).then(([data, analysis]) => {
@@ -44,6 +48,6 @@ export default function KeystoneStarter() {
     {workforce && <WorkforceSnapshot workforce={workforce} fallbackRequirements={demoMode ? demoFutureRequirements : null} />}
     <KeystonePeople />
     <TimeMachine workforce={workforce} />
-    <AIWorkbench workforce={workforce} />
+    <AIWorkbench workforce={workforce} onRequirementsSaved={refresh} />
   </section>;
 }

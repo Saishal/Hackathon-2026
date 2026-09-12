@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { keystoneApi } from '../api/keystone';
 
-const statusLabel = { ready: 'ready now', developable: 'needs development' };
+const statusLabel = { ready: 'ready now', developable: 'needs development', evidence_missing: 'evidence missing', unknown: 'requirements missing' };
 
 export default function KeystonePeople() {
   const [data, setData] = useState(null);
@@ -33,13 +33,22 @@ export default function KeystonePeople() {
           {openId === employee.id ? 'Hide affected skills' : `Show ${employee.recordedSkills} affected skill(s)`}
         </button>
         {openId === employee.id && <ul>
+          {employee.successionRole && <li>
+            <strong>Successor readiness for {employee.successionRole.name}</strong>
+            {employee.successors.length === 0
+              ? <div>No role candidate evidence is available.</div>
+              : <ul>{employee.successors.map((candidate) => <li key={candidate.employeeId}>
+                {candidate.name} — {statusLabel[candidate.status]}, {candidate.metCount}/{candidate.requirementCount} requirements met
+                {candidate.unknownCount > 0 ? ` · ${candidate.unknownCount} without recorded evidence` : ''}
+              </li>)}</ul>}
+          </li>}
           {employee.affectedSkills.map((skill) => <li key={skill.id}>
             <strong>{skill.name}</strong> — recorded holders {skill.busFactorBefore} → {skill.busFactorAfter}, gap {skill.gapBefore} → {skill.gapAfter}
             {skill.becomesUncovered ? <span className="gap-positive"> · no recorded holder left</span> : ''}
             <div>
-              {skill.successors.length === 0
-                ? 'No successor evidence on file. That is missing evidence, not proof that nobody else is capable.'
-                : `Successors: ${skill.successors.map((candidate) => `${candidate.name} (${candidate.proficiency}/5, ${statusLabel[candidate.status]})`).join(' · ')}`}
+              {skill.skillBackups.length === 0
+                ? 'No backup evidence on file. That is missing evidence, not proof that nobody else is capable.'
+                : `Skill backups: ${skill.skillBackups.map((candidate) => `${candidate.name} (${candidate.proficiency}/5, ${candidate.status === 'ready' ? 'at target' : 'below target'})`).join(' · ')}`}
             </div>
           </li>)}
         </ul>}
