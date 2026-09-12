@@ -102,6 +102,53 @@ test('valid target updates persist and are read back', async () => {
   assert.equal(updated.targetPeople, target.targetPeople + 2);
 });
 
+test('every skill has a persisted requirements row', async () => {
+  await ready;
+  const snapshot = await data.getHeatmapData();
+  const [row] = await data.all('SELECT COUNT(*) AS count FROM skill_requirements');
+
+  assert.equal(row.count, snapshot.skills.length);
+});
+
+test('loadWorkforce serves criticality from the database, not hardcoded values', async () => {
+  await ready;
+  await data.run(
+    "UPDATE skill_requirements SET criticality = 1 WHERE skill_id = (SELECT id FROM skills WHERE name = 'Legacy Billing Recovery')",
+  );
+
+  const workforce = await data.loadWorkforce();
+  const billing = workforce.skills.find((skill) => skill.name === 'Legacy Billing Recovery');
+  assert.equal(billing.criticality, 1);
+
+  await data.run(
+    "UPDATE skill_requirements SET criticality = 5 WHERE skill_id = (SELECT id FROM skills WHERE name = 'Legacy Billing Recovery')",
+  );
+  const restored = await data.loadWorkforce();
+  assert.equal(restored.skills.find((skill) => skill.name === 'Legacy Billing Recovery').criticality, 5);
+});
+
+test('snapshot carries evidence and mentoring fields, with unknown dates left null', async () => {
+  await ready;
+  const workforce = await data.loadWorkforce();
+
+  assert.equal(workforce.schemaVersion, 1);
+  assert.ok(workforce.employees.every((employee) => typeof employee.mentoringAvailable === 'boolean'));
+  assert.ok(workforce.matrix.every((edge) => edge.evidenceSource === 'fictional seed'));
+  assert.ok(workforce.matrix.every((edge) => edge.lastVerifiedAt === null));
+});
+
+test('re-running initialization preserves existing rows', async () => {
+  await ready;
+  const before = await data.getHeatmapData();
+
+  await data.initializeDatabase();
+
+  const after = await data.getHeatmapData();
+  assert.equal(after.employees.length, before.employees.length);
+  assert.equal(after.skills.length, before.skills.length);
+  assert.equal(after.matrix.length, before.matrix.length);
+});
+
 test('gap analysis reflects a persisted target change', async () => {
   await ready;
   const targets = await data.getFutureSkillTargets();
