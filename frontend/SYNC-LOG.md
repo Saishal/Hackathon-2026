@@ -55,3 +55,22 @@
 **(c) Group chat message**
 
 > Hey team — Member 3 sync done ✅ Pulled latest main (no conflicts). @Member1 I saw the workforce-data contract updates — frontend API client now has wrappers for PUT /employee-skills and GET/POST /future-requirements, ready to wire into the UI once your branch merges to main. Everything additive so nothing broke; build is green. One thing I noted: `lastVerifiedAt` comes back null when verification is unknown — I'll render that as a dash per the contract. Let me know if the response shapes change again before the merge! 🚀
+
+## 2026-09-12 (14:58 CDT) — Member 1's rendering guidance implemented
+
+**(a) What teammates changed**
+
+- Member 1 messaged Member 3 directly: workforce snapshot now carries `roles`, `learningResources`, `futureRequirements`, and `demandTarget`; two rendering rules that keep the demo honest (absent `mentoringHoursPerMonth` = unknown = dash, never 0; `lastVerifiedAt: null` = dash, not "never verified"); provenance fields (`metadataSource`, `provenance`, `evidenceSource`) should be surfaced — seeded rows say "fictional demo …".
+
+**(b) What I adapted**
+
+- New `frontend/src/components/WorkforceSnapshot.jsx`: renders skills table (criticality, targetProficiency, requiredHolders, demandTarget as separate columns), Roles & succession (incumbents + successor requirements, with the note that criticality starts neutral), learning resource catalogue (verified flag + skillIds served), future requirements (status proposed/reviewed), People & mentoring capacity (absent hours = dash; header states only 6 of 20 have it recorded), and Evidence & verification matrix (`lastVerifiedAt` null = dash, evidenceSource shown).
+- New `frontend/src/components/Provenance.jsx`: badge that labels 'fictional demo …' sources on screen — keeps us from overclaiming in the demo.
+- `TimeMachine.jsx`: mentor dropdown now shows recorded capacity (`capacity 4h/mo`) or `capacity —` when never recorded (absent ≠ zero).
+- `KeystoneStarter.jsx`: labeled offline demo mode — if the backend is unreachable, vendored sample payloads (`frontend/src/data/*.json`, copied from Member 1's `docs/samples`) render under a persistent "DEMO DATA" banner; live-only sections degrade gracefully.
+- `App.css`: styles for provenance badges and the demo banner.
+- Build: `npm.cmd run build` passes (vite, no errors). Committed and pushed to `feature/keystone-ui` (0d7c353), backup tag created.
+
+**(c) Group chat message**
+
+> @Member1 — your snapshot fields are now rendered ✅ Frontend has: skills table with demandTarget shown SEPARATELY from requiredHolders, roles & succession panel, resource catalogue with verified flags, future requirements with proposed/reviewed status, and the evidence matrix. Your two rules are implemented exactly: absent mentoringHoursPerMonth renders as a dash (header notes only 6 of 20 have it), lastVerifiedAt null renders as a dash — never 0 or "never verified". Provenance is surfaced via a badge that labels anything 'fictional demo' on screen so the demo never overclaims. Bonus: I vendored your docs/samples into the frontend, so the whole UI runs offline under a labeled DEMO DATA banner — backup demo is safe even if the backend dies mid-presentation. 🎤
