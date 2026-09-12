@@ -1,5 +1,21 @@
 # Member 3 Sync Log
 
+## 2026-09-12 (16:29 CDT, live verification)
+
+**(a) What teammates changed**
+
+- None this check — this was a live site verification, not a scheduled sync.
+
+**(b) What I adapted**
+
+- Found and fixed a real runtime crash: against `main`'s backend, expanding "Show affected skill(s)" in People & Risk unmounted the whole app, because the integrated backend renamed `affectedSkills[].successors` → `skillBackups` and the UI read only the new name. `KeystonePeople.jsx` now accepts both shapes (`skill.skillBackups ?? skill.successors ?? []`), so the panel survives whichever backend is serving. All other dual-shape code paths were already guarded.
+- Verified end-to-end in the browser (fresh Vite dev server on :5174 + backend on :4000): Overview KPIs, People & Risk expand, Time Machine, AI Advisor, Workforce Data snapshot (dashes for unknowns), and the Activity Log all render with live data.
+- Note: a stale Vite dev server from 14:06 still occupies port 5173 and serves a broken page (`__SERVER_FORWARD_CONSOLE__` placeholder error) — close that process and use a fresh `npm run dev`.
+
+**(c) Group chat message**
+
+> Member 3 ✅ Did a full click-through of the site on the live backend — all six screens work. Found & fixed one crash: expanding a person's affected skills broke against main's backend because of the `successors` → `skillBackups` rename. The UI now tolerates both field names, so it works before AND after integrate merges. 🛠️ Also: if your localhost:5173 shows a blank page, that's a stale dev server from 2pm — restart it. 🚀
+
 ## 2026-09-12 (16:11 CDT, sixteenth run)
 
 **(a) What teammates changed**

@@ -42,15 +42,19 @@ export default function KeystonePeople() {
                 {candidate.unknownCount > 0 ? ` · ${candidate.unknownCount} without recorded evidence` : ''}
               </li>)}</ul>}
           </li>}
-          {employee.affectedSkills.map((skill) => <li key={skill.id}>
+          {employee.affectedSkills.map((skill) => {
+            // Integrated backend renamed affectedSkills[].successors to skillBackups.
+            // Accept both so the panel stays alive no matter which backend is serving.
+            const backups = skill.skillBackups ?? skill.successors ?? [];
+            return <li key={skill.id}>
             <strong>{skill.name}</strong> — recorded holders {skill.busFactorBefore} → {skill.busFactorAfter}, gap {skill.gapBefore} → {skill.gapAfter}
             {skill.becomesUncovered ? <span className="gap-positive"> · no recorded holder left</span> : ''}
             <div>
-              {skill.skillBackups.length === 0
+              {backups.length === 0
                 ? 'No backup evidence on file. That is missing evidence, not proof that nobody else is capable.'
-                : `Skill backups: ${skill.skillBackups.map((candidate) => `${candidate.name} (${candidate.proficiency}/5, ${candidate.status === 'ready' ? 'at target' : 'below target'})`).join(' · ')}`}
+                : `Skill backups: ${backups.map((candidate) => `${candidate.name} (${candidate.proficiency}/5, ${candidate.status === 'ready' ? 'at target' : 'below target'})`).join(' · ')}`}
             </div>
-          </li>)}
+          </li>; })}
         </ul>}
       </article>)}
     </div>}
