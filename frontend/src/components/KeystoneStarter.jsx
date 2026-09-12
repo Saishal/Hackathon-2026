@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { keystoneApi } from '../api/keystone';
+import AIWorkbench from './AIWorkbench';
 
 export default function KeystoneStarter() {
   const [workforce, setWorkforce] = useState(null);
@@ -7,8 +8,6 @@ export default function KeystoneStarter() {
   const [employeeId, setEmployeeId] = useState('');
   const [horizonMonths, setHorizonMonths] = useState(12);
   const [result, setResult] = useState(null);
-  const [direction, setDirection] = useState('');
-  const [strategy, setStrategy] = useState(null);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   useEffect(() => {
@@ -41,11 +40,6 @@ export default function KeystoneStarter() {
     <button disabled={busy || !workforce} onClick={() => run(async () => setResult(await keystoneApi.simulate({ horizonMonths,
       departures: employeeId ? [{ employeeId: Number(employeeId), month: 1 }] : [], interventions: [] })))}>Compare scenario</button>
     {result && <p>Projected uncovered skills: {result.baseline.uncovered} → {result.projected.uncovered}. Assumes only the selected departure; verified baseline stays unchanged.</p>}
-    <h3>Strategic direction — integration boundary</h3>
-    <form onSubmit={(event) => { event.preventDefault(); run(async () => setStrategy(await keystoneApi.strategy(direction))); }}>
-      <label>Business direction <input value={direction} maxLength={2000} onChange={(event) => setDirection(event.target.value)} placeholder="We are expanding into e-commerce" /></label>{' '}
-      <button disabled={busy || !direction.trim()}>Request proposed skills</button>
-    </form>
-    {strategy && <p>{strategy.message}</p>}
+    <AIWorkbench workforce={workforce} />
   </section>;
 }

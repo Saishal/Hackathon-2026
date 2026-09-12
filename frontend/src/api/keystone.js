@@ -12,4 +12,6 @@ export const keystoneApi = {
   simulate: (scenario) => request('/simulate', scenario),
   developmentPlan: (skillId) => request('/development-plan', { skillId }),
   strategy: (direction) => request('/strategy', { direction }),
+  previewStrategy: (payload) => request('/strategy/preview', payload),
+  aiStatus: () => request('/ai-status'),
 };

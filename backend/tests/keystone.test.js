@@ -2,7 +2,9 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const { analyze } = require('../services/risk');
 const { simulate } = require('../services/simulation');
-const { recommend, proposeStrategy } = require('../services/recommendations');
+const { createRecommendationService } = require('../services/recommendations');
+const { createProvider } = require('../services/ai/provider');
+const { recommend, proposeStrategy } = createRecommendationService({ provider: createProvider({ env: { KEYSTONE_AI_PROVIDER: 'demo' } }) });
 const workforce = { employees: [{ id: 1 }, { id: 2 }], skills: [{ id: 1, name: 'Billing', criticality: 5, requiredHolders: 2, targetProficiency: 3 }],
   matrix: [{ employeeId: 1, skillId: 1, proficiency: 5 }, { employeeId: 2, skillId: 1, proficiency: 2 }] };
 test('single-holder score has explainable arithmetic', () => {
@@ -31,13 +33,13 @@ test('unverified or future learning does not change coverage', () => {
 test('unchanged assumptions produce unchanged projections', () => {
   assert.deepEqual(simulate(workforce, { horizonMonths: 60 }).baseline, simulate(workforce, { horizonMonths: 60 }).projected);
 });
-test('invalid inputs fail with a client error', () => {
+test('invalid inputs fail with a client error', async () => {
   assert.throws(() => simulate(workforce, { horizonMonths: 12, departures: [{ employeeId: 999, month: 1 }] }), { status: 400 });
-  assert.throws(() => recommend(workforce, 999), { status: 400 });
-  assert.throws(() => proposeStrategy(''), { status: 400 });
+  await assert.rejects(() => recommend(workforce, 999), { status: 400 });
+  await assert.rejects(() => proposeStrategy(''), { status: 400 });
 });
-test('recommendations disclose fallback and strategy does not pretend to forecast', () => {
-  assert.equal(recommend(workforce, 1).actions.length, 5);
-  assert.equal(recommend(workforce, 1).mode, 'demo-fallback');
-  assert.equal(proposeStrategy('Automate production').mode, 'not-configured');
+test('recommendations and strategy disclose their deterministic fallbacks', async () => {
+  assert.equal((await recommend(workforce, 1)).actions.length, 5);
+  assert.equal((await recommend(workforce, 1)).mode, 'demo-fallback');
+  assert.equal((await proposeStrategy('Automate production')).mode, 'demo-fallback');
 });

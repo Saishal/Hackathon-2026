@@ -36,10 +36,14 @@ Returns `{horizonMonths,baseline,noIntervention,projected,blocked,assumptions}`.
 
 ## POST /api/keystone/development-plan
 
-Body `{skillId:1}`. Returns `{mode:'demo-fallback',skillId,actions}`. Five categories: training, mentoring, certification, job_rotation, project_experience. Action fields: category, employeeId, mentorId, status, targetProficiency, rationale, action, verificationMethod, assumptions. IDs may be null if evidence cannot support a participant. No course/credential/date is invented. Matias owns live AI integration and local validation.
+Body `{skillId:1}`. Returns `{mode,skillId,actions}` where mode is `live-ai` or `demo-fallback`; includes `fallbackReason` and `reviewStatus`. Five categories: training, mentoring, certification, job_rotation, project_experience. Action fields: category, employeeId, mentorId, status, targetProficiency, rationale, action, verificationMethod, assumptions. IDs may be null if evidence cannot support a participant. No course/credential/date is invented. Matias implemented live AI integration and local validation; see [full output fields and setup](AI-INTEGRATION.md).
 
 ## POST /api/keystone/strategy
 
-Body `{direction:'We are expanding into e-commerce'}`, 1–2000 characters. Currently `{mode:'not-configured',direction,requirements:[],message}`. Proposed extension: matched skill ID or proposed name, rationale, proficiency, holder count, criticality, effective month, assumptions. User reviews before activation; Member 1 allocates new skill IDs, Member 2 calculates gaps.
+Body `{direction:'We are expanding into e-commerce'}`, 1–2000 characters. Returns `{mode,direction,requirements,message,reviewStatus,persisted:false}`. Requirements include matched skill ID or null for a new name, rationale, targetProficiency, requiredHolders, criticality, effectiveMonth, sourcing, sourcingRationale, assumptions, requirementId, and deterministic coverage. User reviews before activation; Member 1 allocates new skill IDs, Member 2 calculates gaps.
 
 Legacy endpoints remain compatible: /api/heatmap, /api/critical-skills, /api/gap-analysis, /api/recommendations, GET/PUT /api/future-skills. Member 3 migrates views progressively.
+
+## AI status and reviewed preview
+
+GET /api/keystone/ai-status reports configuration without credentials. POST /api/keystone/strategy/preview accepts reviewed:true, horizonMonths, and requirements; it computes read-only gaps through the existing risk engine. Remove response-only coverage and requirementId fields before submitting. See [AI contract details](AI-INTEGRATION.md).
