@@ -43,6 +43,11 @@ export default function TimeMachine({ workforce }) {
   const mentorFor = (skillId) => (workforce?.matrix ?? [])
     .filter((edge) => edge.skillId === Number(skillId) && edge.proficiency >= 4)
     .map((edge) => edge.employeeId);
+  // Member 1's rule: mentoringHoursPerMonth ABSENT means unknown — a dash, never 0.
+  const capacityLabel = (id) => {
+    const hours = workforce?.employees.find((employee) => employee.id === Number(id))?.mentoringHoursPerMonth;
+    return hours === undefined ? 'capacity —' : `capacity ${hours}h/mo`;
+  };
   const changed = result ? result.baseline.skills.map((skill) => {
     const none = result.noIntervention.skills.find((entry) => entry.id === skill.id);
     const projected = result.projected.skills.find((entry) => entry.id === skill.id);
@@ -98,7 +103,7 @@ export default function TimeMachine({ workforce }) {
           <option value="">No mentor</option>
           {mentorFor(interventionDraft.skillId)
             .filter((id) => String(id) !== String(interventionDraft.employeeId))
-            .map((id) => <option key={id} value={id}>{employeeName(id)}</option>)}
+            .map((id) => <option key={id} value={id}>{employeeName(id)} ({capacityLabel(id)})</option>)}
         </select>
       </label>
       <label>Start month <input type="number" min="0" max="60" value={interventionDraft.startMonth}

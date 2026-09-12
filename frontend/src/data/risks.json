@@ -1,0 +1,316 @@
+{
+  "skills": [
+    {
+      "id": 16,
+      "name": "Legacy Billing Recovery",
+      "criticality": 5,
+      "targetProficiency": 3,
+      "requiredHolders": 2,
+      "demandTarget": null,
+      "metadataSource": "fictional demo default",
+      "holderIds": [
+        2
+      ],
+      "busFactor": 1,
+      "gap": 1,
+      "keystoneScore": 80,
+      "explanation": "1 recorded independent holders; 2 required at proficiency 3+. Criticality 5/5."
+    },
+    {
+      "id": 15,
+      "name": "AI Governance",
+      "criticality": 3,
+      "targetProficiency": 3,
+      "requiredHolders": 6,
+      "demandTarget": 6,
+      "metadataSource": "fictional demo default",
+      "holderIds": [],
+      "busFactor": 0,
+      "gap": 6,
+      "keystoneScore": 60,
+      "explanation": "0 recorded independent holders; 6 required at proficiency 3+. Criticality 3/5."
+    },
+    {
+      "id": 10,
+      "name": "Cybersecurity",
+      "criticality": 3,
+      "targetProficiency": 3,
+      "requiredHolders": 5,
+      "demandTarget": 5,
+      "metadataSource": "fictional demo default",
+      "holderIds": [
+        8
+      ],
+      "busFactor": 1,
+      "gap": 4,
+      "keystoneScore": 55,
+      "explanation": "1 recorded independent holders; 5 required at proficiency 3+. Criticality 3/5."
+    },
+    {
+      "id": 11,
+      "name": "Machine Learning",
+      "criticality": 3,
+      "targetProficiency": 3,
+      "requiredHolders": 7,
+      "demandTarget": 7,
+      "metadataSource": "fictional demo default",
+      "holderIds": [
+        11,
+        20
+      ],
+      "busFactor": 2,
+      "gap": 5,
+      "keystoneScore": 35,
+      "explanation": "2 recorded independent holders; 7 required at proficiency 3+. Criticality 3/5."
+    },
+    {
+      "id": 5,
+      "name": "Data Analysis",
+      "criticality": 3,
+      "targetProficiency": 3,
+      "requiredHolders": 9,
+      "demandTarget": 9,
+      "metadataSource": "fictional demo default",
+      "holderIds": [
+        3,
+        11,
+        14
+      ],
+      "busFactor": 3,
+      "gap": 6,
+      "keystoneScore": 28,
+      "explanation": "3 recorded independent holders; 9 required at proficiency 3+. Criticality 3/5."
+    },
+    {
+      "id": 13,
+      "name": "Leadership",
+      "criticality": 3,
+      "targetProficiency": 3,
+      "requiredHolders": 8,
+      "demandTarget": 8,
+      "metadataSource": "fictional demo default",
+      "holderIds": [
+        4,
+        12,
+        16,
+        17
+      ],
+      "busFactor": 4,
+      "gap": 4,
+      "keystoneScore": 21,
+      "explanation": "4 recorded independent holders; 8 required at proficiency 3+. Criticality 3/5."
+    },
+    {
+      "id": 8,
+      "name": "DevOps",
+      "criticality": 3,
+      "targetProficiency": 3,
+      "requiredHolders": 2,
+      "demandTarget": null,
+      "metadataSource": "fictional demo default",
+      "holderIds": [
+        5,
+        15
+      ],
+      "busFactor": 2,
+      "gap": 0,
+      "keystoneScore": 18,
+      "explanation": "2 recorded independent holders; 2 required at proficiency 3+. Criticality 3/5."
+    },
+    {
+      "id": 1,
+      "name": "React",
+      "criticality": 3,
+      "targetProficiency": 3,
+      "requiredHolders": 2,
+      "demandTarget": null,
+      "metadataSource": "fictional demo default",
+      "holderIds": [
+        1,
+        10
+      ],
+      "busFactor": 2,
+      "gap": 0,
+      "keystoneScore": 18,
+      "explanation": "2 recorded independent holders; 2 required at proficiency 3+. Criticality 3/5."
+    },
+    {
+      "id": 9,
+      "name": "Cloud Architecture",
+      "criticality": 3,
+      "targetProficiency": 3,
+      "requiredHolders": 10,
+      "demandTarget": 10,
+      "metadataSource": "fictional demo default",
+      "holderIds": [
+        2,
+        5,
+        8,
+        9,
+        15,
+        17
+      ],
+      "busFactor": 6,
+      "gap": 4,
+      "keystoneScore": 16,
+      "explanation": "6 recorded independent holders; 10 required at proficiency 3+. Criticality 3/5."
+    },
+    {
+      "id": 4,
+      "name": "Python",
+      "criticality": 3,
+      "targetProficiency": 3,
+      "requiredHolders": 2,
+      "demandTarget": null,
+      "metadataSource": "fictional demo default",
+      "holderIds": [
+        3,
+        11,
+        20
+      ],
+      "busFactor": 3,
+      "gap": 0,
+      "keystoneScore": 12,
+      "explanation": "3 recorded independent holders; 2 required at proficiency 3+. Criticality 3/5."
+    },
+    {
+      "id": 3,
+      "name": "SQLite",
+      "criticality": 3,
+      "targetProficiency": 3,
+      "requiredHolders": 2,
+      "demandTarget": null,
+      "metadataSource": "fictional demo default",
+      "holderIds": [
+        2,
+        9,
+        17
+      ],
+      "busFactor": 3,
+      "gap": 0,
+      "keystoneScore": 12,
+      "explanation": "3 recorded independent holders; 2 required at proficiency 3+. Criticality 3/5."
+    },
+    {
+      "id": 14,
+      "name": "Test Automation",
+      "criticality": 3,
+      "targetProficiency": 3,
+      "requiredHolders": 8,
+      "demandTarget": 8,
+      "metadataSource": "fictional demo default",
+      "holderIds": [
+        1,
+        2,
+        6,
+        9,
+        10,
+        13
+      ],
+      "busFactor": 6,
+      "gap": 2,
+      "keystoneScore": 12,
+      "explanation": "6 recorded independent holders; 8 required at proficiency 3+. Criticality 3/5."
+    },
+    {
+      "id": 6,
+      "name": "Project Management",
+      "criticality": 3,
+      "targetProficiency": 3,
+      "requiredHolders": 2,
+      "demandTarget": null,
+      "metadataSource": "fictional demo default",
+      "holderIds": [
+        4,
+        12,
+        14,
+        16
+      ],
+      "busFactor": 4,
+      "gap": 0,
+      "keystoneScore": 9,
+      "explanation": "4 recorded independent holders; 2 required at proficiency 3+. Criticality 3/5."
+    },
+    {
+      "id": 7,
+      "name": "UX Research",
+      "criticality": 3,
+      "targetProficiency": 3,
+      "requiredHolders": 2,
+      "demandTarget": null,
+      "metadataSource": "fictional demo default",
+      "holderIds": [
+        1,
+        4,
+        7,
+        10
+      ],
+      "busFactor": 4,
+      "gap": 0,
+      "keystoneScore": 9,
+      "explanation": "4 recorded independent holders; 2 required at proficiency 3+. Criticality 3/5."
+    },
+    {
+      "id": 2,
+      "name": "Node.js",
+      "criticality": 3,
+      "targetProficiency": 3,
+      "requiredHolders": 2,
+      "demandTarget": null,
+      "metadataSource": "fictional demo default",
+      "holderIds": [
+        1,
+        2,
+        5,
+        6,
+        9,
+        10,
+        13,
+        15,
+        17,
+        19
+      ],
+      "busFactor": 10,
+      "gap": 0,
+      "keystoneScore": 4,
+      "explanation": "10 recorded independent holders; 2 required at proficiency 3+. Criticality 3/5."
+    },
+    {
+      "id": 12,
+      "name": "Communication",
+      "criticality": 3,
+      "targetProficiency": 3,
+      "requiredHolders": 2,
+      "demandTarget": null,
+      "metadataSource": "fictional demo default",
+      "holderIds": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "busFactor": 19,
+      "gap": 0,
+      "keystoneScore": 2,
+      "explanation": "19 recorded independent holders; 2 required at proficiency 3+. Criticality 3/5."
+    }
+  ],
+  "uncovered": 1,
+  "singleHolder": 2,
+  "methodology": "Demo prioritization heuristic, not departure probability. Bus Factor means recorded independent holder count."
+}

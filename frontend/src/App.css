@@ -598,3 +598,47 @@ form > button[type='button']:hover:not(:disabled) {
   background: var(--surface-sunken);
   color: var(--ink);
 }
+
+/* Provenance badges — keep the demo honest about what's real. */
+.provenance {
+  display: inline-block;
+  font-size: 0.72rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  color: var(--ink-muted);
+  white-space: nowrap;
+}
+
+.provenance.fictional {
+  border-color: var(--warning, #d9a441);
+  color: var(--warning, #d9a441);
+  background: color-mix(in srgb, var(--warning, #d9a441) 12%, transparent);
+}
+
+.provenance .verified-at {
+  color: var(--ink-muted);
+}
+
+/* Labeled offline/demo banner — sample data must never look live. */
+.demo-banner {
+  border: 1px solid var(--warning, #d9a441);
+  background: color-mix(in srgb, var(--warning, #d9a441) 12%, transparent);
+  color: var(--ink);
+  border-radius: var(--radius, 8px);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+}
+
+.snapshot h3 {
+  margin-top: 1.4rem;
+}
+
+.snapshot .hint {
+  color: var(--ink-muted);
+  font-size: 0.82rem;
+}
+
+.snapshot code {
+  font-size: 0.8rem;
+}
