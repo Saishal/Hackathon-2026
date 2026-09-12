@@ -16,6 +16,8 @@ export const keystoneApi = {
   strategy: (direction) => request('/strategy', { direction }),
   previewStrategy: (payload) => request('/strategy/preview', payload),
   aiStatus: () => request('/ai-status'),
+  // Member 1's workforce-data contract: evidence edits and effective-dated future requirements.
+  // lastVerifiedAt is null when verification is unknown; render null/undefined as a dash, never guessed.
   saveEmployeeSkill: (entry) => request('/employee-skills', entry, 'PUT'),
   futureRequirements: () => request('/future-requirements'),
   addFutureRequirement: (requirement) => request('/future-requirements', requirement),
