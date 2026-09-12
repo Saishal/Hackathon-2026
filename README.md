@@ -33,7 +33,9 @@ Read [API contracts](docs/API.md) and [integration workflow](docs/INTEGRATION.md
 
 Working: existing heat map/gaps/targets, new workforce/risk APIs, explainable skill Bus Factor and Keystone Score, dated departure and verified-intervention simulation, starter departure UI, and explicit development fallback. Development and strategy now support configurable OpenAI integration with validated structured output and labeled offline fallbacks. See [AI setup and handoff](docs/AI-INTEGRATION.md).
 
-Remaining: interactive network, persisted evidence/criticality/roles, employee scores, succession, mentor capacity, intervention editor, and persistent future requirements combined with departure/training scenarios. A reviewed read-only strategy gap preview is implemented; a real OpenAI call awaits credentials/model. This is a runnable backbone, not the finished submission.
+The workforce inventory is persisted rather than derived in memory: skill criticality and coverage requirements, per-edge evidence source and verification date, critical roles with succession skill requirements, the learning catalogue with an editable verified flag, recorded mentoring capacity, and effective-dated future requirements. Foreign keys are enforced and writes validate references first. See [API contracts](docs/API.md) and [sample payloads](docs/samples/README.md).
+
+Remaining: interactive network, and wiring succession matching to the persisted role requirements. A reviewed read-only strategy gap preview is implemented; a real OpenAI call awaits credentials/model. This is a runnable backbone, not the finished submission.
 
 Proficiency stays compatible with existing data: 1–5, independent threshold 3, mentor minimum 4. Missing relationships are unknown, displayed as a dash. Do not mix in the earlier proposed 0–4 scale. Scores measure organizational dependency, not likelihood of departure.
 

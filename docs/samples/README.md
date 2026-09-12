@@ -29,8 +29,12 @@ fixture is not updated, the suite fails rather than drifting quietly.
 
 ```sh
 DB_PATH=/tmp/samples.db npm start --prefix backend
-curl -s localhost:4000/api/keystone/workforce | python -m json.tool > docs/samples/workforce.json
+curl -s localhost:4000/api/keystone/workforce \
+  | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>process.stdout.write(JSON.stringify(JSON.parse(d),null,2)+'\n'))" \
+  > docs/samples/workforce.json
 ```
+
+Uses node rather than python so it works anywhere the backend already runs.
 
 Use a throwaway `DB_PATH` so local edits do not leak into the committed samples.
 

@@ -53,8 +53,9 @@ function analyzeEmployees(workforce) {
     methodology: 'Incremental criticality-weighted shortage if this person\'s recorded coverage is removed. Organizational dependency, not a prediction that anyone will leave. Absence of a recorded successor means no evidence on file, never proof that nobody else is capable.' };
 }
 
-// Member 1's role requirements do not exist yet, so candidates are matched on recorded skill
-// evidence instead. Ready means already at target without this person; developable means recorded
+// Candidates are matched on recorded skill evidence. Role requirements now exist on the
+// snapshot as roles[].requirements, so this can switch to them when Member 2 is ready.
+// Ready means already at target without this person; developable means recorded
 // below target. An empty list is missing evidence, not a demonstrated absence of capability.
 function successorsFor(workforce, skill, departingId) {
   return workforce.matrix
