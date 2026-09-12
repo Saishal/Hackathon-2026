@@ -1,5 +1,21 @@
 # Member 3 Sync Log
 
+## 2026-09-12 (16:58 CDT, Certific dark theme)
+
+**(a) What teammates changed**
+
+- Owner-requested restyle, not a scheduled sync. Noted in passing: `integrate/all-parts` gained one docs-only commit (`4913e6b`, a next-session checklist). No contract impact. Vendored demo samples re-verified identical to the integrate branch.
+
+**(b) What I adapted**
+
+- Restyled the whole app to the Certific dark theme from the owner's reference screenshots: near-black background (#050505) with a faint top glow, #101010 cards on #1e1e1e borders, white pill primary buttons, uppercase muted table headers, amber fictional-provenance pills, green accent for focus/success states. Token-based, so every view (dashboard shell, skill network, tables, forms, Time Machine bars) picked it up automatically; `views.css` needed only two dark-contrast tweaks.
+- Verified live in the browser via computed styles (body #050505, panels #101010, pills and table chrome all dark) across Overview and Workforce Data against the running backend. Build passes (vite, 29 modules).
+- Invariants intact: no markup or data-flow changes, dashes for unknowns, no secrets, demo labeling untouched.
+
+**(c) Group chat message**
+
+> Member 3 🎨 The dashboard now wears the Certific look — dark theme, pill buttons, muted table headers, subtle glow. Every view (network, Time Machine, snapshot tables) inherits it through the design tokens. Build green, pushed with backup tag. Tell me if you want the green dialed up or down! 🖤
+
 ## 2026-09-12 (16:47 CDT, seventeenth run)
 
 **(a) What teammates changed**

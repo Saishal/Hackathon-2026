@@ -7,7 +7,7 @@ import ActivityLog from './components/ActivityLog';
 import demoRisks from './data/risks.json';
 
 // Dashboard shell — sidebar navigation in the style of the Certific template
-// (light SaaS dashboard), trimmed to exactly the views Keystone needs:
+// (dark SaaS dashboard), trimmed to exactly the views Keystone needs:
 // Overview, People & Risk, Skill Network, Time Machine, AI Advisor, Workforce Data, Activity.
 
 const NAV = [

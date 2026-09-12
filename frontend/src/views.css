@@ -34,7 +34,7 @@
 .swatch.uncovered { background: var(--critical); }
 .swatch.single { background: var(--warning); }
 .swatch.covered { background: var(--success); }
-.swatch.person { background: #94a3b8; }
+.swatch.person { background: #64748b; }
 .swatch.today { background: var(--ink-muted); border-radius: 2px; }
 .swatch.none { background: var(--critical); border-radius: 2px; }
 .swatch.with { background: var(--success); border-radius: 2px; }
@@ -79,8 +79,8 @@
 
 .network .node { cursor: pointer; }
 .network .node text { fill: var(--ink-secondary); }
-.network .node circle { stroke: var(--surface); stroke-width: 1.5; }
-.network .node.person circle { fill: #94a3b8; }
+.network .node circle { stroke: var(--bg); stroke-width: 1.5; }
+.network .node.person circle { fill: #64748b; }
 .network .node.skill.uncovered circle { fill: var(--critical); }
 .network .node.skill.single circle { fill: var(--warning); }
 .network .node.skill.covered circle { fill: var(--success); }
