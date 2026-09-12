@@ -22,7 +22,7 @@ Optional environment: backend `PORT`, `DB_PATH`; frontend `VITE_API_BASE_URL` in
 
 ## Four member assignments
 
-1. [Data and shared contracts](docs/member-1-data.md)
+1. [Data and shared contracts](docs/member-1-data.md) — explained in [the data layer handoff](docs/member-1-data-layer.md)
 2. [Risk, succession, Time Machine](docs/member-2-risk.md)
 3. [Frontend and integration](docs/member-3-frontend.md)
 4. [Matias: AI and strategic skill needs](docs/member-4-ai.md)
