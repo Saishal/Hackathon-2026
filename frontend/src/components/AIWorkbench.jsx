@@ -55,7 +55,7 @@ export default function AIWorkbench({ workforce }) {
       <button disabled={busy || !direction.trim()}>Propose future skills</button>
     </form>
     {busy && <p role="status">Preparing recommendations…</p>}
-    {proposal && <p><strong>{proposal.mode === 'live-ai' ? 'AI draft' : 'Curated demo template'}</strong> · {proposal.message}</p>}
+    {proposal && <p><strong>{proposal.mode === 'live-ai' ? 'AI draft' : 'Deterministic demo proposal'}</strong> · {proposal.message}</p>}
     {draft.length > 0 && <div>
       {draft.map((requirement, index) => <article className="panel" key={`${requirement.skillId}-${requirement.skillName}`}>
         <h4>{requirement.skillName} · {requirement.skillId === null ? 'New proposed skill' : 'Existing catalog skill'}</h4>
