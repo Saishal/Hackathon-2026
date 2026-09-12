@@ -88,6 +88,21 @@ const skills = [
   'Legacy Billing Recovery',
 ];
 
+// Fictional verified learning catalog. Member 1 would persist this with an editable verified
+// flag; the model can never set that flag and never invents a resource, so an empty catalog
+// simply leaves certification unavailable. Titles carry no URLs or real credential names.
+const learningCatalog = [
+  ['cert-billing-recovery', 'Billing Recovery Practitioner Assessment (fictional)', 'certification', ['Legacy Billing Recovery']],
+  ['cert-cloud-foundations', 'Cloud Foundations Certificate (fictional)', 'certification', ['Cloud Architecture', 'DevOps']],
+  ['cert-security-analyst', 'Security Analyst Credential (fictional)', 'certification', ['Cybersecurity']],
+  ['cert-ai-governance', 'Responsible AI Oversight Certificate (fictional)', 'certification', ['AI Governance']],
+  ['train-billing-internal', 'Internal billing systems walkthrough (fictional)', 'training', ['Legacy Billing Recovery']],
+  ['train-data-analysis', 'Applied data analysis workshop (fictional)', 'training', ['Data Analysis', 'Machine Learning']],
+  ['train-secure-coding', 'Secure coding clinic (fictional)', 'training', ['Cybersecurity', 'Test Automation']],
+  ['proj-billing-shadow', 'Supervised billing remediation project (fictional)', 'project_experience', ['Legacy Billing Recovery']],
+  ['rot-platform-team', 'Platform team rotation placement (fictional)', 'job_rotation', ['Cloud Architecture', 'DevOps', 'Test Automation']],
+];
+
 const roleSkillProfiles = {
   'Frontend Engineer': {
     React: 5,
@@ -395,7 +410,20 @@ async function getRecommendations() {
 async function loadWorkforce() {
   const snapshot = await getHeatmapData();
   const targets = await all('SELECT skill_id, target_people FROM future_skill_targets');
-  return { schemaVersion: 1, ...snapshot,
+  const skillIdByName = new Map(snapshot.skills.map((skill) => [skill.name, skill.id]));
+  const learningResources = learningCatalog
+    .map(([id, title, category, skillNames]) => ({ id, title, category, verified: true,
+      skillIds: skillNames.map((name) => skillIdByName.get(name)).filter((value) => value !== undefined) }))
+    .filter((resource) => resource.skillIds.length > 0);
+  // Recorded mentoring capacity exists only for employees with two or more proficiency-5 skills
+  // (6 of 20 in the seed). Everyone else stays unknown rather than assumed available, so the
+  // unconfirmed-availability path is visible in the demo instead of theoretical.
+  const expertSkillCount = snapshot.matrix.filter((edge) => edge.proficiency >= 5)
+    .reduce((counts, edge) => counts.set(edge.employeeId, (counts.get(edge.employeeId) || 0) + 1), new Map());
+  const recordedCapacity = new Set([...expertSkillCount].filter(([, count]) => count >= 2).map(([id]) => id));
+  return { schemaVersion: 1, ...snapshot, learningResources,
+    employees: snapshot.employees.map((employee) => recordedCapacity.has(employee.id)
+      ? { ...employee, mentoringHoursPerMonth: 4 } : employee),
     skills: snapshot.skills.map((skill) => ({ ...skill,
       criticality: skill.name === 'Legacy Billing Recovery' ? 5 : 3,
       targetProficiency: 3,
