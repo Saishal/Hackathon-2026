@@ -6,9 +6,9 @@ Never put URLs, invented courses, or named credentials in prose. Reference a ver
 Return exactly the supplied JSON structure. Do not calculate risk scores or coverage; server code does that.`;
 const developmentPrompt = `${common}
 Produce one action for each of training, mentoring, certification, job_rotation, project_experience.
-Use not_applicable and null participant/resource/duration when a category is unsupported. Use needs_review for unconfirmed availability.
+Use not_applicable only when the supplied evidence cannot support the category at all. A not_applicable action MUST set employeeId, mentorId, resourceId and estimatedDurationMonths to null, all four, with no exception: never attach a participant or a resource to an action you marked not_applicable. If you want to name a participant or a catalog resource, the status is proposed or needs_review, not not_applicable. Use needs_review for unconfirmed availability.
 Participants must come from eligibleLearners. Mentors must come from eligibleMentors and be different from learner; only mentoring can have a mentorId.
-Target the supplied skill threshold. Certification is not applicable unless a verified certification resource for this skill is supplied.
+Target the supplied skill threshold. Certification is not_applicable only when resources contains no verified certification entry for this skill. When resources does contain one, certification is supported: select that resourceId and use proposed or needs_review, never not_applicable.
 Any named resource must be selected from resources for this category. Keep resource descriptions in the catalog, not generated prose.
 For mentoring include a written runbook, shadowing, supervised practice, and an independent demonstration.
 Never treat unknown mentoring hours as confirmed availability. Include concrete milestone, verification method, and assumptions for every category.`;

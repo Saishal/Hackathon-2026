@@ -8,7 +8,17 @@ For live AI, copy `backend/.env.example` to `backend/.env`, set `KEYSTONE_AI_PRO
 
 The OpenAI SDK uses the Responses API with strict JSON Schema and `store:false`. Local Ajv validation and grounding checks run afterward. See [official structured output documentation](https://developers.openai.com/api/docs/guides/structured-outputs). A configurable 20-second per-attempt timeout (1–60 second bounds), one SDK retry, a three-call concurrency bound, and input/output size caps constrain requests. Refusals, incomplete responses, provider errors, and invalid content use the explicit fallback. No upstream error text or key is returned.
 
-`GET /api/keystone/ai-status` returns `{provider,configured,model,reason}`. Configuration is not proof of a successful live call. Provider is instantiated at backend startup; restart after changing configuration.
+`GET /api/keystone/ai-status` returns `{provider,configured,model,reason}`. Configuration is not proof of a successful live call. Provider is instantiated at backend startup; restart after changing configuration — and restart with `npm start`, not `node index.js`, because only the start script passes `--env-file-if-exists=.env`.
+
+## Model selection, measured
+
+The live path was verified on 2026-09-12. **`gpt-4.1-mini` passes**: four consecutive development plans and both harness modes returned `live-ai` with every grounding check satisfied.
+
+**`gpt-4.1-nano` fails and must not be used.** Across repeated runs it attached participants and resources to `not_applicable` actions, emitted a duplicate category in place of a missing one, and omitted required knowledge-transfer elements from the mentoring plan. Each failure is caught and served as the labeled demo fallback, so the symptom is not an error — it is an app that looks like it works while never using the model. Prompt wording was sharpened twice against these failures; the certification rule was fixed by it, the rest were not. This is an instruction-following ceiling, not a wording problem.
+
+Avoid o-series and gpt-5 reasoning models: reasoning tokens are drawn from the same `max_output_tokens` budget of 6000, which can return an incomplete response and fall back silently.
+
+Run `node scripts/verify-live-ai.js` after any model change. Phase B fails loudly on a fallback rather than letting it pass as success, which is the only reliable way to tell a working live path from a convincing demo one.
 
 ## Development plan
 
