@@ -27,7 +27,7 @@ Optional environment: backend `PORT`, `DB_PATH`, `KEYSTONE_SEED_DIR`; frontend `
 3. [Frontend and integration](docs/member-3-frontend.md)
 4. [Matias: AI and strategic skill needs](docs/member-4-ai.md)
 
-Read [API contracts](docs/API.md) and [integration workflow](docs/INTEGRATION.md) before changing shared interfaces.
+Read [API contracts](docs/API.md) and [integration workflow](docs/INTEGRATION.md) before changing shared interfaces. For what is done, what is missing and what is out of scope, see [project status](docs/PROJECT-STATUS.md).
 
 ## Implemented vs remaining
 
