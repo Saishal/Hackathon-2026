@@ -1,5 +1,23 @@
 # Member 3 Sync Log
 
+## 2026-09-12 (16:11 CDT, sixteenth run)
+
+**(a) What teammates changed**
+
+- `fix/docs-sync` gained one docs-only commit `26d485a` ("Document the data layer: storage, provenance, contract and every step taken") — a new 443-line `docs/member-1-data-layer.md` plus a README tweak. No API contract or code changes.
+- All other branches unchanged: `main` (`fd002fa`), `feature/workforce-data` (`9073fd1`), `feature/ai-recommendations` (merged), `fix/review-risk-ai` (`bd6c883`), `integrate/parts-2-4-data` (`0c0df44`). Merge was a no-op.
+
+**(b) What I adapted**
+
+- Regenerated `frontend/src/data/activity.json` via `node frontend/scripts/generate-activity.mjs` (now 43 commits: Member 3 19, Team 15, Member 1 9) so the Activity Log picks up Member 1's documentation commit.
+- No contract adaptation needed — frontend still matches the integrated backend from the 15:06 run.
+- Build: `npm.cmd run build` passes (vite, 29 modules, no errors). Invariants hold: unknowns as dashes, no score recomputation, no secrets, demo fallback labeled.
+- Safety: backup tag `backup/pre-sync-20260912-1611` created at the pushed HEAD and pushed to origin.
+
+**(c) Group chat message**
+
+> Member 3 sync ✅ Saw @Member1's data-layer deep-dive doc land on fix/docs-sync — 443 lines, nice! 📖 Activity Log refreshed (43 commits and counting). No API changes, frontend untouched, build green. Still one merge away from demo-ready: integrate/docs-sync → main! 🚀
+
 ## 2026-09-12 (16:06 CDT, fifteenth run)
 
 **(a) What teammates changed**
