@@ -33,7 +33,7 @@ Existing snapshots work without those fields. A verified flag means your catalog
 
 Each requirement contains `skillId` (null for novel skills), `skillName`, `rationale`, `targetProficiency`, `requiredHolders`, `criticality`, `effectiveMonth`, `sourcing`, `sourcingRationale`, and `assumptions`. Responses also contain `requirementId` and deterministic `coverage`. Coverage measures the proposed target against today's recorded skills; it is not an attrition forecast. Existing names/aliases normalize to catalog IDs; mismatches and duplicates are rejected.
 
-Offline strategy templates cover e-commerce, industrial automation, and AI/customer-support initiatives. Unknown directions produce no requirements and ask for a concrete initiative. Demo counts/dates are illustrative and prominently labeled.
+Offline strategy templates cover e-commerce, industrial automation, and AI/customer-support initiatives. A direction matching no template now falls back to `coverageFallback`, which derives up to three requirements from the capabilities the recorded evidence is thinnest in, using Member 2's `analyze`. It references existing catalog skills by their real IDs, never invents a skill, proposes `hire` when nothing is recorded and `build` otherwise, and returns nothing only when the catalog itself is empty. Because it is derived from coverage rather than from the initiative, unrelated directions produce the same requirements; each one says so in its `rationale` and carries a `Derived deterministically from recorded coverage gaps; not an AI forecast` assumption. Demo counts/dates are illustrative and prominently labeled.
 
 `POST /api/keystone/strategy/preview` requires:
 

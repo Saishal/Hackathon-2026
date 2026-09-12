@@ -46,7 +46,7 @@ function createRecommendationService({ provider = createProvider() } = {}) {
       const result = await generateOrFallback({ name: 'keystone_strategy', schema: strategySchema,
         instructions: strategyPrompt, context,
         validate: (payload) => ({ requirements: normalizeRequirements(payload, workforce) }),
-        fallback: () => strategyFallback(direction) });
+        fallback: () => strategyFallback(direction, workforce) });
       const requirements = result.payload.requirements;
       const coverage = previewRequirements(workforce, { requirements, reviewed: true, horizonMonths: 60 });
       return { schemaVersion: 1, mode: result.mode, fallbackReason: result.fallbackReason, direction,
@@ -55,7 +55,7 @@ function createRecommendationService({ provider = createProvider() } = {}) {
           coverage: coverage.requirements[index].coverage })),
         message: requirements.length === 0 ? 'Describe a concrete business initiative. No skill requirements were proposed.'
           : result.mode === 'live-ai' ? 'AI-proposed requirements with deterministic coverage; review quantities and dates before use.'
-            : 'Curated demo template, not an AI forecast. Review illustrative quantities, dates, and sourcing options.',
+            : 'Deterministic demo proposal, not an AI forecast; each requirement states whether it came from a curated template or from recorded coverage gaps. Review quantities, dates, and sourcing options.',
       };
     },
     previewStrategy: previewRequirements,

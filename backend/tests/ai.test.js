@@ -5,7 +5,7 @@ const OpenAI = require('openai');
 const { createRecommendationService } = require('../services/recommendations');
 const { createProvider, ProviderFailure } = require('../services/ai/provider');
 const { developmentContext, normalizeRequirements } = require('../services/ai/grounding');
-const { developmentFallback, strategyFallback } = require('../services/ai/fallbacks');
+const { developmentFallback, strategyFallback, coverageFallback } = require('../services/ai/fallbacks');
 const { previewRequirements } = require('../services/ai/strategy-preview');
 const { analyze } = require('../services/risk');
 const { developmentSchema } = require('../services/ai/schemas');
@@ -83,7 +83,20 @@ test('strategy matches known names, leaves novel IDs null, calculates gaps witho
   assert.equal(result.requirements.find((r) => r.skillName === 'E-commerce Operations').skillId, null);
   assert.equal(result.requirements.find((r) => r.skillName === 'E-commerce Operations').coverage.recordedQualifiedHolders, 0);
   assert.equal(JSON.stringify(workforce), before);
-  assert.deepEqual((await demo().proposeStrategy('Make things better', workforce)).requirements, []);
+  const derived = (await demo().proposeStrategy('Make things better', workforce)).requirements;
+  assert.ok(derived.length > 0, 'an unmatched direction still proposes reviewable requirements');
+  assert.ok(derived.every((r) => Number.isInteger(r.skillId)), 'derived requirements only reference catalog skills');
+  assert.ok(derived.every((r) => r.assumptions.some((a) => /derived deterministically/i.test(a))), 'derived requirements disclose their basis');
+  assert.equal(JSON.stringify(workforce), before);
+});
+test('coverage-derived fallback invents nothing and stays empty without a catalog', () => {
+  assert.deepEqual(coverageFallback({ skills: [], matrix: [] }), []);
+  assert.deepEqual(coverageFallback(undefined), []);
+  const names = coverageFallback(workforce).map((requirement) => requirement.skillName);
+  assert.ok(names.every((name) => workforce.skills.some((skill) => skill.name === name)));
+  const bySkill = new Map(coverageFallback(workforce).map((requirement) => [requirement.skillId, requirement]));
+  assert.equal(bySkill.get(2).sourcing, 'hire', 'a skill with no recorded holders proposes hiring');
+  assert.equal(bySkill.get(1).sourcing, 'build', 'a skill with a recorded holder proposes internal development');
 });
 test('name normalization resolves aliases but rejects invented IDs and duplicates', () => {
   const candidate = { ...requirement(), skillName: '  NODE JS  ' };

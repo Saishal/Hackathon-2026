@@ -1,4 +1,6 @@
 const { categories } = require('./schemas');
+const { normalizeName } = require('./grounding');
+const { analyze } = require('../risk');
 function developmentFallback(context) {
   const learner = context.eligibleLearners[0];
   const mentor = context.eligibleMentors.find((entry) => entry.mentoringHoursPerMonth > 0) || context.eligibleMentors[0];
@@ -47,14 +49,40 @@ const templates = [
     ['Knowledge Base Operations', 'Maintain current, attributable support knowledge.', 'build'],
   ] },
 ];
-function strategyFallback(direction) {
+const clamp = (value, low, high) => Math.min(high, Math.max(low, Math.round(value)));
+const sourcingRationale = (sourcing) => sourcing === 'build' ? 'Assess internal candidates and development capacity before selecting this path.'
+  : sourcing === 'hire' ? 'Consider hiring if internal development cannot meet the reviewed timeline.' : 'Consider specialist support while evaluating internal capability.';
+
+// No keyword template matched. Rather than proposing nothing, surface the capabilities the
+// recorded evidence is already thinnest in: any initiative depends at least on those. Uses
+// Member 2's analyzer, never invents a skill, and is labeled as derived rather than forecast.
+function coverageFallback(workforce) {
+  const catalog = workforce?.skills || [];
+  if (!catalog.length || !workforce.matrix) return [];
+  const unambiguous = (skill) => catalog.filter((entry) => normalizeName(entry.name) === normalizeName(skill.name)).length === 1;
+  return analyze(workforce).skills
+    .filter((skill) => (skill.gap > 0 || skill.busFactor <= 1) && unambiguous(skill))
+    .slice(0, 3)
+    .map((skill) => {
+      const sourcing = skill.busFactor === 0 ? 'hire' : 'build';
+      return { skillId: skill.id, skillName: skill.name.slice(0, 100),
+        rationale: `No initiative template matched this direction, so this requirement is derived from recorded coverage rather than the initiative itself: ${skill.explanation}`,
+        targetProficiency: clamp(skill.targetProficiency, 1, 5),
+        requiredHolders: clamp(Math.max(2, skill.requiredHolders), 1, 10000),
+        criticality: clamp(skill.criticality, 1, 5), effectiveMonth: 12, sourcing, sourcingRationale: sourcingRationale(sourcing),
+        assumptions: ['Derived deterministically from recorded coverage gaps; not an AI forecast and not specific to this initiative.',
+          'Confirm whether this capability actually supports the stated direction before acting on it.',
+          'Month 12 and a two-holder minimum are illustrative planning defaults; review scope, budget, and timeline.'] };
+    });
+}
+function strategyFallback(direction, workforce) {
   const template = templates.find((entry) => entry.pattern.test(direction));
-  return { requirements: (template?.skills || []).map(([skillName, rationale, sourcing]) => ({
+  if (!template) return { requirements: coverageFallback(workforce) };
+  return { requirements: template.skills.map(([skillName, rationale, sourcing]) => ({
     skillId: null, skillName, rationale, targetProficiency: 3, requiredHolders: 2, criticality: 3, effectiveMonth: 12,
-    sourcing, sourcingRationale: sourcing === 'build' ? 'Assess internal candidates and development capacity before selecting this path.'
-      : sourcing === 'hire' ? 'Consider hiring if internal development cannot meet the reviewed timeline.' : 'Consider specialist support while evaluating internal capability.',
+    sourcing, sourcingRationale: sourcingRationale(sourcing),
     assumptions: ['Curated demo template selected by keywords; not an AI forecast.',
       'Two independent holders at month 12 is an illustrative planning assumption; review scope, budget, and timeline.'],
   })) };
 }
-module.exports = { developmentFallback, strategyFallback };
+module.exports = { developmentFallback, strategyFallback, coverageFallback };
