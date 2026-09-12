@@ -552,3 +552,49 @@ details li {
   font-size: 0.84rem;
   margin-top: 0.2rem;
 }
+
+/* A small comparison table should not inherit the heat map's scroll width. */
+.table-wrap.compact table {
+  min-width: 0;
+}
+
+.table-wrap.compact th[scope='row'] {
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.table-wrap.compact td {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+/* Scenario rows: a remove control sits inline with its description, so it stays small. */
+.panel li > button {
+  margin-top: 0.25rem;
+  font-size: 0.78rem;
+  padding: 0.2rem 0.55rem;
+  min-height: 26px;
+  background: transparent;
+  color: var(--ink-muted);
+  border-color: var(--border-strong);
+  box-shadow: none;
+}
+
+.panel li > button:hover:not(:disabled) {
+  color: var(--critical);
+  border-color: var(--critical);
+  background: var(--critical-soft);
+}
+
+/* The reset control is secondary to the primary compare action beside it. */
+form > button[type='button'] {
+  background: transparent;
+  color: var(--ink-secondary);
+  border-color: var(--border-strong);
+  box-shadow: none;
+}
+
+form > button[type='button']:hover:not(:disabled) {
+  background: var(--surface-sunken);
+  color: var(--ink);
+}
