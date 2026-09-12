@@ -1,5 +1,24 @@
 # Member 3 Sync Log
 
+## 2026-09-12 (15:36 CDT, tenth run)
+
+**(a) What teammates changed**
+
+- New branch `fix/docs-sync` = `integrate/parts-2-4-data` + one docs-only commit `ac7720b` ("Record verified checklist state and correct stale remaining work") touching only `README.md` and `docs/INTEGRATION.md`. No API or frontend changes.
+- The updated final checklist in `docs/INTEGRATION.md` confirms: 89 backend tests pass from a clean install, demo works without AI credentials, and — notably — "the UI here renders only part of the snapshot. `WorkforceSnapshot.jsx` and `Provenance.jsx` live on `feature/keystone-ui`… **Merging that branch is what closes this box.**" So the team is waiting on our branch as much as we are on theirs.
+- One open team question flagged there: the learning catalogue contains invented course/credential names suffixed "(fictional)" but stored with `verified: true` — a deliberate-judgement call for the team, not a code action. Our Provenance badge already labels these on screen.
+- `origin/main` and all other branches unchanged; merge was a no-op.
+
+**(b) What I adapted**
+
+- No changes needed. Contract unchanged; frontend already matches the integrated backend from the 15:06 run.
+- Build: `npm.cmd run build` passes (vite, 27 modules, no errors). Invariants hold: unknowns as dashes, no score recomputation, no secrets, demo fallback labeled.
+- Safety: backup tag `backup/pre-sync-20260912-1536` created at the pushed HEAD and pushed to origin.
+
+**(c) Group chat message**
+
+> Member 3 sync ✅ Spotted fix/docs-sync — thanks for the verified checklist! 🙌 Noticed the open box: "Merging feature/keystone-ui is what closes this." Our side is ready — snapshot UI, provenance labels, demo fallback all aligned with the integrated backend and the build is green. Proposal: merge integrate/parts-2-4-data (or fix/docs-sync) into main first, then I'll merge main into feature/keystone-ui, verify, and we open the final PR. On the fictional-catalogue question: the UI already badges every "(fictional)" entry, so it reads honest on screen — happy to add a bigger banner if judges want it louder. 📣
+
 ## 2026-09-12 (15:31 CDT, ninth run)
 
 **(a) What teammates changed**
