@@ -267,6 +267,27 @@ async function backfillRoles() {
   }
 }
 
+// Generic activity types, not named courses or credentials. Naming a real
+// certification here would invent a credential, so certification entries are
+// deliberately absent until someone adds a verified one with provenance.
+const demoResources = [
+  { title: 'Internal mentoring pairing', kind: 'mentoring' },
+  { title: 'Internal workshop series', kind: 'training' },
+  { title: 'Paired delivery on a live project', kind: 'project_experience' },
+  { title: 'Rotation into an owning team', kind: 'job_rotation' },
+  { title: 'Runbook and documentation walkthrough', kind: 'documentation' },
+];
+
+async function backfillResources() {
+  for (const resource of demoResources) {
+    await run(
+      `INSERT OR IGNORE INTO resources (skill_id, title, kind, url, verified, provenance)
+       VALUES (NULL, ?, ?, NULL, 0, 'fictional demo entry')`,
+      [resource.title, resource.kind],
+    );
+  }
+}
+
 module.exports = {
   employees,
   skills,
@@ -276,4 +297,6 @@ module.exports = {
   profileForEmployee,
   seedDemoData,
   backfillRoles,
+  backfillResources,
+  demoResources,
 };

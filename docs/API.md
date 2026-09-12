@@ -4,12 +4,16 @@ Backend: JavaScript/CommonJS. Frontend: JavaScript/JSX ES modules. Stable intege
 
 ## GET /api/keystone/workforce
 
-Returns `{schemaVersion:1, employees, skills, roles, matrix}`.
+Returns `{schemaVersion:1, employees, skills, roles, resources, matrix}`.
 
 - employees: `{id,name,role,department,mentoringAvailable}`.
 - skills: `{id,name,criticality,targetProficiency,requiredHolders,demandTarget,metadataSource}`.
 - roles: `{id,name,criticality,metadataSource,incumbentIds,requirements}`, where requirements is `[{skillId,minimumProficiency}]`.
 - matrix: `{employeeId,skillId,proficiency,evidenceSource,lastVerifiedAt}`.
+
+- resources: `{id,skillId,title,kind,url,verified,provenance}`. kind is one of training, mentoring, certification, job_rotation, project_experience, documentation. skillId is null for generally applicable entries.
+
+The resource catalogue is what development actions cite, and `verified` defaults to false so nothing reads as a genuine course until someone confirms it and records `provenance`. Seeded entries are generic activity types labelled `'fictional demo entry'` with no URL. **No certification entries are seeded on purpose** — naming one would invent a credential, which the brief forbids. Add real entries with `verified:1` and a provenance describing who confirmed them.
 
 Roles carry the succession inputs: `incumbentIds` are the employees currently in the role and `requirements` are the skills a successor must already hold. Roles and their requirements are derived from the fictional demo role profiles, so criticality starts at a neutral 3 and is meant to be edited rather than read as a finding. Deciding who actually qualifies as a successor is Member 2's calculation, not a stored value.
 

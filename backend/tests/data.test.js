@@ -195,6 +195,35 @@ test('role requirements reference real skills and usable proficiencies', async (
   }
 });
 
+test('seeded resources are labelled unverified and invent no credentials', async () => {
+  await ready;
+  const workforce = await data.loadWorkforce();
+
+  assert.ok(workforce.resources.length > 0);
+
+  for (const resource of workforce.resources) {
+    assert.equal(resource.verified, false);
+    assert.equal(resource.provenance, 'fictional demo entry');
+    assert.equal(resource.url, null);
+  }
+
+  assert.equal(workforce.resources.some((resource) => resource.kind === 'certification'), false);
+});
+
+test('a verified resource is reported as verified', async () => {
+  await ready;
+  await data.run(
+    `INSERT OR IGNORE INTO resources (skill_id, title, kind, url, verified, provenance)
+     VALUES (NULL, 'Team runbook', 'documentation', 'https://example.invalid/runbook', 1, 'confirmed by team')`,
+  );
+
+  const workforce = await data.loadWorkforce();
+  const entry = workforce.resources.find((resource) => resource.title === 'Team runbook');
+
+  assert.equal(entry.verified, true);
+  assert.equal(entry.provenance, 'confirmed by team');
+});
+
 test('re-running initialization preserves existing rows', async () => {
   await ready;
   const before = await data.getHeatmapData();

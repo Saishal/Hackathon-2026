@@ -51,6 +51,12 @@ async function loadWorkforce() {
     FROM role_skill_requirements
     ORDER BY role_id ASC, skill_id ASC
   `);
+  const resources = await all(`
+    SELECT id, skill_id, title, kind, url, verified, provenance
+    FROM resources
+    ORDER BY kind ASC, title ASC
+  `);
+
   const incumbentsByRole = new Map();
 
   for (const employee of snapshot.employees) {
@@ -90,6 +96,15 @@ async function loadWorkforce() {
           skillId: requirement.skill_id,
           minimumProficiency: requirement.minimum_proficiency,
         })),
+    })),
+    resources: resources.map((resource) => ({
+      id: resource.id,
+      skillId: resource.skill_id,
+      title: resource.title,
+      kind: resource.kind,
+      url: resource.url,
+      verified: resource.verified === 1,
+      provenance: resource.provenance,
     })),
     matrix: snapshot.matrix.map((edge) => {
       const row = evidenceByEdge.get(`${edge.employeeId}:${edge.skillId}`);

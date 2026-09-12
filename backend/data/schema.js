@@ -70,6 +70,24 @@ async function createTables() {
       FOREIGN KEY (skill_id) REFERENCES skills(id)
     )
   `);
+
+  // Development actions must cite a real catalogue entry. verified defaults to 0 so
+  // nothing is presented as a genuine course or credential until someone confirms it.
+  await run(`
+    CREATE TABLE IF NOT EXISTS resources (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      skill_id INTEGER,
+      title TEXT NOT NULL,
+      kind TEXT NOT NULL CHECK (
+        kind IN ('training', 'mentoring', 'certification', 'job_rotation', 'project_experience', 'documentation')
+      ),
+      url TEXT,
+      verified INTEGER NOT NULL DEFAULT 0 CHECK (verified IN (0, 1)),
+      provenance TEXT NOT NULL,
+      UNIQUE (title, kind),
+      FOREIGN KEY (skill_id) REFERENCES skills(id)
+    )
+  `);
 }
 
 async function columnExists(table, column) {
