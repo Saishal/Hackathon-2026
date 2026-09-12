@@ -153,7 +153,8 @@ body {
   border-top: 1px solid var(--border);
 }
 
-.panel h3:first-child {
+/* Direct children only: a component that wraps its section in a div still needs the divider. */
+.panel > h3:first-child {
   margin-top: 0;
   padding-top: 0;
   border-top: 0;

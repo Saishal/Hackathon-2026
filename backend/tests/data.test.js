@@ -382,3 +382,24 @@ test('gap analysis reflects a persisted target change', async () => {
   assert.equal(entry.targetPeople, 99);
   assert.equal(entry.gap, 99 - entry.currentPeople);
 });
+
+test('gap analysis reports a surplus as no gap rather than a negative one', async () => {
+  await ready;
+  const [target] = (await data.getGapAnalysis()).filter((row) => row.currentPeople > 0);
+
+  await data.replaceFutureSkillTargets([{ id: target.id, targetPeople: 0 }]);
+
+  const entry = (await data.getGapAnalysis()).find((row) => row.id === target.id);
+  assert.equal(entry.gap, 0);
+});
+
+test('critical skills count holders at each skill\'s target proficiency and skip forecast-only skills', async () => {
+  await ready;
+  const critical = await data.getAtRiskSkills();
+  const cybersecurity = critical.find((skill) => skill.name === 'Cybersecurity');
+
+  // Target 4: Isabella Ross (5) counts, Omar Haddad (3) does not.
+  assert.equal(cybersecurity.holderCount, 1);
+  assert.equal(cybersecurity.holders, 'Isabella Ross');
+  assert.equal(critical.some((skill) => skill.name === 'Quantum Readiness'), false);
+});

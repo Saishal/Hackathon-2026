@@ -231,16 +231,21 @@ async function getHeatmapData() {
   };
 }
 
+// Counts holders at each skill's own target proficiency, the same threshold the Keystone
+// risk analysis uses, so a skill that needs level 4 is not shown as safe here while the
+// Keystone panel flags it. Forecast-only skills are not part of today's inventory.
 async function getAtRiskSkills() {
   return all(`
     SELECT
       s.id,
       s.name,
-      SUM(CASE WHEN es.proficiency >= 3 THEN 1 ELSE 0 END) AS holderCount,
-      GROUP_CONCAT(CASE WHEN es.proficiency >= 3 THEN e.name END, ', ') AS holders
+      SUM(CASE WHEN es.proficiency >= COALESCE(sr.target_proficiency, 3) THEN 1 ELSE 0 END) AS holderCount,
+      GROUP_CONCAT(CASE WHEN es.proficiency >= COALESCE(sr.target_proficiency, 3) THEN e.name END, ', ') AS holders
     FROM skills s
+    LEFT JOIN skill_requirements sr ON sr.skill_id = s.id
     LEFT JOIN employee_skills es ON es.skill_id = s.id
     LEFT JOIN employees e ON e.id = es.employee_id
+    WHERE s.future_only = 0
     GROUP BY s.id, s.name
     HAVING holderCount < 2
     ORDER BY holderCount ASC, s.name ASC
@@ -254,7 +259,8 @@ async function getGapAnalysis() {
       s.name,
       fst.target_people AS targetPeople,
       COALESCE(curr.currentPeople, 0) AS currentPeople,
-      fst.target_people - COALESCE(curr.currentPeople, 0) AS gap
+      -- A surplus is not a gap; reporting it as a negative number read as a shortage.
+      MAX(0, fst.target_people - COALESCE(curr.currentPeople, 0)) AS gap
     FROM future_skill_targets fst
     JOIN skills s ON s.id = fst.skill_id
     LEFT JOIN (
