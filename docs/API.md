@@ -65,3 +65,10 @@ Legacy endpoints remain compatible: /api/heatmap, /api/critical-skills, /api/gap
 ## AI status and reviewed preview
 
 GET /api/keystone/ai-status reports configuration without credentials. POST /api/keystone/strategy/preview accepts reviewed:true, horizonMonths, and requirements; it computes read-only gaps through the existing risk engine. Remove response-only coverage and requirementId fields before submitting. See [AI contract details](AI-INTEGRATION.md).
+
+## Identity and scheduling validation
+
+- AI proposals and simulations share `services/skill-identity.js`. Case/whitespace and explicit aliases such as Node.js/Node JS normalize; meaningful punctuation stays intact, so C, C++, and C# are different skills.
+- Non-null future skill IDs must exist. Supplied names must agree with IDs. A name-only requirement matching a catalog skill uses that existing ID. An unmatched name remains a new proposed skill. Unknown IDs, conflicting names, and duplicate normalized skills return HTTP 400 in the simulator. Each scenario accepts one target per skill; send the reviewed target for the selected planning scenario rather than multiple competing targets.
+- Mentoring capacity is counted for each occupied month, including start and completion. Separate earlier bookings that each overlap a longer engagement do not imply they overlap one another. Real peak occupancy must remain within the recorded capacity.
+- If both AI output and the deterministic fallback fail validation, the response stays `demo-fallback` with `fallbackReason: "fallback_invalid"` and an explicit unavailable message. Strategy returns no requirements; development returns five inactive, unassigned categories. No invalid recommendations are returned.

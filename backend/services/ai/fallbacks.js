@@ -85,4 +85,15 @@ function strategyFallback(direction, workforce) {
       'Two independent holders at month 12 is an illustrative planning assumption; review scope, budget, and timeline.'],
   })) };
 }
-module.exports = { developmentFallback, strategyFallback, coverageFallback };
+function unavailableDevelopment(context) {
+  return { actions: categories.map((category) => ({
+    category, employeeId: null, mentorId: null, resourceId: null, status: 'not_applicable',
+    targetProficiency: context.skill.targetProficiency, estimatedDurationMonths: null,
+    rationale: 'A validated development proposal is unavailable.',
+    action: 'Review the workforce evidence and resource catalog before planning this action.',
+    milestone: 'Required evidence is reviewed and a valid plan can be generated.',
+    verificationMethod: 'A qualified reviewer checks the supporting evidence.',
+    assumptions: ['No participant has been assigned and no proficiency improvement is assumed.'],
+  })) };
+}
+module.exports = { developmentFallback, strategyFallback, coverageFallback, unavailableDevelopment };
