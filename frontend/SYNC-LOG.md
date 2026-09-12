@@ -1,5 +1,23 @@
 # Member 3 Sync Log
 
+## 2026-09-12 (16:06 CDT, fifteenth run)
+
+**(a) What teammates changed**
+
+- Nothing new on teammate branches — `main` (`fd002fa`), `feature/workforce-data` (`9073fd1`), `feature/ai-recommendations` (merged), `fix/review-risk-ai` (`bd6c883`), `integrate/parts-2-4-data` (`0c0df44`), `fix/docs-sync` (`ac7720b`) all unchanged since 15:56. Merge was a no-op.
+- Between runs, a parallel Member 3 session landed `a473813`: a Certific-style dashboard redesign (sidebar nav, KPI cards, light theme) plus a team Activity Log generated from git history (`frontend/scripts/generate-activity.mjs` → `frontend/src/data/activity.json`).
+
+**(b) What I adapted**
+
+- Regenerated `frontend/src/data/activity.json` via `node frontend/scripts/generate-activity.mjs` (42 commits: Team 15, Member 3 18, Member 1 9) so the Activity Log includes the latest sync commits.
+- No contract changes to adapt — frontend still matches the integrated backend from the 15:06 run.
+- Build: `npm.cmd run build` passes (vite, 29 modules, no errors). Invariants hold: unknowns as dashes, no score recomputation, no secrets, demo fallback labeled.
+- Safety: backup tag `backup/pre-sync-20260912-1606` created at the pushed HEAD and pushed to origin.
+
+**(c) Group chat message**
+
+> Member 3 sync ✅ The dashboard got a makeover on our branch — sidebar nav, KPI cards, light theme, and a team Activity Log that reads straight from git history (currently: 42 commits — Team 15, Member 3 18, Member 1 9 💪). Build green, pushed with backup tag. No new teammate commits this round — still holding for integrate/docs-sync → main! 🎨
+
 ## 2026-09-12 (15:56 CDT, fourteenth run)
 
 **(a) What teammates changed**
