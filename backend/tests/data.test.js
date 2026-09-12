@@ -132,7 +132,6 @@ test('snapshot carries evidence and mentoring fields, with unknown dates left nu
   const workforce = await data.loadWorkforce();
 
   assert.equal(workforce.schemaVersion, 1);
-  assert.ok(workforce.employees.every((employee) => typeof employee.mentoringAvailable === 'boolean'));
   assert.ok(workforce.matrix.every((edge) => edge.evidenceSource === 'fictional seed'));
   assert.ok(workforce.matrix.every((edge) => edge.lastVerifiedAt === null));
 });
@@ -195,33 +194,43 @@ test('role requirements reference real skills and usable proficiencies', async (
   }
 });
 
-test('seeded resources are labelled unverified and invent no credentials', async () => {
+test('the persisted catalogue keeps the shape AI grounding filters on', async () => {
   await ready;
   const workforce = await data.loadWorkforce();
+  const skillIds = new Set(workforce.skills.map((skill) => skill.id));
 
-  assert.ok(workforce.resources.length > 0);
+  assert.ok(workforce.learningResources.length > 0);
 
-  for (const resource of workforce.resources) {
-    assert.equal(resource.verified, false);
+  for (const resource of workforce.learningResources) {
+    assert.equal(typeof resource.id, 'string');
+    assert.equal(typeof resource.verified, 'boolean');
+    assert.ok(Array.isArray(resource.skillIds));
+    assert.ok(resource.skillIds.every((id) => skillIds.has(id)));
+    assert.match(resource.title, /\(fictional\)/);
     assert.equal(resource.provenance, 'fictional demo entry');
-    assert.equal(resource.url, null);
   }
-
-  assert.equal(workforce.resources.some((resource) => resource.kind === 'certification'), false);
 });
 
-test('a verified resource is reported as verified', async () => {
+test('a multi-skill catalogue entry maps to every skill it serves', async () => {
   await ready;
-  await data.run(
-    `INSERT OR IGNORE INTO resources (skill_id, title, kind, url, verified, provenance)
-     VALUES (NULL, 'Team runbook', 'documentation', 'https://example.invalid/runbook', 1, 'confirmed by team')`,
-  );
-
   const workforce = await data.loadWorkforce();
-  const entry = workforce.resources.find((resource) => resource.title === 'Team runbook');
+  const rotation = workforce.learningResources.find((resource) => resource.id === 'rot-platform-team');
+  const named = ['Cloud Architecture', 'DevOps', 'Test Automation']
+    .map((name) => workforce.skills.find((skill) => skill.name === name).id)
+    .sort();
 
-  assert.equal(entry.verified, true);
-  assert.equal(entry.provenance, 'confirmed by team');
+  assert.deepEqual([...rotation.skillIds].sort(), named);
+});
+
+test('unrecorded mentoring capacity is omitted rather than reported as zero', async () => {
+  await ready;
+  const workforce = await data.loadWorkforce();
+  const recorded = workforce.employees.filter((employee) => 'mentoringHoursPerMonth' in employee);
+  const unrecorded = workforce.employees.filter((employee) => !('mentoringHoursPerMonth' in employee));
+
+  assert.ok(recorded.length > 0);
+  assert.ok(unrecorded.length > 0);
+  assert.ok(recorded.every((employee) => employee.mentoringHoursPerMonth > 0));
 });
 
 test('an employee skill edit requires evidence and a known pair', async () => {
@@ -293,9 +302,12 @@ test('fixture matches the live snapshot shape so it cannot drift silently', asyn
 
   assert.deepEqual(keys(fixture), keys(live));
 
-  for (const section of ['employees', 'skills', 'roles', 'resources', 'matrix']) {
+  // mentoringHoursPerMonth is intentionally optional, so it is compared separately.
+  const required = (value) => keys(value).filter((key) => key !== 'mentoringHoursPerMonth');
+
+  for (const section of ['employees', 'skills', 'roles', 'learningResources', 'matrix']) {
     assert.ok(fixture[section].length > 0, `fixture ${section} is empty`);
-    assert.deepEqual(keys(fixture[section][0]), keys(live[section][0]), `${section} shape drifted`);
+    assert.deepEqual(required(fixture[section][0]), required(live[section][0]), `${section} shape drifted`);
   }
 });
 

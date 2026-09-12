@@ -6,140 +6,126 @@
       "name": "Abigail Lewis",
       "role": "People Manager",
       "department": "People Ops",
-      "mentoringAvailable": true
+      "mentoringHoursPerMonth": 4
     },
     {
       "id": 10,
       "name": "Amelia Diaz",
       "role": "Frontend Engineer",
-      "department": "Engineering",
-      "mentoringAvailable": true
+      "department": "Engineering"
     },
     {
       "id": 1,
       "name": "Ava Patel",
       "role": "Frontend Engineer",
-      "department": "Engineering",
-      "mentoringAvailable": true
+      "department": "Engineering"
     },
     {
       "id": 13,
       "name": "Benjamin Hall",
       "role": "QA Engineer",
-      "department": "Engineering",
-      "mentoringAvailable": true
+      "department": "Engineering"
     },
     {
       "id": 19,
       "name": "Daniel Young",
       "role": "Support Engineer",
-      "department": "Customer Success",
-      "mentoringAvailable": true
+      "department": "Customer Success"
     },
     {
       "id": 18,
       "name": "Ella Walker",
       "role": "Technical Writer",
-      "department": "Operations",
-      "mentoringAvailable": true
+      "department": "Operations"
     },
     {
       "id": 5,
       "name": "Ethan Brooks",
       "role": "DevOps Engineer",
-      "department": "Platform",
-      "mentoringAvailable": true
+      "department": "Platform"
     },
     {
       "id": 14,
       "name": "Evelyn Scott",
       "role": "Business Analyst",
-      "department": "Operations",
-      "mentoringAvailable": true
+      "department": "Operations"
     },
     {
       "id": 20,
       "name": "Grace King",
       "role": "AI Specialist",
       "department": "Innovation",
-      "mentoringAvailable": true
+      "mentoringHoursPerMonth": 4
     },
     {
       "id": 12,
       "name": "Harper White",
       "role": "Project Lead",
       "department": "Operations",
-      "mentoringAvailable": true
+      "mentoringHoursPerMonth": 4
     },
     {
       "id": 15,
       "name": "Henry Adams",
       "role": "Cloud Engineer",
-      "department": "Platform",
-      "mentoringAvailable": true
+      "department": "Platform"
     },
     {
       "id": 8,
       "name": "Isabella Ross",
       "role": "Security Analyst",
-      "department": "Security",
-      "mentoringAvailable": true
+      "department": "Security"
     },
     {
       "id": 17,
       "name": "Jack Turner",
       "role": "Solutions Architect",
-      "department": "Platform",
-      "mentoringAvailable": true
+      "department": "Platform"
     },
     {
       "id": 11,
       "name": "James Carter",
       "role": "Data Scientist",
       "department": "Data",
-      "mentoringAvailable": true
+      "mentoringHoursPerMonth": 4
     },
     {
       "id": 2,
       "name": "Liam Chen",
       "role": "Backend Engineer",
       "department": "Engineering",
-      "mentoringAvailable": true
+      "mentoringHoursPerMonth": 4
     },
     {
       "id": 7,
       "name": "Lucas Kim",
       "role": "UX Designer",
-      "department": "Design",
-      "mentoringAvailable": true
+      "department": "Design"
     },
     {
       "id": 9,
       "name": "Mason Green",
       "role": "Backend Engineer",
-      "department": "Engineering",
-      "mentoringAvailable": true
+      "department": "Engineering"
     },
     {
       "id": 4,
       "name": "Mia Thompson",
       "role": "Product Manager",
       "department": "Product",
-      "mentoringAvailable": true
+      "mentoringHoursPerMonth": 4
     },
     {
       "id": 3,
       "name": "Noah Rivera",
       "role": "Data Analyst",
-      "department": "Data",
-      "mentoringAvailable": true
+      "department": "Data"
     },
     {
       "id": 6,
       "name": "Sophia Nguyen",
       "role": "QA Engineer",
-      "department": "Engineering",
-      "mentoringAvailable": true
+      "department": "Engineering"
     }
   ],
   "skills": [
@@ -1441,51 +1427,101 @@
       ]
     }
   ],
-  "resources": [
+  "learningResources": [
     {
-      "id": 5,
-      "skillId": null,
-      "title": "Runbook and documentation walkthrough",
-      "kind": "documentation",
-      "url": null,
-      "verified": false,
-      "provenance": "fictional demo entry"
+      "id": "cert-billing-recovery",
+      "title": "Billing Recovery Practitioner Assessment (fictional)",
+      "category": "certification",
+      "verified": true,
+      "provenance": "fictional demo entry",
+      "skillIds": [
+        16
+      ]
     },
     {
-      "id": 4,
-      "skillId": null,
-      "title": "Rotation into an owning team",
-      "kind": "job_rotation",
-      "url": null,
-      "verified": false,
-      "provenance": "fictional demo entry"
+      "id": "cert-cloud-foundations",
+      "title": "Cloud Foundations Certificate (fictional)",
+      "category": "certification",
+      "verified": true,
+      "provenance": "fictional demo entry",
+      "skillIds": [
+        9,
+        8
+      ]
     },
     {
-      "id": 1,
-      "skillId": null,
-      "title": "Internal mentoring pairing",
-      "kind": "mentoring",
-      "url": null,
-      "verified": false,
-      "provenance": "fictional demo entry"
+      "id": "cert-ai-governance",
+      "title": "Responsible AI Oversight Certificate (fictional)",
+      "category": "certification",
+      "verified": true,
+      "provenance": "fictional demo entry",
+      "skillIds": [
+        15
+      ]
     },
     {
-      "id": 3,
-      "skillId": null,
-      "title": "Paired delivery on a live project",
-      "kind": "project_experience",
-      "url": null,
-      "verified": false,
-      "provenance": "fictional demo entry"
+      "id": "cert-security-analyst",
+      "title": "Security Analyst Credential (fictional)",
+      "category": "certification",
+      "verified": true,
+      "provenance": "fictional demo entry",
+      "skillIds": [
+        10
+      ]
     },
     {
-      "id": 2,
-      "skillId": null,
-      "title": "Internal workshop series",
-      "kind": "training",
-      "url": null,
-      "verified": false,
-      "provenance": "fictional demo entry"
+      "id": "rot-platform-team",
+      "title": "Platform team rotation placement (fictional)",
+      "category": "job_rotation",
+      "verified": true,
+      "provenance": "fictional demo entry",
+      "skillIds": [
+        9,
+        8,
+        14
+      ]
+    },
+    {
+      "id": "proj-billing-shadow",
+      "title": "Supervised billing remediation project (fictional)",
+      "category": "project_experience",
+      "verified": true,
+      "provenance": "fictional demo entry",
+      "skillIds": [
+        16
+      ]
+    },
+    {
+      "id": "train-data-analysis",
+      "title": "Applied data analysis workshop (fictional)",
+      "category": "training",
+      "verified": true,
+      "provenance": "fictional demo entry",
+      "skillIds": [
+        5,
+        11
+      ]
+    },
+    {
+      "id": "train-billing-internal",
+      "title": "Internal billing systems walkthrough (fictional)",
+      "category": "training",
+      "verified": true,
+      "provenance": "fictional demo entry",
+      "skillIds": [
+        16
+      ]
+    },
+    {
+      "id": "train-secure-coding",
+      "title": "Secure coding clinic (fictional)",
+      "category": "training",
+      "verified": true,
+      "provenance": "fictional demo entry",
+      "skillIds": [
+        10,
+        14
+      ]
     }
   ],
   "futureRequirements": [

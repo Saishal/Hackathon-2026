@@ -1,10 +1,45 @@
 const { analyze } = require('./risk');
 const fail = (message) => { const error = new Error(message); error.status = 400; throw error; };
 
+// One mentoring engagement is assumed to cost this much of a mentor's recorded monthly capacity.
+// A planning constant, not measured: it is stated in the response assumptions so a reviewer can
+// challenge it rather than discover it.
+const MENTOR_HOURS_PER_ENGAGEMENT = 2;
+const overlaps = (a, b) => a.startMonth <= b.completionMonth && b.startMonth <= a.completionMonth;
+
+function validateRequirement(requirement) {
+  const integerIn = (value, low, high) => Number.isInteger(value) && value >= low && value <= high;
+  if (!requirement || (requirement.skillId != null && !integerIn(requirement.skillId, 1, Number.MAX_SAFE_INTEGER))
+    || !integerIn(requirement.targetProficiency, 1, 5) || !integerIn(requirement.requiredHolders, 1, 10000)
+    || !integerIn(requirement.criticality, 1, 5) || !integerIn(requirement.effectiveMonth, 0, 60)) fail('Invalid future requirement');
+  if (requirement.skillId == null && (typeof requirement.skillName !== 'string' || !requirement.skillName.trim()
+    || requirement.skillName.length > 100)) fail('A new future requirement needs a skillName');
+}
+
+// Approved future requirements change what the organization needs at a horizon, so they apply to
+// the future scenarios and never to today's baseline. New skills take provisional negative IDs that
+// exist only inside this scenario; Member 1 allocates persistent IDs when requirements are saved.
+function applyRequirements(snapshot, requirements, horizonMonths) {
+  const applied = [];
+  requirements.forEach((requirement, index) => {
+    if (requirement.effectiveMonth > horizonMonths) return;
+    const id = requirement.skillId ?? -(index + 1);
+    const existing = snapshot.skills.find((skill) => skill.id === id);
+    const definition = { id, name: requirement.skillName?.trim() || existing?.name || `Requirement ${index + 1}`,
+      criticality: requirement.criticality, requiredHolders: requirement.requiredHolders, targetProficiency: requirement.targetProficiency };
+    if (existing) Object.assign(existing, definition);
+    else snapshot.skills.push(definition);
+    applied.push({ skillId: requirement.skillId ?? null, skillName: definition.name, effectiveMonth: requirement.effectiveMonth,
+      requiredHolders: definition.requiredHolders, targetProficiency: definition.targetProficiency, criticality: definition.criticality,
+      isNewSkill: !requirement.skillId });
+  });
+  return applied;
+}
+
 function simulate(workforce, scenario) {
   if (!scenario || ![0, 12, 36, 60].includes(scenario.horizonMonths)) fail('horizonMonths must be 0, 12, 36, or 60');
-  const { horizonMonths, departures = [], interventions = [] } = scenario;
-  if (!Array.isArray(departures) || !Array.isArray(interventions)) fail('departures and interventions must be arrays');
+  const { horizonMonths, departures = [], interventions = [], requirements = [] } = scenario;
+  if (!Array.isArray(departures) || !Array.isArray(interventions) || !Array.isArray(requirements)) fail('departures, interventions and requirements must be arrays');
   const employeeExists = (id) => workforce.employees.some((employee) => employee.id === id);
   const validMonth = (month) => Number.isInteger(month) && month >= 0 && month <= 60;
   for (const departure of departures) {
@@ -15,9 +50,14 @@ function simulate(workforce, scenario) {
       || !validMonth(item.completionMonth) || !Number.isInteger(item.targetProficiency) || item.targetProficiency < 1 || item.targetProficiency > 5
       || typeof item.assumeVerified !== 'boolean') fail('Invalid intervention');
     if (item.mentorId != null && (!employeeExists(item.mentorId) || item.mentorId === item.employeeId)) fail('Invalid mentorId');
+    if (item.startMonth !== undefined && (!validMonth(item.startMonth) || item.startMonth > item.completionMonth)) fail('Invalid intervention startMonth');
   }
+  requirements.forEach(validateRequirement);
+
   const projected = structuredClone(workforce);
   const blocked = [];
+  const capacityWarnings = [];
+  const mentorLoad = new Map();
   for (const item of [...interventions].sort((a, b) => a.completionMonth - b.completionMonth)) {
     if (!item.assumeVerified || item.completionMonth > horizonMonths) continue;
     if (departures.some((departure) => departure.employeeId === item.employeeId && departure.month <= item.completionMonth)) {
@@ -29,6 +69,24 @@ function simulate(workforce, scenario) {
         || departures.some((departure) => departure.employeeId === item.mentorId && departure.month <= item.completionMonth)) {
         blocked.push({ ...item, reason: 'Mentor unqualified or unavailable before completion' }); continue;
       }
+      const window = { startMonth: item.startMonth ?? 0, completionMonth: item.completionMonth };
+      const hours = workforce.employees.find((employee) => employee.id === item.mentorId)?.mentoringHoursPerMonth;
+      const booked = mentorLoad.get(item.mentorId) ?? [];
+      if (Number.isFinite(hours)) {
+        const concurrent = Math.floor(hours / MENTOR_HOURS_PER_ENGAGEMENT);
+        if (concurrent < 1) {
+          blocked.push({ ...item, reason: `Mentor has ${hours} recorded hours per month, below one engagement` }); continue;
+        }
+        if (booked.filter((existing) => overlaps(existing, window)).length >= concurrent) {
+          blocked.push({ ...item, reason: `Mentor capacity exceeded: ${hours} recorded hours per month supports ${concurrent} concurrent engagement(s)` }); continue;
+        }
+      } else {
+        // Unknown capacity is not a blocker, because absent evidence is not evidence of absence.
+        // It is surfaced instead, so a reviewer confirms availability before relying on the plan.
+        capacityWarnings.push({ mentorId: item.mentorId, skillId: item.skillId, completionMonth: item.completionMonth,
+          warning: 'Mentor has no recorded monthly capacity; this engagement is scheduled on an unverified assumption' });
+      }
+      mentorLoad.set(item.mentorId, [...booked, window]);
     }
     const edge = projected.matrix.find((entry) => entry.employeeId === item.employeeId && entry.skillId === item.skillId);
     if (edge) edge.proficiency = Math.max(edge.proficiency, item.targetProficiency);
@@ -36,8 +94,14 @@ function simulate(workforce, scenario) {
   }
   const unavailable = new Set(departures.filter((departure) => departure.month <= horizonMonths).map((departure) => departure.employeeId));
   projected.matrix = projected.matrix.filter((edge) => !unavailable.has(edge.employeeId));
-  const withoutInterventions = { ...workforce, matrix: workforce.matrix.filter((edge) => !unavailable.has(edge.employeeId)) };
-  return { horizonMonths, baseline: analyze(workforce), noIntervention: analyze(withoutInterventions), projected: analyze(projected), blocked,
-    assumptions: ['Scenario only; baseline is unchanged.', 'Completed interventions assume successful proficiency verification.', 'Capacity scheduling and future strategic requirements are extension work.'] };
+  const withoutInterventions = structuredClone({ ...workforce, matrix: workforce.matrix.filter((edge) => !unavailable.has(edge.employeeId)) });
+  const requirementsApplied = applyRequirements(projected, requirements, horizonMonths);
+  applyRequirements(withoutInterventions, requirements, horizonMonths);
+  return { horizonMonths, baseline: analyze(workforce), noIntervention: analyze(withoutInterventions), projected: analyze(projected),
+    blocked, capacityWarnings, requirementsApplied,
+    assumptions: ['Scenario only; baseline is unchanged.', 'Completed interventions assume successful proficiency verification.',
+      `One mentoring engagement is assumed to occupy ${MENTOR_HOURS_PER_ENGAGEMENT} of a mentor's recorded hours per month.`,
+      'Approved future requirements apply to the horizon scenarios, never to today\'s baseline.',
+      'New future skills use provisional scenario-only IDs; Member 1 allocates persistent IDs on save.'] };
 }
-module.exports = { simulate };
+module.exports = { simulate, MENTOR_HOURS_PER_ENGAGEMENT };

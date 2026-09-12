@@ -71,20 +71,29 @@ async function createTables() {
     )
   `);
 
-  // Development actions must cite a real catalogue entry. verified defaults to 0 so
-  // nothing is presented as a genuine course or credential until someone confirms it.
+  // Persists the catalogue Member 4 held in memory. slug keeps their stable string
+  // handle; verified stays an editable column the model can never set itself.
   await run(`
     CREATE TABLE IF NOT EXISTS resources (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      skill_id INTEGER,
+      slug TEXT NOT NULL UNIQUE,
       title TEXT NOT NULL,
       kind TEXT NOT NULL CHECK (
         kind IN ('training', 'mentoring', 'certification', 'job_rotation', 'project_experience', 'documentation')
       ),
       url TEXT,
       verified INTEGER NOT NULL DEFAULT 0 CHECK (verified IN (0, 1)),
-      provenance TEXT NOT NULL,
-      UNIQUE (title, kind),
+      provenance TEXT NOT NULL
+    )
+  `);
+
+  // A catalogue entry can serve several skills, which a single column could not express.
+  await run(`
+    CREATE TABLE IF NOT EXISTS resource_skills (
+      resource_id INTEGER NOT NULL,
+      skill_id INTEGER NOT NULL,
+      PRIMARY KEY (resource_id, skill_id),
+      FOREIGN KEY (resource_id) REFERENCES resources(id),
       FOREIGN KEY (skill_id) REFERENCES skills(id)
     )
   `);
@@ -123,7 +132,21 @@ async function addColumnIfMissing(table, column, definition) {
 async function migrate() {
   await addColumnIfMissing('employee_skills', 'evidence_source', 'TEXT');
   await addColumnIfMissing('employee_skills', 'last_verified_at', 'TEXT');
-  await addColumnIfMissing('employees', 'mentoring_available', 'INTEGER NOT NULL DEFAULT 1');
+  // Null means capacity was never recorded, which is not the same as zero hours.
+  await addColumnIfMissing('employees', 'mentoring_hours_per_month', 'INTEGER');
+}
+
+// The resources table existed briefly with a single skill_id column and no slug. It
+// only ever held seeded demo rows, so it is rebuilt rather than migrated in place.
+async function dropSupersededResources() {
+  const existing = await all("SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'resources'");
+
+  if (existing.length === 0 || (await columnExists('resources', 'slug'))) {
+    return;
+  }
+
+  await run('DROP TABLE IF EXISTS resource_skills');
+  await run('DROP TABLE resources');
 }
 
 // Gives every row the values loadWorkforce previously computed in memory, so the
@@ -151,4 +174,4 @@ async function backfillDefaults() {
   `);
 }
 
-module.exports = { createTables, migrate, backfillDefaults };
+module.exports = { createTables, migrate, backfillDefaults, dropSupersededResources };

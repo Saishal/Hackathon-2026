@@ -4,10 +4,12 @@
 // a baseline was not mutated cannot be undermined by a shared reference.
 const WORKFORCE_FIXTURE = {
   schemaVersion: 1,
+  // Liam has recorded mentoring capacity; the other two are omitted deliberately,
+  // which consumers read as unknown rather than zero.
   employees: [
-    { id: 1, name: 'Liam Chen', role: 'Backend Engineer', department: 'Engineering', mentoringAvailable: true },
-    { id: 2, name: 'Mason Green', role: 'Backend Engineer', department: 'Engineering', mentoringAvailable: true },
-    { id: 3, name: 'Ava Patel', role: 'Frontend Engineer', department: 'Engineering', mentoringAvailable: false },
+    { id: 1, name: 'Liam Chen', role: 'Backend Engineer', department: 'Engineering', mentoringHoursPerMonth: 4 },
+    { id: 2, name: 'Mason Green', role: 'Backend Engineer', department: 'Engineering' },
+    { id: 3, name: 'Ava Patel', role: 'Frontend Engineer', department: 'Engineering' },
   ],
   skills: [
     {
@@ -47,15 +49,14 @@ const WORKFORCE_FIXTURE = {
       requirements: [{ skillId: 2, minimumProficiency: 3 }],
     },
   ],
-  resources: [
+  learningResources: [
     {
-      id: 1,
-      skillId: null,
-      title: 'Internal mentoring pairing',
-      kind: 'mentoring',
-      url: null,
-      verified: false,
+      id: 'train-billing-internal',
+      title: 'Internal billing systems walkthrough (fictional)',
+      category: 'training',
+      verified: true,
       provenance: 'fictional demo entry',
+      skillIds: [1],
     },
   ],
   futureRequirements: [

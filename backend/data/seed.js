@@ -267,25 +267,66 @@ async function backfillRoles() {
   }
 }
 
-// Generic activity types, not named courses or credentials. Naming a real
-// certification here would invent a credential, so certification entries are
-// deliberately absent until someone adds a verified one with provenance.
-const demoResources = [
-  { title: 'Internal mentoring pairing', kind: 'mentoring' },
-  { title: 'Internal workshop series', kind: 'training' },
-  { title: 'Paired delivery on a live project', kind: 'project_experience' },
-  { title: 'Rotation into an owning team', kind: 'job_rotation' },
-  { title: 'Runbook and documentation walkthrough', kind: 'documentation' },
+// Catalogue carried over verbatim from Member 4's in-memory list, which its own
+// comment asked Member 1 to persist. Every title is marked "(fictional)" and carries
+// no URL or real credential name; verified means "this entry exists in our catalogue",
+// and it stays a column no model can set for itself.
+const learningCatalog = [
+  ['cert-billing-recovery', 'Billing Recovery Practitioner Assessment (fictional)', 'certification', ['Legacy Billing Recovery']],
+  ['cert-cloud-foundations', 'Cloud Foundations Certificate (fictional)', 'certification', ['Cloud Architecture', 'DevOps']],
+  ['cert-security-analyst', 'Security Analyst Credential (fictional)', 'certification', ['Cybersecurity']],
+  ['cert-ai-governance', 'Responsible AI Oversight Certificate (fictional)', 'certification', ['AI Governance']],
+  ['train-billing-internal', 'Internal billing systems walkthrough (fictional)', 'training', ['Legacy Billing Recovery']],
+  ['train-data-analysis', 'Applied data analysis workshop (fictional)', 'training', ['Data Analysis', 'Machine Learning']],
+  ['train-secure-coding', 'Secure coding clinic (fictional)', 'training', ['Cybersecurity', 'Test Automation']],
+  ['proj-billing-shadow', 'Supervised billing remediation project (fictional)', 'project_experience', ['Legacy Billing Recovery']],
+  ['rot-platform-team', 'Platform team rotation placement (fictional)', 'job_rotation', ['Cloud Architecture', 'DevOps', 'Test Automation']],
 ];
 
 async function backfillResources() {
-  for (const resource of demoResources) {
+  const dbSkills = await all('SELECT id, name FROM skills');
+  const skillIdByName = new Map(dbSkills.map((skill) => [skill.name, skill.id]));
+
+  for (const [slug, title, kind, skillNames] of learningCatalog) {
     await run(
-      `INSERT OR IGNORE INTO resources (skill_id, title, kind, url, verified, provenance)
-       VALUES (NULL, ?, ?, NULL, 0, 'fictional demo entry')`,
-      [resource.title, resource.kind],
+      `INSERT OR IGNORE INTO resources (slug, title, kind, url, verified, provenance)
+       VALUES (?, ?, ?, NULL, 1, 'fictional demo entry')`,
+      [slug, title, kind],
     );
+
+    const [resource] = await all('SELECT id FROM resources WHERE slug = ?', [slug]);
+
+    for (const skillName of skillNames) {
+      const skillId = skillIdByName.get(skillName);
+
+      if (!skillId) {
+        continue;
+      }
+
+      await run(
+        'INSERT OR IGNORE INTO resource_skills (resource_id, skill_id) VALUES (?, ?)',
+        [resource.id, skillId],
+      );
+    }
   }
+}
+
+// Member 4's rule, now recorded rather than recomputed per request: capacity exists
+// only for people with two or more proficiency-5 skills. Everyone else stays null,
+// which means unknown, not zero.
+async function backfillMentoringCapacity() {
+  await run(`
+    UPDATE employees
+    SET mentoring_hours_per_month = 4
+    WHERE mentoring_hours_per_month IS NULL
+      AND id IN (
+        SELECT employee_id
+        FROM employee_skills
+        WHERE proficiency >= 5
+        GROUP BY employee_id
+        HAVING COUNT(*) >= 2
+      )
+  `);
 }
 
 module.exports = {
@@ -298,5 +339,6 @@ module.exports = {
   seedDemoData,
   backfillRoles,
   backfillResources,
-  demoResources,
+  backfillMentoringCapacity,
+  learningCatalog,
 };

@@ -35,8 +35,8 @@ async function loadWorkforce() {
     evidence.map((row) => [`${row.employee_id}:${row.skill_id}`, row]),
   );
 
-  const mentoring = await all('SELECT id, mentoring_available FROM employees');
-  const mentoringById = new Map(mentoring.map((row) => [row.id, row.mentoring_available === 1]));
+  const mentoring = await all('SELECT id, mentoring_hours_per_month FROM employees');
+  const mentoringById = new Map(mentoring.map((row) => [row.id, row.mentoring_hours_per_month]));
 
   // Legacy future demand is reported separately from Keystone coverage: a skill can
   // have zero hiring demand and still need holders to avoid a knowledge dependency.
@@ -52,10 +52,11 @@ async function loadWorkforce() {
     ORDER BY role_id ASC, skill_id ASC
   `);
   const resources = await all(`
-    SELECT id, skill_id, title, kind, url, verified, provenance
+    SELECT id, slug, title, kind, url, verified, provenance
     FROM resources
     ORDER BY kind ASC, title ASC
   `);
+  const resourceSkills = await all('SELECT resource_id, skill_id FROM resource_skills');
 
   const futureRequirements = await getFutureRequirements();
 
@@ -70,10 +71,13 @@ async function loadWorkforce() {
   return {
     schemaVersion: 1,
     ...snapshot,
-    employees: snapshot.employees.map((employee) => ({
-      ...employee,
-      mentoringAvailable: mentoringById.get(employee.id) ?? true,
-    })),
+    // mentoringHoursPerMonth is omitted entirely when capacity was never recorded:
+    // consumers treat an absent field as unknown, which is not the same as zero.
+    employees: snapshot.employees.map((employee) => {
+      const hours = mentoringById.get(employee.id);
+
+      return hours === null || hours === undefined ? { ...employee } : { ...employee, mentoringHoursPerMonth: hours };
+    }),
     skills: snapshot.skills.map((skill) => {
       const requirement = requirementBySkill.get(skill.id) ?? UNSPECIFIED_REQUIREMENT;
 
@@ -99,14 +103,15 @@ async function loadWorkforce() {
           minimumProficiency: requirement.minimum_proficiency,
         })),
     })),
-    resources: resources.map((resource) => ({
-      id: resource.id,
-      skillId: resource.skill_id,
+    learningResources: resources.map((resource) => ({
+      id: resource.slug,
       title: resource.title,
-      kind: resource.kind,
-      url: resource.url,
+      category: resource.kind,
       verified: resource.verified === 1,
       provenance: resource.provenance,
+      skillIds: resourceSkills
+        .filter((link) => link.resource_id === resource.id)
+        .map((link) => link.skill_id),
     })),
     futureRequirements,
     matrix: snapshot.matrix.map((edge) => {
