@@ -1,8 +1,6 @@
 const { validateShape, categories } = require('./schemas');
-
-// A bare domain is as fabricated as a full URL: "enroll at billingcert.com" names a resource
-// nobody verified. Catalog resources are referenced by resourceId, never written into prose.
-const fabricatedLink = /https?:\/\/|www\.|\b[a-z0-9-]{2,}\.(com|org|net|io|edu|co|ai|dev|app|gov|uk|ca)\b/i;
+const { normalizeName, resolveSkillIdentity } = require('../skill-identity');
+const { hasUnverifiedLink, developmentProse, strategyProse } = require('./resource-links');
 // Member 4 brief: knowledge transfer means documentation, shadowing, practice, and an
 // independent demonstration. The prompt asks for all four; this makes it a requirement.
 // Matched against `action` and `milestone` only. `verificationMethod` is boilerplate that
@@ -15,10 +13,6 @@ const transferElements = [
   ['independent demonstration', /independent|unassisted|without assistance|demonstrat|sign-?off/i],
 ];
 
-function normalizeName(value) {
-  const normalized = value.normalize('NFKC').toLowerCase().trim().replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
-  return ({ 'node js': 'nodejs', 'node': 'nodejs', 'ml': 'machine learning', 'e commerce': 'ecommerce', 'e commerce operations': 'ecommerce operations' })[normalized] || normalized;
-}
 function developmentContext(workforce, skill, analysis) {
   const threshold = skill.targetProficiency;
   const employee = (id) => workforce.employees.find((entry) => entry.id === id);
@@ -40,7 +34,7 @@ function validateDevelopment(payload, context) {
   validateShape('development', payload);
   if (new Set(payload.actions.map((action) => action.category)).size !== categories.length) throw new Error('Duplicate action category');
   for (const action of payload.actions) {
-    if (fabricatedLink.test(JSON.stringify(action))) throw new Error('Unverified generated URL');
+    if (hasUnverifiedLink(developmentProse(action), [context.skill.name])) throw new Error('Unverified generated URL');
     if (action.targetProficiency !== context.skill.targetProficiency) throw new Error('Unexpected target proficiency');
     if (action.employeeId !== null && !context.eligibleLearners.some((entry) => entry.id === action.employeeId)) throw new Error('Unsupported learner');
     const mentor = context.eligibleMentors.find((entry) => entry.id === action.mentorId);
@@ -63,19 +57,11 @@ function normalizeRequirements(payload, workforce) {
   validateShape('strategy', payload);
   const seen = new Set();
   return payload.requirements.map((requirement) => {
-    if (fabricatedLink.test(JSON.stringify(requirement))) throw new Error('Unverified generated URL');
-    const name = normalizeName(requirement.skillName);
-    if (!name) throw new Error('Empty skill name');
-    const matches = workforce.skills.filter((skill) => normalizeName(skill.name) === name);
-    if (matches.length > 1) throw new Error('Ambiguous catalog skill');
-    const named = matches[0];
-    const specified = requirement.skillId === null ? null : workforce.skills.find((skill) => skill.id === requirement.skillId);
-    if (requirement.skillId !== null && (!specified || normalizeName(specified.name) !== name)) throw new Error('Mismatched skill ID/name');
-    const match = specified || named;
-    const key = match ? `id:${match.id}` : `name:${name}`;
+    if (hasUnverifiedLink(strategyProse(requirement), workforce.skills.map((skill) => skill.name))) throw new Error('Unverified generated URL');
+    const { key, ...identity } = resolveSkillIdentity(workforce, requirement);
     if (seen.has(key)) throw new Error('Duplicate strategic skill');
     seen.add(key);
-    return { ...requirement, skillId: match?.id ?? null, skillName: match?.name ?? requirement.skillName.trim() };
+    return { ...requirement, ...identity };
   });
 }
 module.exports = { normalizeName, developmentContext, validateDevelopment, normalizeRequirements };

@@ -1,11 +1,19 @@
 const { analyze } = require('./risk');
+const { resolveSkillIdentity } = require('./skill-identity');
 const fail = (message) => { const error = new Error(message); error.status = 400; throw error; };
 
 // One mentoring engagement is assumed to cost this much of a mentor's recorded monthly capacity.
 // A planning constant, not measured: it is stated in the response assumptions so a reviewer can
 // challenge it rather than discover it.
 const MENTOR_HOURS_PER_ENGAGEMENT = 2;
-const overlaps = (a, b) => a.startMonth <= b.completionMonth && b.startMonth <= a.completionMonth;
+// Months are discrete and both endpoints are occupied. At most 61 months are checked.
+function hasCapacity(booked, window, concurrent) {
+  for (let month = window.startMonth; month <= window.completionMonth; month += 1) {
+    const active = booked.filter((existing) => existing.startMonth <= month && month <= existing.completionMonth).length;
+    if (active + 1 > concurrent) return false;
+  }
+  return true;
+}
 
 function validateRequirement(requirement) {
   const integerIn = (value, low, high) => Number.isInteger(value) && value >= low && value <= high;
@@ -14,6 +22,22 @@ function validateRequirement(requirement) {
     || !integerIn(requirement.criticality, 1, 5) || !integerIn(requirement.effectiveMonth, 0, 60)) fail('Invalid future requirement');
   if (requirement.skillId == null && (typeof requirement.skillName !== 'string' || !requirement.skillName.trim()
     || requirement.skillName.length > 100)) fail('A new future requirement needs a skillName');
+  if (requirement.skillName !== undefined && (typeof requirement.skillName !== 'string' || !requirement.skillName.trim()
+    || requirement.skillName.length > 100)) fail('Invalid future skill name');
+}
+
+function normalizeFutureRequirements(workforce, requirements) {
+  const seen = new Set();
+  return requirements.map((requirement) => {
+    validateRequirement(requirement);
+    let identity;
+    try { identity = resolveSkillIdentity(workforce, requirement); }
+    catch (error) { fail(error.message); }
+    const { key, ...fields } = identity;
+    if (seen.has(key)) fail('Duplicate future skill requirement');
+    seen.add(key);
+    return { ...requirement, ...fields };
+  });
 }
 
 // Approved future requirements change what the organization needs at a horizon, so they apply to
@@ -52,7 +76,7 @@ function simulate(workforce, scenario) {
     if (item.mentorId != null && (!employeeExists(item.mentorId) || item.mentorId === item.employeeId)) fail('Invalid mentorId');
     if (item.startMonth !== undefined && (!validMonth(item.startMonth) || item.startMonth > item.completionMonth)) fail('Invalid intervention startMonth');
   }
-  requirements.forEach(validateRequirement);
+  const normalizedRequirements = normalizeFutureRequirements(workforce, requirements);
 
   const projected = structuredClone(workforce);
   const blocked = [];
@@ -77,7 +101,7 @@ function simulate(workforce, scenario) {
         if (concurrent < 1) {
           blocked.push({ ...item, reason: `Mentor has ${hours} recorded hours per month, below one engagement` }); continue;
         }
-        if (booked.filter((existing) => overlaps(existing, window)).length >= concurrent) {
+        if (!hasCapacity(booked, window, concurrent)) {
           blocked.push({ ...item, reason: `Mentor capacity exceeded: ${hours} recorded hours per month supports ${concurrent} concurrent engagement(s)` }); continue;
         }
       } else {
@@ -95,8 +119,8 @@ function simulate(workforce, scenario) {
   const unavailable = new Set(departures.filter((departure) => departure.month <= horizonMonths).map((departure) => departure.employeeId));
   projected.matrix = projected.matrix.filter((edge) => !unavailable.has(edge.employeeId));
   const withoutInterventions = structuredClone({ ...workforce, matrix: workforce.matrix.filter((edge) => !unavailable.has(edge.employeeId)) });
-  const requirementsApplied = applyRequirements(projected, requirements, horizonMonths);
-  applyRequirements(withoutInterventions, requirements, horizonMonths);
+  const requirementsApplied = applyRequirements(projected, normalizedRequirements, horizonMonths);
+  applyRequirements(withoutInterventions, normalizedRequirements, horizonMonths);
   return { horizonMonths, baseline: analyze(workforce), noIntervention: analyze(withoutInterventions), projected: analyze(projected),
     blocked, capacityWarnings, requirementsApplied,
     assumptions: ['Scenario only; baseline is unchanged.', 'Completed interventions assume successful proficiency verification.',

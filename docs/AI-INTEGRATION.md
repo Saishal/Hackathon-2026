@@ -72,6 +72,10 @@ Strip `coverage` and `requirementId` when submitting generated requirements. The
 
 ## Integration boundaries
 
+Skill identity and link validation now have separate responsibilities. Shared `skill-identity.js` preserves C/C++/C# distinctions and validates IDs consistently with simulation. Resource-link checks inspect prose rather than serialized IDs. Known catalog technology identifiers and explicit dotted technologies such as ASP.NET, VB.NET, and Socket.IO are allowed as names; explicit URLs and unrecognized bare domains in generated prose remain rejected. This check does not establish the factual correctness of every sentence.
+
+An invalid deterministic fallback is reported as `fallbackReason: "fallback_invalid"`, with no actionable assignments or requirements and a message requesting catalog/evidence review. It is not returned as a valid plan and does not escape as an unhandled validation error.
+
 - Member 1: pass catalog/evidence/availability fields; add explicit reviewed requirement persistence and stable new-skill IDs.
 - Member 2: reuse normalized requirements in the combined departure/intervention Time Machine; add capacity scheduling. The read-only strategy preview intentionally assumes neither departures nor training gains.
 - Member 3: `AIWorkbench.jsx` provides working cards, strategy input, editable planning quantities, review checkbox, and gap preview. Reuse it or move these interactions into the finished design. Editing clears review and stale results. Browser never sees credentials.
