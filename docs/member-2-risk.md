@@ -6,8 +6,8 @@
 - [x] Show affected skills and newly uncovered capabilities with each score.
 - [~] Successor matching implemented against recorded skill evidence; Member 1 has not defined role requirements, so that substitution is documented in API.md.
 - [x] Distinguish unmet requirements from unknown evidence.
-- [ ] Add approved future requirements with effective months.
-- [ ] Add mentor capacity and scheduling constraints.
+- [x] Add approved future requirements with effective months.
+- [x] Add mentor capacity and scheduling constraints.
 - [x] Compare baseline/no-intervention/intervention scenarios.
 - [x] Expand tests for arithmetic, timing, unknown data, blocked transfers, and baseline immutability.
 

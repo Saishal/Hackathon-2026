@@ -46,7 +46,11 @@ This scores organizational dependency on a person. It is not a prediction that a
 
 IDs above are illustrative: select actual IDs from workforce. Horizons 0/12/36/60; event months integers 0–60. mentorId optional; if present, mentor must have baseline proficiency >=max(4,targetProficiency) and remain available through completion. Learner must remain available through completion. Same-month departure blocks transfer conservatively. Only completed assumed-verified actions affect projected proficiency.
 
-Returns `{horizonMonths,baseline,noIntervention,projected,blocked,assumptions}`. Three analyses use one calculation. Baseline is never mutated. Capacity scheduling and approved future requirements are extension work for Member 2.
+Returns `{horizonMonths,baseline,noIntervention,projected,blocked,capacityWarnings,requirementsApplied,assumptions}`. Three analyses use one calculation. Baseline is never mutated.
+
+**Mentor capacity.** An intervention may carry an optional `startMonth` (integer 0–60, not after `completionMonth`, default 0); mentor and learner are occupied across `[startMonth, completionMonth]`. A mentor with recorded `mentoringHoursPerMonth` supports `floor(hours / 2)` concurrent engagements — one engagement is assumed to cost 2 hours per month, a stated planning constant rather than a measurement. Overlapping engagements beyond that are blocked with the capacity reason; a mentor whose recorded hours cannot fund one engagement is blocked rather than silently scheduled. A mentor with **no** recorded capacity is not blocked — absent evidence is not evidence of absence — but produces an entry in `capacityWarnings` so a reviewer confirms availability before relying on the plan. Non-overlapping engagements do not compete.
+
+**Approved future requirements.** The scenario may carry `requirements: [{skillId,skillName,targetProficiency,requiredHolders,criticality,effectiveMonth}]`. `skillId` null means a new skill and then `skillName` is required. Requirements whose `effectiveMonth` is at or before the horizon apply to `noIntervention` and `projected` and **never to `baseline`**, which stays today's picture — so the comparison separates "what changed about us" from "what changed about the requirement". Applied entries are echoed in `requirementsApplied`. New skills take provisional negative IDs valid only inside the scenario; Member 1 allocates persistent IDs on save. This is the path by which reviewed strategy requirements reach a dated simulation.
 
 ## POST /api/keystone/development-plan
 
