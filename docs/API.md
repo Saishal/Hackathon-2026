@@ -41,11 +41,15 @@ Each employee: `{id,name,role,department,keystoneScore,capped,recordedSkills,new
 
 score = min(100, round(100 * Σ over affected skills of `criticality/5 * (0.6*becomesUncovered + 0.4*(gapAfter-gapBefore)/requiredHolders)`)). An affected skill is one where this person is a recorded holder at or above target, so removing them lowers its Bus Factor. The sum means sole coverage of several critical skills scores higher than one; `capped` is true if the uncapped value exceeded 100. Same 0.6/0.4 weighting as the skill score so the two read consistently.
 
-Each entry in `affectedSkills` carries `{id,name,criticality,targetProficiency,requiredHolders,busFactorBefore,busFactorAfter,gapBefore,gapAfter,becomesUncovered,successors}`.
+Each entry in `affectedSkills` carries `{id,name,criticality,targetProficiency,requiredHolders,busFactorBefore,busFactorAfter,gapBefore,gapAfter,becomesUncovered,skillBackups}`.
 
-`successors` lists up to three other employees with recorded proficiency in that skill, ranked by proficiency, each `{employeeId,name,proficiency,shortfall,status}` where status is `ready` (already at target without this person) or `developable`. **Matching currently uses recorded skill evidence as a stand-in.** Role requirements now exist on the snapshot as `roles[].requirements`, so this can switch to them when Member 2 is ready. An empty `successors` array means no evidence on file — never proof that nobody else is capable.
+`skillBackups` lists up to three other employees with recorded proficiency in that individual skill, ranked by proficiency. The employee-level `successors` field is separate: it compares candidates with every persisted requirement in the employee's role and reports `ready`, `developable`, `evidence_missing`, or `unknown`. Each candidate includes requirement-level recorded proficiency and shortfall. Missing evidence is never presented as proof that nobody is capable.
 
 This scores organizational dependency on a person. It is not a prediction that anyone will leave, and it must not be presented as one.
+
+## GET /api/keystone/succession
+
+Returns role-level succession readiness from `roles[].requirements`, including current incumbents, their top candidates, the non-incumbent pipeline, and `rolesWithoutReadyNonIncumbent`. A candidate is ready only when recorded evidence meets every requirement. A missing matrix edge is counted as unknown; a recorded proficiency below the minimum is counted as a shortfall.
 
 ## POST /api/keystone/simulate
 
@@ -59,11 +63,11 @@ This scores organizational dependency on a person. It is not a prediction that a
 
 IDs above are illustrative: select actual IDs from workforce. Horizons 0/12/36/60; event months integers 0–60. mentorId optional; if present, mentor must have baseline proficiency >=max(4,targetProficiency) and remain available through completion. Learner must remain available through completion. Same-month departure blocks transfer conservatively. Only completed assumed-verified actions affect projected proficiency.
 
-Returns `{horizonMonths,baseline,noIntervention,projected,blocked,capacityWarnings,requirementsApplied,assumptions}`. Three analyses use one calculation. Baseline is never mutated.
+Returns `{horizonMonths,baseline,noIntervention,projected,requirementsSource,blocked,capacityWarnings,requirementsApplied,assumptions}`. Three analyses use one calculation. Baseline is never mutated. When the request omits `requirements`, the simulator loads only saved requirements whose status is `reviewed`; if several reviewed rows exist for one skill, the latest one due at the selected horizon wins. An explicit array remains a scenario-only override.
 
 **Mentor capacity.** An intervention may carry an optional `startMonth` (integer 0–60, not after `completionMonth`, default 0); mentor and learner are occupied across `[startMonth, completionMonth]`. A mentor with recorded `mentoringHoursPerMonth` supports `floor(hours / 2)` concurrent engagements — one engagement is assumed to cost 2 hours per month, a stated planning constant rather than a measurement. Overlapping engagements beyond that are blocked with the capacity reason; a mentor whose recorded hours cannot fund one engagement is blocked rather than silently scheduled. A mentor with **no** recorded capacity is not blocked — absent evidence is not evidence of absence — but produces an entry in `capacityWarnings` so a reviewer confirms availability before relying on the plan. Non-overlapping engagements do not compete.
 
-**Approved future requirements.** The scenario may carry `requirements: [{skillId,skillName,targetProficiency,requiredHolders,criticality,effectiveMonth}]`. `skillId` null means a new skill and then `skillName` is required. Requirements whose `effectiveMonth` is at or before the horizon apply to `noIntervention` and `projected` and **never to `baseline`**, which stays today's picture — so the comparison separates "what changed about us" from "what changed about the requirement". Applied entries are echoed in `requirementsApplied`. New skills take provisional negative IDs valid only inside the scenario; Member 1 allocates persistent IDs on save. This is the path by which reviewed strategy requirements reach a dated simulation.
+**Approved future requirements.** The scenario may carry `requirements: [{skillId,skillName,targetProficiency,requiredHolders,criticality,effectiveMonth}]`. `skillId` null means a new skill and then `skillName` is required. Requirements whose `effectiveMonth` is at or before the horizon apply to `noIntervention` and `projected` and **never to `baseline`**, which stays today's picture — so the comparison separates "what changed about us" from "what changed about the requirement". Applied entries are echoed in `requirementsApplied`. Unsaved skills use provisional negative IDs inside the scenario. Saved future skills keep a stable positive ID while remaining outside today's inventory until evidence promotes them.
 
 ## POST /api/keystone/development-plan
 
@@ -81,9 +85,9 @@ Body `{employeeId, skillId, proficiency, evidenceSource, lastVerifiedAt}`. Inser
 
 ## GET, POST /api/keystone/future-requirements
 
-`GET` returns `[{id,skillId,skillName,requiredHolders,targetProficiency,effectiveMonth,status,provenance}]` ordered by effective month. `POST` creates one and returns 201.
+`GET` returns `[{id,skillId,skillName,requiredHolders,targetProficiency,criticality,effectiveMonth,status,provenance}]` ordered by effective month. `POST` creates one and returns 201. It accepts an existing positive `skillId`, or a null/provisional negative ID with `skillName`; a new name receives a stable positive skill ID in the response.
 
-`effectiveMonth` is 0–60, matching the simulation horizon. `status` is `proposed` or `reviewed` and **defaults to `proposed`**, so a requirement does not tighten coverage expectations until a person reviews it — this is what keeps "no future deterioration without explicit assumptions" true. `provenance` is required and records where the requirement came from. Member 2 should treat only `reviewed` entries as active when calculating future gaps.
+`effectiveMonth` is 0–60, matching the simulation horizon. `status` is `proposed` or `reviewed` and **defaults to `proposed`**, so a requirement does not tighten coverage expectations until a person reviews it — this is what keeps "no future deterioration without explicit assumptions" true. `provenance` is required and records where the requirement came from. Time Machine automatically applies only `reviewed` entries when callers omit a scenario requirements array.
 
 ## Data integrity
 

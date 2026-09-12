@@ -8,6 +8,10 @@ export default function KeystoneStarter() {
   const [workforce, setWorkforce] = useState(null);
   const [risks, setRisks] = useState(null);
   const [error, setError] = useState('');
+  async function refresh() {
+    const [data, analysis] = await Promise.all([keystoneApi.workforce(), keystoneApi.risks()]);
+    setWorkforce(data); setRisks(analysis);
+  }
   useEffect(() => {
     let active = true;
     Promise.all([keystoneApi.workforce(), keystoneApi.risks()]).then(([data, analysis]) => {
@@ -25,6 +29,6 @@ export default function KeystoneStarter() {
     </>}
     <KeystonePeople />
     <TimeMachine workforce={workforce} />
-    <AIWorkbench workforce={workforce} />
+    <AIWorkbench workforce={workforce} onRequirementsSaved={refresh} />
   </section>;
 }

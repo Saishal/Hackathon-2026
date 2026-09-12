@@ -66,6 +66,7 @@ const WORKFORCE_FIXTURE = {
       skillName: 'Legacy Billing Recovery',
       requiredHolders: 3,
       targetProficiency: 3,
+      criticality: 5,
       effectiveMonth: 12,
       status: 'proposed',
       provenance: 'fictional demo entry',

@@ -13,7 +13,8 @@ async function createTables() {
   await run(`
     CREATE TABLE IF NOT EXISTS skills (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL UNIQUE
+      name TEXT NOT NULL UNIQUE,
+      future_only INTEGER NOT NULL DEFAULT 0 CHECK (future_only IN (0, 1))
     )
   `);
 
@@ -104,8 +105,9 @@ async function createTables() {
     CREATE TABLE IF NOT EXISTS future_requirements (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       skill_id INTEGER NOT NULL,
-      required_holders INTEGER NOT NULL CHECK (required_holders >= 0),
+      required_holders INTEGER NOT NULL CHECK (required_holders >= 1),
       target_proficiency INTEGER NOT NULL CHECK (target_proficiency BETWEEN 1 AND 5),
+      criticality INTEGER NOT NULL DEFAULT 3 CHECK (criticality BETWEEN 1 AND 5),
       effective_month INTEGER NOT NULL CHECK (effective_month BETWEEN 0 AND 60),
       status TEXT NOT NULL CHECK (status IN ('proposed', 'reviewed')),
       provenance TEXT NOT NULL,
@@ -134,6 +136,10 @@ async function migrate() {
   await addColumnIfMissing('employee_skills', 'last_verified_at', 'TEXT');
   // Null means capacity was never recorded, which is not the same as zero hours.
   await addColumnIfMissing('employees', 'mentoring_hours_per_month', 'INTEGER');
+  // A newly forecast skill needs a stable foreign-key ID without appearing in today's
+  // inventory before its effective month.
+  await addColumnIfMissing('skills', 'future_only', 'INTEGER NOT NULL DEFAULT 0 CHECK (future_only IN (0, 1))');
+  await addColumnIfMissing('future_requirements', 'criticality', 'INTEGER NOT NULL DEFAULT 3 CHECK (criticality BETWEEN 1 AND 5)');
 }
 
 // The resources table existed briefly with a single skill_id column and no slug. It

@@ -14,13 +14,19 @@ function normalizeName(value) {
 }
 
 function resolveSkillIdentity(workforce, { skillId, skillName }) {
+  const catalog = [...workforce.skills];
+  for (const requirement of workforce.futureRequirements || []) {
+    if (!catalog.some((skill) => skill.id === requirement.skillId)) {
+      catalog.push({ id: requirement.skillId, name: requirement.skillName });
+    }
+  }
   const namedKey = skillName === undefined ? null : normalizeName(skillName);
-  const matches = namedKey === null ? [] : workforce.skills.filter((skill) => normalizeName(skill.name) === namedKey);
+  const matches = namedKey === null ? [] : catalog.filter((skill) => normalizeName(skill.name) === namedKey);
   if (matches.length > 1) throw new Error('Ambiguous catalog skill');
   let match = matches[0];
   if (skillId != null) {
     if (!Number.isSafeInteger(skillId) || skillId <= 0) throw new Error('Invalid skill ID');
-    const specified = workforce.skills.find((skill) => skill.id === skillId);
+    const specified = catalog.find((skill) => skill.id === skillId);
     if (!specified) throw new Error('Unknown skill ID');
     if (namedKey !== null && normalizeName(specified.name) !== namedKey) throw new Error('Mismatched skill ID/name');
     match = specified;

@@ -274,6 +274,7 @@ test('future requirements validate and default to proposed', async () => {
   const skillId = snapshot.skills[0].id;
 
   await assert.rejects(() => data.addFutureRequirement({ skillId: 9999, requiredHolders: 2, targetProficiency: 3, effectiveMonth: 12, provenance: 'planning' }), { status: 400 });
+  await assert.rejects(() => data.addFutureRequirement({ skillId, requiredHolders: 0, targetProficiency: 3, effectiveMonth: 12, provenance: 'planning' }), { status: 400 });
   await assert.rejects(() => data.addFutureRequirement({ skillId, requiredHolders: 2, targetProficiency: 3, effectiveMonth: 99, provenance: 'planning' }), { status: 400 });
   await assert.rejects(() => data.addFutureRequirement({ skillId, requiredHolders: 2, targetProficiency: 3, effectiveMonth: 12, provenance: '' }), { status: 400 });
   await assert.rejects(() => data.addFutureRequirement({ skillId, requiredHolders: 2, targetProficiency: 3, effectiveMonth: 12, provenance: 'planning', status: 'active' }), { status: 400 });
@@ -294,6 +295,34 @@ test('future requirements validate and default to proposed', async () => {
   assert.equal(stored.status, 'proposed');
 });
 
+test('a provisional future skill receives a stable id without entering today\'s inventory', async () => {
+  await ready;
+  const created = await data.addFutureRequirement({
+    skillId: -42,
+    skillName: 'Quantum Readiness',
+    requiredHolders: 2,
+    targetProficiency: 4,
+    criticality: 5,
+    effectiveMonth: 12,
+    status: 'reviewed',
+    provenance: 'reviewed strategy workshop',
+  });
+
+  assert.ok(created.skillId > 0);
+  assert.equal(created.provisionalSkillId, -42);
+  assert.equal(created.createdSkill, true);
+
+  const workforce = await data.loadWorkforce();
+  assert.equal(workforce.skills.some((skill) => skill.id === created.skillId), false);
+  assert.equal(workforce.futureRequirements.find((entry) => entry.id === created.id).criticality, 5);
+
+  const { simulate } = require('../services/simulation');
+  const result = simulate(workforce, { horizonMonths: 12 });
+  assert.equal(result.requirementsSource, 'persisted-reviewed');
+  assert.equal(result.baseline.skills.some((skill) => skill.id === created.skillId), false);
+  assert.equal(result.projected.skills.find((skill) => skill.id === created.skillId).gap, 2);
+});
+
 test('fixture matches the live snapshot shape so it cannot drift silently', async () => {
   await ready;
   const live = await data.loadWorkforce();
@@ -305,7 +334,7 @@ test('fixture matches the live snapshot shape so it cannot drift silently', asyn
   // mentoringHoursPerMonth is intentionally optional, so it is compared separately.
   const required = (value) => keys(value).filter((key) => key !== 'mentoringHoursPerMonth');
 
-  for (const section of ['employees', 'skills', 'roles', 'learningResources', 'matrix']) {
+  for (const section of ['employees', 'skills', 'roles', 'learningResources', 'futureRequirements', 'matrix']) {
     assert.ok(fixture[section].length > 0, `fixture ${section} is empty`);
     assert.deepEqual(required(fixture[section][0]), required(live[section][0]), `${section} shape drifted`);
   }

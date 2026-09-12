@@ -4,7 +4,7 @@ import { keystoneApi } from '../api/keystone';
 const labels = { training: 'Training', mentoring: 'Mentoring', certification: 'Certification', job_rotation: 'Job rotation', project_experience: 'Project experience' };
 const editableRequirements = (requirements) => requirements.map(({ requirementId: _id, coverage: _coverage, ...requirement }) => requirement);
 
-export default function AIWorkbench({ workforce }) {
+export default function AIWorkbench({ workforce, onRequirementsSaved }) {
   const [skillId, setSkillId] = useState('');
   const [plan, setPlan] = useState(null);
   const [direction, setDirection] = useState('');
@@ -13,6 +13,7 @@ export default function AIWorkbench({ workforce }) {
   const [reviewed, setReviewed] = useState(false);
   const [horizon, setHorizon] = useState(12);
   const [preview, setPreview] = useState(null);
+  const [savedRequirements, setSavedRequirements] = useState([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   async function run(action) {
@@ -22,6 +23,26 @@ export default function AIWorkbench({ workforce }) {
   function update(index, field, value) {
     setDraft((current) => current.map((item, i) => i === index ? { ...item, [field]: Number(value) } : item));
     setReviewed(false); setPreview(null);
+  }
+  async function saveRequirements() {
+    const saved = [];
+    for (const requirement of draft) {
+      saved.push(await keystoneApi.addFutureRequirement({
+        skillId: requirement.skillId,
+        skillName: requirement.skillName,
+        requiredHolders: requirement.requiredHolders,
+        targetProficiency: requirement.targetProficiency,
+        criticality: requirement.criticality,
+        effectiveMonth: requirement.effectiveMonth,
+        status: 'reviewed',
+        provenance: `Reviewed strategy: ${direction.trim()}`,
+      }));
+    }
+    setSavedRequirements(saved);
+    setDraft((current) => current.map((requirement, index) => ({ ...requirement, skillId: saved[index].skillId,
+      skillName: saved[index].skillName })));
+    setPreview(null);
+    await onRequirementsSaved?.();
   }
   const employeeName = (id) => workforce?.employees.find((employee) => employee.id === id)?.name || 'Not assigned';
   return <div>
@@ -49,7 +70,7 @@ export default function AIWorkbench({ workforce }) {
     </div>}
     <h3>Future strategy</h3>
     <p>Describe your initiative, then review the proposed capabilities and planning assumptions.</p>
-    <form onSubmit={(event) => { event.preventDefault(); setProposal(null); setPreview(null); setReviewed(false); setDraft([]);
+    <form onSubmit={(event) => { event.preventDefault(); setProposal(null); setPreview(null); setReviewed(false); setDraft([]); setSavedRequirements([]);
       run(async () => { const response = await keystoneApi.strategy(direction); setProposal(response); setDraft(editableRequirements(response.requirements)); }); }}>
       <label>Business direction <input disabled={busy} value={direction} maxLength={2000} onChange={(event) => { setDirection(event.target.value); setProposal(null); setDraft([]); setPreview(null); setReviewed(false); }} placeholder="We are expanding into e-commerce" /></label>{' '}
       <button disabled={busy || !direction.trim()}>Propose future skills</button>
@@ -71,10 +92,13 @@ export default function AIWorkbench({ workforce }) {
       <label>Preview horizon <select disabled={busy} value={horizon} onChange={(event) => { setHorizon(Number(event.target.value)); setPreview(null); }}>
         <option value={0}>Now</option><option value={12}>1 year</option><option value={36}>3 years</option><option value={60}>5 years</option>
       </select></label>{' '}
-      <button disabled={busy || !reviewed} onClick={() => run(async () => setPreview(await keystoneApi.previewStrategy({ reviewed, horizonMonths: horizon, requirements: draft })))}>Preview reviewed gaps</button>
+      <button disabled={busy || !reviewed} onClick={() => run(async () => setPreview(await keystoneApi.previewStrategy({ reviewed, horizonMonths: horizon, requirements: draft })))}>Preview reviewed gaps</button>{' '}
+      <button disabled={busy || !reviewed || savedRequirements.length > 0}
+        onClick={() => run(saveRequirements)}>{savedRequirements.length > 0 ? 'Requirements saved' : 'Save reviewed requirements'}</button>
+      {savedRequirements.length > 0 && <p role="status">Saved {savedRequirements.length} reviewed requirement(s). New skills now have stable IDs and will enter Time Machine scenarios at their effective month.</p>}
     </div>}
     {preview && <div aria-live="polite"><h4>Reviewed scenario preview</h4>
-      <p>No requirements or employee evidence have been saved.</p>
+      <p>{savedRequirements.length > 0 ? 'This preview uses the reviewed requirements that were saved.' : 'No requirements or employee evidence have been saved.'}</p>
       <p>For matching skills, this preview uses your reviewed quantities in place of the current targets. It assumes no departures or training gains.</p>
       <ul>{preview.requirements.map((requirement) => <li key={requirement.requirementId}><strong>{requirement.skillName}:</strong>{' '}
         {requirement.active ? `${requirement.coverage.recordedQualifiedHolders} recorded qualified holders; gap ${requirement.coverage.gap}; score ${requirement.coverage.keystoneScore}/100.` : `Not yet effective at this horizon (month ${requirement.effectiveMonth}).`}

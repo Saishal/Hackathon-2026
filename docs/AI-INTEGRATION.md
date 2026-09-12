@@ -68,7 +68,7 @@ Offline strategy templates cover e-commerce, industrial automation, and AI/custo
 }
 ```
 
-Strip `coverage` and `requirementId` when submitting generated requirements. The UI does this. A preview rejects missing review, invalid quantities, and conflicting ID/name pairs. It uses Member 2's existing `analyze` function on a clone. New skills use private temporary IDs that never leave the bridge; Member 1 must allocate persistent IDs for saved skills. Matching requirements replace current quantities in this preview, rather than being summed. Requirements not yet effective return `coverage:null`. Nothing is saved.
+Strip `coverage` and `requirementId` when submitting generated requirements. The UI does this. A preview rejects missing review, invalid quantities, and conflicting ID/name pairs. It uses Member 2's existing `analyze` function on a clone. Preview-only skills use temporary IDs; saving reviewed requirements through `/future-requirements` allocates stable IDs. Matching requirements replace current quantities in this preview, rather than being summed. Requirements not yet effective return `coverage:null`.
 
 ## Integration boundaries
 
@@ -76,8 +76,8 @@ Skill identity and link validation now have separate responsibilities. Shared `s
 
 An invalid deterministic fallback is reported as `fallbackReason: "fallback_invalid"`, with no actionable assignments or requirements and a message requesting catalog/evidence review. It is not returned as a valid plan and does not escape as an unhandled validation error.
 
-- Member 1: pass catalog/evidence/availability fields; add explicit reviewed requirement persistence and stable new-skill IDs.
-- Member 2: reuse normalized requirements in the combined departure/intervention Time Machine; add capacity scheduling. The read-only strategy preview intentionally assumes neither departures nor training gains.
+- Member 1: passes the persisted catalogue, evidence, availability, role requirements, and reviewed future requirements.
+- Member 2: uses role requirements for succession and automatically applies persisted reviewed requirements in the combined departure/intervention Time Machine.
 - Member 3: `AIWorkbench.jsx` provides working cards, strategy input, editable planning quantities, review checkbox, and gap preview. Reuse it or move these interactions into the finished design. Editing clears review and stale results. Browser never sees credentials.
 - Matias: owns `services/ai/`, recommendations facade, provider tests. Both facade functions are now async and routes await them.
 
@@ -85,4 +85,4 @@ An invalid deterministic fallback is reported as `fallbackReason: "fallback_inva
 
 Run `npm test --prefix backend`, `npm run lint --prefix frontend`, and `npm run build --prefix frontend`. Tests use local mocks, never real account keys. The actual OpenAI SDK is exercised against a local HTTP server including retry and JSON response handling. Invalid model output, IDs, resources, missing availability, aliases, review gating, effective dates, and HTTP contract errors are covered.
 
-A real provider call has not been verified without configured credentials/model. No capacity scheduler, database migration, or workforce evidence change belongs to this module. Structured validation cannot prove the quality of every prose recommendation; estimates and business requirements remain drafts for review.
+A real provider call requires configured credentials and a model. Structured validation cannot prove the quality of every prose recommendation; estimates and business requirements remain drafts until a person reviews and saves them.

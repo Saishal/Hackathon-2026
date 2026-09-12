@@ -43,15 +43,21 @@ export default function TimeMachine({ workforce }) {
   const mentorFor = (skillId) => (workforce?.matrix ?? [])
     .filter((edge) => edge.skillId === Number(skillId) && edge.proficiency >= 4)
     .map((edge) => edge.employeeId);
-  const changed = result ? result.baseline.skills.map((skill) => {
-    const none = result.noIntervention.skills.find((entry) => entry.id === skill.id);
-    const projected = result.projected.skills.find((entry) => entry.id === skill.id);
-    return { id: skill.id, name: skill.name, base: skill.busFactor, none: none?.busFactor, projected: projected?.busFactor };
+  const changed = result ? [...new Set([
+    ...result.baseline.skills.map((skill) => skill.id),
+    ...result.noIntervention.skills.map((skill) => skill.id),
+    ...result.projected.skills.map((skill) => skill.id),
+  ])].map((id) => {
+    const base = result.baseline.skills.find((entry) => entry.id === id);
+    const none = result.noIntervention.skills.find((entry) => entry.id === id);
+    const projected = result.projected.skills.find((entry) => entry.id === id);
+    return { id, name: projected?.name ?? none?.name ?? base?.name,
+      base: base?.busFactor ?? 0, none: none?.busFactor ?? 0, projected: projected?.busFactor ?? 0 };
   }).filter((row) => row.base !== row.none || row.base !== row.projected) : [];
 
   return <>
     <h3>Time Machine</h3>
-    <p>Model departures and development against a horizon. Nothing here is saved, and the baseline is never changed.</p>
+    <p>Model departures and development against a horizon. Reviewed future requirements are loaded from the saved plan and apply only when their effective month is reached. The baseline is never changed.</p>
     {error && <p role="alert">{error}</p>}
 
     <form onSubmit={(event) => { event.preventDefault(); addDeparture(); }}>
@@ -146,6 +152,13 @@ export default function TimeMachine({ workforce }) {
         </li>)}</ul>
       </>}
       {changed.length === 0 && <p>No skill changes recorded coverage under this scenario.</p>}
+
+      {result.requirementsApplied.length > 0 && <>
+        <h3>Future requirements now in effect</h3>
+        <ul>{result.requirementsApplied.map((requirement) => <li key={requirement.skillId ?? requirement.skillName}>
+          <strong>{requirement.skillName}</strong> — {requirement.requiredHolders} holders at proficiency {requirement.targetProficiency}+ from month {requirement.effectiveMonth}
+        </li>)}</ul>
+      </>}
 
       {result.blocked.length > 0 && <>
         <h3>Blocked development</h3>

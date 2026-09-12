@@ -40,29 +40,48 @@ function normalizeFutureRequirements(workforce, requirements) {
   });
 }
 
+function persistedReviewedRequirements(workforce, horizonMonths = 60) {
+  const latestBySkill = new Map();
+  for (const requirement of workforce.futureRequirements || []) {
+    if (requirement.status !== 'reviewed' || requirement.effectiveMonth > horizonMonths) continue;
+    const current = latestBySkill.get(requirement.skillId);
+    if (!current || requirement.effectiveMonth > current.effectiveMonth
+      || (requirement.effectiveMonth === current.effectiveMonth && requirement.id > current.id)) {
+      latestBySkill.set(requirement.skillId, requirement);
+    }
+  }
+  return [...latestBySkill.values()].map((requirement) => ({ skillId: requirement.skillId, skillName: requirement.skillName,
+      targetProficiency: requirement.targetProficiency, requiredHolders: requirement.requiredHolders,
+      criticality: requirement.criticality ?? workforce.skills.find((skill) => skill.id === requirement.skillId)?.criticality ?? 3,
+      effectiveMonth: requirement.effectiveMonth }));
+}
+
 // Approved future requirements change what the organization needs at a horizon, so they apply to
-// the future scenarios and never to today's baseline. New skills take provisional negative IDs that
-// exist only inside this scenario; Member 1 allocates persistent IDs when requirements are saved.
+// the future scenarios and never to today's baseline. Unsaved skills use provisional negative IDs;
+// persisted future skills keep their stable positive IDs.
 function applyRequirements(snapshot, requirements, horizonMonths) {
   const applied = [];
   requirements.forEach((requirement, index) => {
     if (requirement.effectiveMonth > horizonMonths) return;
     const id = requirement.skillId ?? -(index + 1);
     const existing = snapshot.skills.find((skill) => skill.id === id);
+    const isNewSkill = !existing;
     const definition = { id, name: requirement.skillName?.trim() || existing?.name || `Requirement ${index + 1}`,
       criticality: requirement.criticality, requiredHolders: requirement.requiredHolders, targetProficiency: requirement.targetProficiency };
     if (existing) Object.assign(existing, definition);
     else snapshot.skills.push(definition);
     applied.push({ skillId: requirement.skillId ?? null, skillName: definition.name, effectiveMonth: requirement.effectiveMonth,
       requiredHolders: definition.requiredHolders, targetProficiency: definition.targetProficiency, criticality: definition.criticality,
-      isNewSkill: !requirement.skillId });
+      isNewSkill });
   });
   return applied;
 }
 
 function simulate(workforce, scenario) {
   if (!scenario || ![0, 12, 36, 60].includes(scenario.horizonMonths)) fail('horizonMonths must be 0, 12, 36, or 60');
-  const { horizonMonths, departures = [], interventions = [], requirements = [] } = scenario;
+  const { horizonMonths, departures = [], interventions = [] } = scenario;
+  const usesPersistedRequirements = scenario.requirements === undefined;
+  const requirements = usesPersistedRequirements ? persistedReviewedRequirements(workforce, horizonMonths) : scenario.requirements;
   if (!Array.isArray(departures) || !Array.isArray(interventions) || !Array.isArray(requirements)) fail('departures, interventions and requirements must be arrays');
   const employeeExists = (id) => workforce.employees.some((employee) => employee.id === id);
   const validMonth = (month) => Number.isInteger(month) && month >= 0 && month <= 60;
@@ -122,10 +141,14 @@ function simulate(workforce, scenario) {
   const requirementsApplied = applyRequirements(projected, normalizedRequirements, horizonMonths);
   applyRequirements(withoutInterventions, normalizedRequirements, horizonMonths);
   return { horizonMonths, baseline: analyze(workforce), noIntervention: analyze(withoutInterventions), projected: analyze(projected),
+    requirementsSource: usesPersistedRequirements ? 'persisted-reviewed' : 'scenario',
     blocked, capacityWarnings, requirementsApplied,
     assumptions: ['Scenario only; baseline is unchanged.', 'Completed interventions assume successful proficiency verification.',
       `One mentoring engagement is assumed to occupy ${MENTOR_HOURS_PER_ENGAGEMENT} of a mentor's recorded hours per month.`,
       'Approved future requirements apply to the horizon scenarios, never to today\'s baseline.',
-      'New future skills use provisional scenario-only IDs; Member 1 allocates persistent IDs on save.'] };
+      usesPersistedRequirements
+        ? 'Only persisted requirements with reviewed status are applied automatically.'
+        : 'Caller-supplied requirements are scenario inputs and are not saved.',
+      'Unsaved future skills use provisional scenario-only IDs; saved future skills keep their persistent IDs.'] };
 }
-module.exports = { simulate, MENTOR_HOURS_PER_ENGAGEMENT };
+module.exports = { simulate, MENTOR_HOURS_PER_ENGAGEMENT, persistedReviewedRequirements };
