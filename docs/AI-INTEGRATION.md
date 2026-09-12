@@ -25,7 +25,9 @@ Optional Member 1 fields consumed now:
 }
 ```
 
-Existing snapshots work without those fields. A verified flag means your catalog owner has checked the resource; the model cannot set it. Resource URLs are not generated. No course title or credential should be invented in prose; prompts prohibit this, and structured resource IDs are checked. Free-form factual wording still needs human review.
+Existing snapshots work without those fields. A verified flag means your catalog owner has checked the resource; the model cannot set it. Resource URLs are not generated. No course title or credential should be invented in prose; prompts prohibit this, and structured resource IDs are checked. The link guard rejects full URLs, `www.` prefixes, and bare domains such as `billingcert.com` anywhere in an action or requirement. An invented credential *name* carrying no domain (`Advanced Billing Professional`) cannot be detected by pattern, so free-form factual wording still needs human review.
+
+Mentoring actions that are not `not_applicable` must describe all four knowledge-transfer elements — documentation, shadowing, supervised practice, and an independent demonstration — across their `action` and `milestone` fields, or the response is rejected and falls back. `verificationMethod` is deliberately excluded from that scan: it is boilerplate that always mentions observing an independent demonstration, so counting it would satisfy two elements for free.
 
 ## Future strategy and review
 
