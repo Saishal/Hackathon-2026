@@ -35,7 +35,9 @@ Working: existing heat map/gaps/targets, new workforce/risk APIs, explainable sk
 
 The workforce inventory is persisted rather than derived in memory: skill criticality and coverage requirements, per-edge evidence source and verification date, critical roles with succession skill requirements, the learning catalogue with an editable verified flag, recorded mentoring capacity, and effective-dated future requirements. Foreign keys are enforced and writes validate references first. See [API contracts](docs/API.md) and [sample payloads](docs/samples/README.md).
 
-Remaining: interactive network, and wiring succession matching to the persisted role requirements. A reviewed read-only strategy gap preview is implemented; a real OpenAI call awaits credentials/model. This is a runnable backbone, not the finished submission.
+Succession matching now compares candidates against the persisted role requirements rather than recorded skill evidence alone.
+
+Remaining: the interactive network, and the frontend that renders the persisted snapshot — roles, learning catalogue, future requirements and provenance badges — which lives on `feature/keystone-ui` and is not merged here. A reviewed read-only strategy gap preview is implemented; a real OpenAI call awaits credentials/model. This is a runnable backbone, not the finished submission.
 
 Proficiency stays compatible with existing data: 1–5, independent threshold 3, mentor minimum 4. Missing relationships are unknown, displayed as a dash. Do not mix in the earlier proposed 0–4 scale. Scores measure organizational dependency, not likelihood of departure.
 

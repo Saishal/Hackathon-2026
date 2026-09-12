@@ -21,10 +21,12 @@ Branch names appear in each member specification. All four use the same JS stack
 
 ## Final checklist
 
-- [ ] Tests/lint/build pass; both servers run from clean install.
-- [ ] All five brief questions shown: inventory, concentration, gaps/succession, development, future strategy.
-- [ ] Scores trace to recorded evidence and explicit requirements.
-- [ ] Actual and simulated evidence stay separate.
-- [ ] No future deterioration without explicit assumptions.
-- [ ] No invented employee IDs, credentials, courses, forecasts.
-- [ ] Demo works without AI credentials.
+Verified on this branch from a clean install on 2026-09-12. Re-run before submitting.
+
+- [x] Tests/lint/build pass; both servers run from clean install. 89 tests pass, lint and build exit 0, backend answers `/api/health`, frontend serves on 5173.
+- [ ] All five brief questions shown: inventory, concentration, gaps/succession, development, future strategy. **All five answer over HTTP, but the UI here renders only part of the snapshot.** `WorkforceSnapshot.jsx` and `Provenance.jsx` live on `feature/keystone-ui`, which is branched from `main` and does not yet contain this work. Merging that branch is what closes this box.
+- [x] Scores trace to recorded evidence and explicit requirements. Every risk entry carries `explanation`; recording a proficiency requires a non-empty `evidenceSource`.
+- [x] Actual and simulated evidence stay separate. Simulation never mutates baseline, asserted by test.
+- [x] No future deterioration without explicit assumptions. Future requirements default to `proposed` and only apply when explicitly supplied to a scenario.
+- [ ] No invented employee IDs, credentials, courses, forecasts. IDs and forecasts are clean. **Open question: the learning catalogue contains invented course and credential names** — each suffixed "(fictional)" but stored with `verified: true`. The label is the mitigation; the team should decide whether that reads honestly to a judge before submitting.
+- [x] Demo works without AI credentials. Confirmed with no key set: `ai-status` reports `configured:false, reason:missing_api_key`, and development and strategy both return labelled `demo-fallback` results.
