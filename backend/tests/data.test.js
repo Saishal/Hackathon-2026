@@ -137,6 +137,33 @@ test('snapshot carries evidence and mentoring fields, with unknown dates left nu
   assert.ok(workforce.matrix.every((edge) => edge.lastVerifiedAt === null));
 });
 
+test('zero legacy demand is reported without zeroing Keystone coverage', async () => {
+  await ready;
+  const [skill] = await data.all("SELECT id FROM skills WHERE name = 'Machine Learning'");
+
+  await data.run('UPDATE future_skill_targets SET target_people = 0 WHERE skill_id = ?', [skill.id]);
+  await data.run('UPDATE skill_requirements SET required_holders = 0 WHERE skill_id = ?', [skill.id]);
+
+  const workforce = await data.loadWorkforce();
+  const published = workforce.skills.find((entry) => entry.id === skill.id);
+
+  assert.equal(published.demandTarget, 0);
+  assert.ok(published.requiredHolders >= 1);
+});
+
+test('no published skill can make risk scoring divide by zero', async () => {
+  await ready;
+  const { analyze } = require('../services/risk');
+  const workforce = await data.loadWorkforce();
+
+  assert.ok(workforce.skills.every((skill) => skill.requiredHolders >= 1));
+
+  for (const skill of analyze(workforce).skills) {
+    assert.ok(Number.isFinite(skill.keystoneScore), `${skill.name} scored ${skill.keystoneScore}`);
+    assert.ok(Number.isFinite(skill.gap));
+  }
+});
+
 test('re-running initialization preserves existing rows', async () => {
   await ready;
   const before = await data.getHeatmapData();

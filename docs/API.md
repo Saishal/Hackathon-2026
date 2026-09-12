@@ -7,10 +7,12 @@ Backend: JavaScript/CommonJS. Frontend: JavaScript/JSX ES modules. Stable intege
 Returns `{schemaVersion:1, employees, skills, matrix}`.
 
 - employees: `{id,name,role,department,mentoringAvailable}`.
-- skills: `{id,name,criticality,targetProficiency,requiredHolders,metadataSource}`.
+- skills: `{id,name,criticality,targetProficiency,requiredHolders,demandTarget,metadataSource}`.
 - matrix: `{employeeId,skillId,proficiency,evidenceSource,lastVerifiedAt}`.
 
-Recorded proficiency 1–5; absent edge means unknown. Criticality 1–5, requiredHolders >=1. Legacy targetPeople=0 is clamped to 1 by the Keystone adapter; Member 1 must reconcile zero-demand semantics in a unified requirements model.
+Recorded proficiency 1–5; absent edge means unknown. Criticality 1–5, requiredHolders >=1.
+
+**Demand and coverage are separate questions.** `demandTarget` is legacy future hiring demand from `future_skill_targets` and may be 0 or null; it drives `/api/gap-analysis` only. `requiredHolders` is the Keystone coverage requirement — the holders needed to avoid a knowledge dependency — and is never below 1, because `services/risk.js` computes `gap / requiredHolders` and a 0 would publish `NaN` as `keystoneScore` and corrupt the ranking. A skill with zero hiring demand can still require coverage, so the two are reported independently rather than one being clamped into the other.
 
 Skill metadata is persisted in `skill_requirements` and read per request, so criticality, targetProficiency and requiredHolders are editable rather than hardcoded. Seeded rows report `metadataSource:'fictional demo default'`; a skill with no requirements row reports `'unspecified'` instead of a fabricated requirement. Evidence lives on `employee_skills`: `evidenceSource` labels provenance and `lastVerifiedAt` is null when verification is unknown. `mentoringAvailable` is a boolean; mentor eligibility also still requires baseline proficiency >=4.
 

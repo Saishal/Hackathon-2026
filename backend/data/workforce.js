@@ -1,6 +1,11 @@
 const { all } = require('./db');
 const { getHeatmapData } = require('./queries');
 
+// services/risk.js computes gap / requiredHolders, so publishing 0 would make
+// keystoneScore NaN and corrupt the ranking. Coverage floors at 1; genuine
+// zero-demand is reported through demandTarget instead.
+const MIN_REQUIRED_HOLDERS = 1;
+
 // Used only if a skill is added without a requirements row; absent metadata is
 // reported as unspecified rather than silently presented as a real requirement.
 const UNSPECIFIED_REQUIREMENT = {
@@ -33,6 +38,11 @@ async function loadWorkforce() {
   const mentoring = await all('SELECT id, mentoring_available FROM employees');
   const mentoringById = new Map(mentoring.map((row) => [row.id, row.mentoring_available === 1]));
 
+  // Legacy future demand is reported separately from Keystone coverage: a skill can
+  // have zero hiring demand and still need holders to avoid a knowledge dependency.
+  const demand = await all('SELECT skill_id, target_people FROM future_skill_targets');
+  const demandBySkill = new Map(demand.map((row) => [row.skill_id, row.target_people]));
+
   return {
     schemaVersion: 1,
     ...snapshot,
@@ -47,7 +57,8 @@ async function loadWorkforce() {
         ...skill,
         criticality: requirement.criticality,
         targetProficiency: requirement.target_proficiency,
-        requiredHolders: requirement.required_holders,
+        requiredHolders: Math.max(MIN_REQUIRED_HOLDERS, requirement.required_holders),
+        demandTarget: demandBySkill.get(skill.id) ?? null,
         metadataSource: requirement.metadata_source,
       };
     }),
