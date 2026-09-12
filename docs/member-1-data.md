@@ -1,5 +1,7 @@
 # Member 1 — data and contracts
 
+Handoff and full explanation of how this was built: [member-1-data-layer.md](member-1-data-layer.md).
+
 **Prompt:** Build Keystone's workforce inventory in JavaScript/CommonJS, Express, SQLite. Start at backend/index.js; extract schema, seed, queries, and loadWorkforce into backend/data without breaking existing routes. Own docs/API.md and coordinate changes before teammates consume them.
 
 - [ ] Persist criticality, proficiency thresholds, required holders, evidence/date, mentoring availability.
