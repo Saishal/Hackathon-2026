@@ -104,7 +104,7 @@ function EmployeeDialog({ employee, active, roles, onClose, onDone }) {
       </>}
     >
       <form id="employee-form" className="form-sections" onSubmit={submit}>
-        <FormError error={error && !error.details?.length ? error : null} />
+        <FormError error={error} fields={['name', 'role', 'department', 'managerId', 'reportsExternally', 'mentoringHoursPerMonth', 'startDate']} />
 
         <fieldset className="form-section">
           <legend>Identity</legend>
@@ -248,7 +248,7 @@ function ArchiveDialog({ employee, active, onClose, onDone }) {
       </>}
     >
       <form id="archive-form" onSubmit={submit} className="form-sections">
-        <FormError error={error && !error.details?.length ? error : null} />
+        <FormError error={error} fields={['reassignReportsTo']} />
         {loadError && <ErrorState error={loadError} title="Could not work out the impact" />}
         {!impact && !loadError && <Skeleton lines={4} />}
         {impact && (

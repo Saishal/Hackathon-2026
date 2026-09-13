@@ -68,7 +68,7 @@ export default function EvidenceChangeDialog({ session, employees, skills, initi
         </button>
       </>}
     >
-      <FormError error={error} />
+      <FormError error={error} fields={['employeeId', 'skillId', 'proficiency', 'lastVerifiedAt', 'evidenceSource']} />
       <div className="form-grid form-grid-2">
         <label className="field">Employee
           <select value={form.employeeId} onChange={set('employeeId')} disabled={lockEmployee} data-autofocus={!lockEmployee || undefined}

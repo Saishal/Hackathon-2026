@@ -89,7 +89,8 @@ function search({ query, workforce, risks = null, issues = [], scenarios = [], c
       type: 'issue', id: issue.fingerprint, title: issue.title,
       description: `${issue.severity} · ${issue.entityLabel ?? issue.entityType}${issue.status === 'acknowledged' ? ' · acknowledged' : ''}`,
       status: issue.severity,
-      href: '#/quality',
+      // The quality page reads q from the URL, so the link opens on this record's issues (any status still counted).
+      href: `#/quality?q=${encodeURIComponent(issue.entityLabel ?? issue.title)}`,
     }, best([issue.title, issue.entityLabel, issue.ruleCode], needle));
   }
 

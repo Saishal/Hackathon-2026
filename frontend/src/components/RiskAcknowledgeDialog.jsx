@@ -75,7 +75,7 @@ export default function RiskAcknowledgeDialog({ risk, existing, onClose, onSaved
       </>}
     >
       <form id="risk-owner-form" className="form-stack" onSubmit={submit}>
-        <FormError error={error} />
+        <FormError error={error} fields={['ownerUserId', 'note', 'dueDate', 'nextReviewDate']} />
         <label className="field">Owner
           <select value={form.ownerUserId} onChange={update('ownerUserId')} required disabled={!owners} data-autofocus
             aria-invalid={Boolean(errors.ownerUserId)} aria-describedby="risk-owner-error">

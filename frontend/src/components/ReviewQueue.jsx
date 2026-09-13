@@ -65,7 +65,7 @@ function DecisionDialog({ request, kind, onClose, onDone }) {
       </>}
     >
       <form id="decision-form" className="form-stack" onSubmit={submit}>
-        <FormError error={error} />
+        <FormError error={error} fields={['comment']} />
         <p className="muted">
           {approving
             ? 'Approving writes this change to official data, updates every score that depends on it, and records both in the audit history.'

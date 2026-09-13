@@ -85,13 +85,20 @@ export function ErrorState({ error, onRetry, title }) {
 }
 
 // Shows the server's message; lists each field problem when there is more than one.
-export function FormError({ error }) {
+// Summary of a failed request. A form that shows field errors inline passes the names of those
+// fields (`fields`); details already shown next to an input are then left out of the summary, and
+// when every detail is covered the summary disappears, so a message is never read twice.
+export function FormError({ error, fields }) {
   if (!error) return null;
   const details = error.details ?? [];
+  const shownInline = new Set(fields ?? []);
+  const remaining = details.filter((detail) => !shownInline.has(String(detail.field).split('.').pop()));
+  if (fields && details.length > 0 && remaining.length === 0) return null;
   return (
     <div className="alert" role="alert">
       <p>{error.message}</p>
-      {details.length > 1 && <ul>{details.map((detail) => <li key={`${detail.field}:${detail.code}`}>{detail.message}</li>)}</ul>}
+      {remaining.length > 1 && <ul>{remaining.map((detail) => <li key={`${detail.field}:${detail.code}`}>{detail.message}</li>)}</ul>}
+      {remaining.length === 1 && details.length > 1 && <p>{remaining[0].message}</p>}
     </div>
   );
 }
