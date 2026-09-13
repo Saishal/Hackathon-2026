@@ -166,6 +166,13 @@ const MIGRATIONS = [
     // Who provides a catalogue entry; a verified entry should name a provider or a URL.
     () => addColumnIfMissing('resources', 'provider', 'TEXT'),
   ]],
+  ['governance-006-employment', [
+    // Archived people keep their records for history but leave every score, team and scope.
+    () => addColumnIfMissing('employees', 'employment_status', "TEXT NOT NULL DEFAULT 'active' CHECK (employment_status IN ('active', 'archived'))"),
+    () => addColumnIfMissing('employees', 'archived_at', 'TEXT'),
+    () => addColumnIfMissing('employees', 'start_date', 'TEXT'),
+    'CREATE INDEX IF NOT EXISTS employees_status ON employees(employment_status)',
+  ]],
 ];
 
 async function runGovernanceMigrations() {

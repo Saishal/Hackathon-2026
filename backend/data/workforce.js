@@ -28,14 +28,15 @@ async function loadWorkforce() {
   const requirementBySkill = new Map(requirements.map((row) => [row.skill_id, row]));
 
   const evidence = await all(`
-    SELECT employee_id, skill_id, evidence_source, last_verified_at
-    FROM employee_skills
+    SELECT es.employee_id, es.skill_id, es.evidence_source, es.last_verified_at
+    FROM employee_skills es
+    JOIN employees e ON e.id = es.employee_id AND e.employment_status = 'active'
   `);
   const evidenceByEdge = new Map(
     evidence.map((row) => [`${row.employee_id}:${row.skill_id}`, row]),
   );
 
-  const mentoring = await all('SELECT id, mentoring_hours_per_month, manager_id FROM employees');
+  const mentoring = await all("SELECT id, mentoring_hours_per_month, manager_id FROM employees WHERE employment_status = 'active'");
   const mentoringById = new Map(mentoring.map((row) => [row.id, row.mentoring_hours_per_month]));
   const managerById = new Map(mentoring.map((row) => [row.id, row.manager_id]));
 

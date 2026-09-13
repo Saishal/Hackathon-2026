@@ -111,6 +111,16 @@ export const GLOSSARY = {
     ],
     related: ['pending-vs-approved', 'risk-acknowledgement'],
   },
+  'employment-status': {
+    term: 'Active versus archived employee',
+    short: 'Active people count in every score and team. Archived people keep their history but count nowhere.',
+    long: [
+      'When someone leaves, archive them rather than deleting them. Their record, skill evidence and audit history stay intact, but they drop out of the workforce snapshot: no Bus Factor, no succession candidate, no team member, no scope.',
+      'Archiving a manager needs a new manager for their reports, chosen at the same time, so nobody is left reporting to a person who is gone. A linked sign-in account is disabled and signed out everywhere in the same step.',
+      'Restoring is one click and brings back every score exactly as the evidence supports. It does not re-enable the sign-in account; that is a separate, deliberate decision in Users & settings.',
+    ],
+    related: ['bus-factor', 'succession-readiness', 'user-roles'],
+  },
   'succession-readiness': {
     term: 'Succession readiness',
     short: 'Whether someone could step into a role, judged against every skill that role requires.',
@@ -202,6 +212,32 @@ export const TASKS = {
     related: ['user-roles'],
     view: 'users',
   },
+  'add-employee': {
+    title: 'Add an employee',
+    intro: 'Create a record for a new person so their skills can be recorded and counted.',
+    steps: [
+      'Open Employee directory and choose Add employee.',
+      'Enter their name, job role and department. The role must be one of the defined roles, because roles carry the skill requirements used for succession.',
+      'Choose their manager if known. Only active employees are offered, and the server refuses a reporting loop.',
+      'Record mentoring hours only if you actually know them. Blank means unknown and is shown as a dash.',
+      'Save. The person appears in the workforce, risk and succession views immediately, with no skills yet — add evidence from their profile.',
+    ],
+    related: ['employment-status', 'unknown-vs-unmet'],
+    view: 'directory',
+  },
+  'archive-employee': {
+    title: 'Archive an employee who has left',
+    intro: 'Remove someone from every score and team while keeping their history.',
+    steps: [
+      'Open Employee directory, find the person, and choose Archive.',
+      'Read the impact first: which skills lose their only qualified holder, who reports to them, and whether a sign-in account will be disabled.',
+      'If a skill would be left uncovered, consider planning a replacement in the Time Machine before you continue.',
+      'If they manage people, choose who those people report to now. This is required.',
+      'Tick the confirmation and archive. Everything is recorded in the audit history and can be reversed with Restore.',
+    ],
+    related: ['employment-status', 'bus-factor'],
+    view: 'directory',
+  },
   'export-report': {
     title: 'Export a report',
     intro: 'Download the risk register or the data-quality issues as a CSV file.',
@@ -261,6 +297,11 @@ export const VIEW_HELP = {
     purpose: 'An append-only record of every sign-in, change, review and planning decision. Nothing here can be edited or deleted.',
     topics: ['pending-vs-approved', 'risk-acknowledgement'],
     tasks: [],
+  },
+  directory: {
+    purpose: 'Administrative records for every employee, including archived ones. Changes here take effect immediately and are audited.',
+    topics: ['employment-status', 'unknown-vs-unmet', 'succession-readiness'],
+    tasks: ['add-employee', 'archive-employee'],
   },
   users: {
     purpose: 'Accounts, roles and organisation settings. Every permission shown here is also enforced by the server.',

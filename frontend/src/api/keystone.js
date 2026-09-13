@@ -95,6 +95,12 @@ export const keystoneApi = {
   rejectFutureRequirement: (id, comment) => post(`/keystone/future-requirements/${id}/reject`, { comment }),
 
   organization: () => request('/keystone/organization'),
+  employees: () => request('/keystone/employees'),
+  createEmployee: (body) => post('/keystone/employees', body),
+  updateEmployee: (id, fields) => request(`/keystone/employees/${id}`, { method: 'PATCH', body: fields }),
+  employeeImpact: (id) => request(`/keystone/employees/${id}/impact`),
+  archiveEmployee: (id, body) => post(`/keystone/employees/${id}/archive`, body),
+  restoreEmployee: (id) => post(`/keystone/employees/${id}/restore`),
   updateOrganization: (fields) => request('/keystone/organization', { method: 'PATCH', body: fields }),
 
   auditLog: (filters) => request(`/keystone/audit-log${query(filters)}`),

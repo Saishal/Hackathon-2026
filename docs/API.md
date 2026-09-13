@@ -97,6 +97,18 @@ Body `{employeeId, skillId, proficiency, evidenceSource, lastVerifiedAt}`. Inser
 
 Schema upgrades are additive and existing rows are preserved, so an existing `backend/skillsight.db` keeps working. To get a clean seed, point `DB_PATH` at a new file (`DB_PATH=/tmp/fresh.db npm start --prefix backend`) or delete `backend/skillsight.db`; seeding only runs when the employees table is empty.
 
+## Employee directory (admin)
+
+All under `/api/keystone`, all requiring `employee.edit`. Archived employees keep their record, evidence and audit history but are excluded from the workforce snapshot, so they hold no coverage, appear in no team or scope, and are not succession candidates.
+
+- `GET /employees` — every employee including archived, each with `employmentStatus`, `archivedAt`, `startDate`, `managerName`, `directReports` (active only), `recordedSkills`, and `account` (`{id,email,disabled}` or null).
+- `POST /employees` — body `{name, role, department, managerId?, reportsExternally?, mentoringHoursPerMonth?, startDate?}`. Role must be a defined role; manager must be an active employee; start date cannot be in the future. Duplicate name returns 409 `duplicate_name`. Audited as `employee.created`. Returns 201.
+- `PATCH /employees/:id` — any subset of the same fields. Refuses self-management, reporting loops and archived managers. Audited as `employee.updated` with changed fields.
+- `GET /employees/:id/impact` — what archiving would change: `directReports` (active people who report to them), `account` (the linked sign-in, if any) and `coverage` (`keystoneScore`, `newlyUncovered` skill names, and `affectedSkills` with Bus Factor before/after), computed with the same engine as `/employee-risks`.
+- `POST /employees/:id/archive` — body `{reassignReportsTo?}`. If the person has active direct reports, `reassignReportsTo` is required and must be a different active employee; reports are moved in the same transaction and each move is audited. A linked account is disabled and its sessions destroyed. Audited as `employee.archived` (high signal). 409 if already archived.
+- `POST /employees/:id/restore` — reactivates. Does **not** re-enable a disabled account; the response says so with `accountStillDisabled`. Audited as `employee.restored`.
+
+Migration `governance-006-employment` adds `employment_status`, `archived_at` and `start_date` to `employees`; existing rows default to active.
 ## GET /api/health
 
 Returns `{status, failing, checks, checkedAt}` with **HTTP 200** when healthy and **HTTP 503** when any component fails, so an uptime monitor can poll it directly.

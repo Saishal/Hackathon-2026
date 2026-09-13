@@ -17,7 +17,7 @@ const dataQuality = require('../data/data-quality-store');
 const writes = require('../data/workforce-writes');
 const queries = require('../data/queries');
 const { loadWorkforce } = require('../data/workforce');
-const { analyze } = require('../services/risk');
+const { analyze, analyzeEmployees } = require('../services/risk');
 const { simulate } = require('../services/simulation');
 const { summarizeDataQuality, evaluateScenario } = require('../services/data-quality');
 const { buildProfile } = require('../services/profile');
@@ -81,8 +81,51 @@ function sendCsv(res, filename, csv) {
 
 const pickUser = (user) => ({ email: user.email, displayName: user.displayName, role: user.role, employeeId: user.employeeId, disabled: user.disabled });
 const pickOrganization = ({ name, planStartDate, evidenceStaleMonths }) => ({ name, planStartDate, evidenceStaleMonths });
-const pickEmployee = ({ name, role, department, managerId, reportsExternally, mentoringHoursPerMonth }) =>
-  ({ name, role, department, managerId, reportsExternally, mentoringHoursPerMonth });
+const pickEmployee = ({ name, role, department, managerId, reportsExternally, mentoringHoursPerMonth, startDate, employmentStatus }) =>
+  ({ name, role, department, managerId, reportsExternally, mentoringHoursPerMonth, startDate, employmentStatus });
+
+// Validation shared by create and edit: the role must be defined and the manager must be a
+// different, active employee who does not already report to this person.
+async function employeeReferenceProblems(body, selfId = null) {
+  const details = [];
+  if (body.role !== undefined && !(await writes.roleExists(body.role.trim()))) {
+    details.push({ field: 'role', code: 'unknown_reference', message: 'Role must match a defined role.' });
+  }
+  if (body.managerId !== undefined && body.managerId !== null) {
+    const manager = await writes.getEmployee(body.managerId);
+    if (selfId !== null && body.managerId === selfId) details.push({ field: 'managerId', code: 'invalid_reference', message: 'An employee cannot manage themselves.' });
+    else if (!manager) details.push({ field: 'managerId', code: 'unknown_reference', message: 'Manager does not exist.' });
+    else if (manager.employmentStatus !== 'active') details.push({ field: 'managerId', code: 'invalid_reference', message: `${manager.name} is archived and cannot be a manager.` });
+    else if (selfId !== null && (await writes.wouldCreateCycle(selfId, body.managerId))) {
+      details.push({ field: 'managerId', code: 'reporting_cycle', message: 'That manager already reports to this employee, which would create a loop.' });
+    }
+  }
+  if (body.startDate !== undefined && body.startDate !== null && body.startDate > today()) {
+    details.push({ field: 'startDate', code: 'date_in_future', message: 'Start date cannot be in the future.' });
+  }
+  return details;
+}
+
+// What archiving this person would change, so the admin sees it before confirming: who loses
+// their manager, which account is disabled, and which skills lose recorded coverage.
+async function archiveImpact(id) {
+  const employee = await writes.getEmployee(id);
+  if (!employee) throw notFound('The employee');
+  const reports = await writes.activeDirectReports(id);
+  const account = await users.getUserByEmployee(id);
+  let coverage = null;
+  if (employee.employmentStatus === 'active') {
+    const workforce = await loadWorkforce();
+    const risk = analyzeEmployees(workforce).employees.find((entry) => entry.id === id);
+    coverage = risk ? {
+      keystoneScore: risk.keystoneScore,
+      newlyUncovered: risk.newlyUncovered,
+      affectedSkills: risk.affectedSkills.map(({ id: skillId, name, busFactorBefore, busFactorAfter, becomesUncovered }) =>
+        ({ id: skillId, name, busFactorBefore, busFactorAfter, becomesUncovered })),
+    } : { keystoneScore: 0, newlyUncovered: [], affectedSkills: [] };
+  }
+  return { employee, directReports: reports, account: account ? { id: account.id, email: account.email, disabled: account.disabled } : null, coverage };
+}
 
 async function scopedQuality(req) {
   const result = await dataQuality.refreshDataQuality();
@@ -497,22 +540,124 @@ module.exports = function governanceRoutes() {
     res.status(204).end();
   });
 
+  router.get('/employees', requirePermission('employee.edit'), async (_req, res) => {
+    res.json({ items: await writes.listEmployees() });
+  });
+
+  router.post('/employees', requirePermission('employee.edit'), validateBody(schemas.employeeCreate), async (req, res) => {
+    const details = await employeeReferenceProblems(req.body);
+    if (details.length > 0) throw validationError(details);
+    const fields = { ...req.body };
+    for (const key of ['name', 'role', 'department']) if (typeof fields[key] === 'string') fields[key] = fields[key].trim();
+    if (fields.managerId !== undefined && fields.managerId !== null && fields.reportsExternally === undefined) fields.reportsExternally = false;
+
+    const created = await withTransaction(async () => {
+      let employee;
+      try {
+        employee = await writes.createEmployee(fields);
+      } catch (error) {
+        if (String(error.code).startsWith('SQLITE_CONSTRAINT')) throw conflict('Another employee already has that name.', 'duplicate_name');
+        throw error;
+      }
+      const set = Object.entries(pickEmployee(employee)).filter(([, value]) => value !== null && value !== undefined && value !== false).map(([key]) => humanize(key).toLowerCase());
+      await recordAudit({
+        ...auditContext(req), action: 'employee.created', entityType: 'employee', entityId: employee.id, entityLabel: employee.name,
+        summary: `${req.user.displayName} added ${employee.name} as ${employee.role} in ${employee.department} (${set.join(', ')})`,
+        after: pickEmployee(employee), metadata: { setFields: Object.keys(pickEmployee(employee)) }, highSignal: true,
+      });
+      return employee;
+    });
+    res.status(201).json(created);
+  });
+
+  router.get('/employees/:id/impact', requirePermission('employee.edit'), async (req, res) => {
+    res.json(await archiveImpact(paramId(req)));
+  });
+
+  router.post('/employees/:id/archive', requirePermission('employee.edit'), validateBody(schemas.employeeArchive), async (req, res) => {
+    const id = paramId(req);
+    const impact = await archiveImpact(id);
+    if (impact.employee.employmentStatus === 'archived') throw conflict(`${impact.employee.name} is already archived.`, 'already_archived');
+    const reassignTo = req.body.reassignReportsTo ?? null;
+    if (impact.directReports.length > 0) {
+      if (reassignTo === null) {
+        throw validationError([{ field: 'reassignReportsTo', code: 'reports_need_manager',
+          message: `${impact.employee.name} manages ${impact.directReports.length} ${impact.directReports.length === 1 ? 'person' : 'people'}. Choose who they report to now.` }]);
+      }
+      const next = await writes.getEmployee(reassignTo);
+      if (!next || next.employmentStatus !== 'active') throw validationError([{ field: 'reassignReportsTo', code: 'unknown_reference', message: 'The new manager must be an active employee.' }]);
+      if (reassignTo === id) throw validationError([{ field: 'reassignReportsTo', code: 'invalid_reference', message: 'Reports cannot be reassigned to the person being archived.' }]);
+      if (impact.directReports.some((report) => report.id === reassignTo)) {
+        // Promoting a direct report is fine; they simply stop reporting to the archived person.
+      }
+    }
+    const now = new Date().toISOString();
+
+    const result = await withTransaction(async () => {
+      let reassigned = 0;
+      if (impact.directReports.length > 0) {
+        reassigned = await writes.reassignReports(id, reassignTo);
+        // The new manager cannot report to the archived person, so clear that link if it existed.
+        await writes.updateEmployee(reassignTo, (await writes.getEmployee(reassignTo)).managerId === id ? { managerId: null } : {});
+        for (const report of impact.directReports) {
+          if (report.id === reassignTo) continue;
+          await recordAudit({
+            ...auditContext(req), action: 'employee.updated', entityType: 'employee', entityId: report.id, entityLabel: report.name,
+            summary: `${report.name} now reports to ${(await writes.getEmployee(reassignTo)).name} because ${impact.employee.name} was archived`,
+            before: { managerId: id }, after: { managerId: reassignTo }, metadata: { changedFields: ['managerId'], cause: 'employee.archived' },
+          });
+        }
+      }
+      await writes.setEmploymentStatus(id, 'archived', now);
+      let accountDisabled = false;
+      if (impact.account && !impact.account.disabled) {
+        await users.updateUser(impact.account.id, { disabled: true });
+        await destroyUserSessions(impact.account.id);
+        accountDisabled = true;
+        await recordAudit({
+          ...auditContext(req), action: 'user.disabled', entityType: 'user', entityId: impact.account.id, entityLabel: impact.account.email,
+          summary: `${req.user.displayName} disabled ${impact.account.email} because ${impact.employee.name} was archived`,
+          before: { disabled: false }, after: { disabled: true }, metadata: { cause: 'employee.archived' },
+        });
+      }
+      const after = await writes.getEmployee(id);
+      await recordAudit({
+        ...auditContext(req), action: 'employee.archived', entityType: 'employee', entityId: id, entityLabel: after.name,
+        summary: `${req.user.displayName} archived ${after.name}${reassigned ? `, moving ${reassigned} report(s) to ${(await writes.getEmployee(reassignTo)).name}` : ''}${accountDisabled ? ' and disabled their account' : ''}`,
+        before: pickEmployee(impact.employee), after: pickEmployee(after),
+        metadata: { reassignedReports: reassigned, reassignedTo: reassignTo, accountDisabled, newlyUncovered: impact.coverage?.newlyUncovered ?? [] },
+        highSignal: true,
+      });
+      return { employee: after, reassignedReports: reassigned, accountDisabled, newlyUncovered: impact.coverage?.newlyUncovered ?? [] };
+    });
+    res.json(result);
+  });
+
+  router.post('/employees/:id/restore', requirePermission('employee.edit'), async (req, res) => {
+    const id = paramId(req);
+    const current = await writes.getEmployee(id);
+    if (!current) throw notFound('The employee');
+    if (current.employmentStatus !== 'archived') throw conflict(`${current.name} is not archived.`, 'not_archived');
+    const restored = await withTransaction(async () => {
+      await writes.setEmploymentStatus(id, 'active', null);
+      const after = await writes.getEmployee(id);
+      const account = await users.getUserByEmployee(id);
+      await recordAudit({
+        ...auditContext(req), action: 'employee.restored', entityType: 'employee', entityId: id, entityLabel: after.name,
+        summary: `${req.user.displayName} restored ${after.name}${account?.disabled ? '; their account stays disabled until re-enabled' : ''}`,
+        before: pickEmployee(current), after: pickEmployee(after), highSignal: true,
+      });
+      return { employee: after, accountStillDisabled: Boolean(account?.disabled) };
+    });
+    res.json(restored);
+  });
+
   router.patch('/employees/:id', requirePermission('employee.edit'), validateBody(schemas.employeeUpdate), async (req, res) => {
     const id = paramId(req);
     const updated = await withTransaction(async () => {
       const current = await writes.getEmployee(id);
       if (!current) throw notFound('The employee');
-      const details = [];
-      if (req.body.role !== undefined && !(await writes.roleExists(req.body.role.trim()))) {
-        details.push({ field: 'role', code: 'unknown_reference', message: 'Role must match a defined role.' });
-      }
-      if (req.body.managerId !== undefined && req.body.managerId !== null) {
-        if (req.body.managerId === id) details.push({ field: 'managerId', code: 'invalid_reference', message: 'An employee cannot manage themselves.' });
-        else if (!(await writes.getEmployee(req.body.managerId))) details.push({ field: 'managerId', code: 'unknown_reference', message: 'Manager does not exist.' });
-        else if (await writes.wouldCreateCycle(id, req.body.managerId)) {
-          details.push({ field: 'managerId', code: 'reporting_cycle', message: 'That manager already reports to this employee, which would create a loop.' });
-        }
-      }
+      const details = await employeeReferenceProblems(req.body, id);
       if (details.length > 0) throw validationError(details);
 
       const fields = { ...req.body };

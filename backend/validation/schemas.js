@@ -169,14 +169,19 @@ const organizationUpdate = object({
   evidenceStaleMonths: { type: 'integer', minimum: 1, maximum: 60, title: 'Re-verification period' },
 }, [], { minProperties: 1 });
 
-const employeeUpdate = object({
+const employeeFields = {
   name: text(120, 'Name'),
   role: text(120, 'Role'),
   department: text(120, 'Department'),
   managerId: nullableId('Manager'),
   reportsExternally: { type: 'boolean', title: 'Reports outside the organization' },
   mentoringHoursPerMonth: { type: ['integer', 'null'], minimum: 0, maximum: 744, title: 'Mentoring hours per month' },
-}, [], { minProperties: 1 });
+  startDate: nullableDate('Start date'),
+};
+const employeeUpdate = object(employeeFields, [], { minProperties: 1 });
+const employeeCreate = object(employeeFields, ['name', 'role', 'department']);
+// Archiving a manager needs to say where their active reports go; null is allowed only when they have none.
+const employeeArchive = object({ reassignReportsTo: nullableId('New manager for their reports') }, []);
 
 const roleRequirement = object({ minimumProficiency: level('Minimum level') }, ['minimumProficiency']);
 
@@ -196,5 +201,5 @@ module.exports = {
   RESOURCE_KINDS, ROLES, login, employeeSkill, evidenceChangePayload, futureRequirementCreate, futureRequirementUpdate,
   futureRequirementChangePayload, resourceFields, resourceChangePayload, changeRequestCreate, changeRequestUpdate,
   approveDecision, rejectDecision, scenario, acknowledgementCreate, acknowledgementUpdate, acknowledgementClose,
-  userCreate, userUpdate, passwordReset, organizationUpdate, employeeUpdate, roleRequirement, aiDecision, issueAcknowledge,
+  userCreate, userUpdate, passwordReset, organizationUpdate, employeeUpdate, employeeCreate, employeeArchive, roleRequirement, aiDecision, issueAcknowledge,
 };

@@ -24,27 +24,83 @@ async function getEvidence(employeeId, skillId) {
 
 const deleteEvidence = (employeeId, skillId) => run('DELETE FROM employee_skills WHERE employee_id = ? AND skill_id = ?', [employeeId, skillId]);
 
+const EMPLOYEE_SELECT = `
+  SELECT e.id, e.name, e.role, e.department, e.manager_id, e.reports_externally, e.mentoring_hours_per_month,
+         e.employment_status, e.archived_at, e.start_date, m.name AS manager_name
+  FROM employees e LEFT JOIN employees m ON m.id = e.manager_id`;
+
+const mapEmployee = (row) => (row ? {
+  id: row.id,
+  name: row.name,
+  role: row.role,
+  department: row.department,
+  managerId: row.manager_id,
+  managerName: row.manager_name,
+  reportsExternally: row.reports_externally === 1,
+  mentoringHoursPerMonth: row.mentoring_hours_per_month,
+  employmentStatus: row.employment_status,
+  archivedAt: row.archived_at,
+  startDate: row.start_date,
+} : null);
+
 async function getEmployee(id) {
-  const row = await get(
-    `SELECT e.id, e.name, e.role, e.department, e.manager_id, e.reports_externally, e.mentoring_hours_per_month, m.name AS manager_name
-     FROM employees e LEFT JOIN employees m ON m.id = e.manager_id WHERE e.id = ?`,
-    [id],
+  return mapEmployee(await get(`${EMPLOYEE_SELECT} WHERE e.id = ?`, [id]));
+}
+
+// The directory: every employee including archived ones, with the counts an admin needs to judge
+// the effect of a change. Linked accounts come from users; archived people show their date.
+async function listEmployees() {
+  const rows = await all(`
+    ${EMPLOYEE_SELECT}
+    ORDER BY e.employment_status ASC, e.name ASC`);
+  const reports = await all(`
+    SELECT manager_id AS managerId, COUNT(*) AS count FROM employees
+    WHERE manager_id IS NOT NULL AND employment_status = 'active' GROUP BY manager_id`);
+  const skills = await all('SELECT employee_id AS employeeId, COUNT(*) AS count FROM employee_skills GROUP BY employee_id');
+  const accounts = await all('SELECT id, email, employee_id AS employeeId, disabled FROM users WHERE employee_id IS NOT NULL');
+  const reportsBy = new Map(reports.map((row) => [row.managerId, row.count]));
+  const skillsBy = new Map(skills.map((row) => [row.employeeId, row.count]));
+  const accountBy = new Map(accounts.map((row) => [row.employeeId, { id: row.id, email: row.email, disabled: row.disabled === 1 }]));
+  return rows.map((row) => ({
+    ...mapEmployee(row),
+    directReports: reportsBy.get(row.id) ?? 0,
+    recordedSkills: skillsBy.get(row.id) ?? 0,
+    account: accountBy.get(row.id) ?? null,
+  }));
+}
+
+async function createEmployee({ name, role, department, managerId = null, reportsExternally = false, mentoringHoursPerMonth = null, startDate = null }) {
+  const result = await run(
+    `INSERT INTO employees (name, role, department, manager_id, reports_externally, mentoring_hours_per_month, start_date, employment_status)
+     VALUES (?, ?, ?, ?, ?, ?, ?, 'active')`,
+    [name, role, department, managerId, reportsExternally ? 1 : 0, mentoringHoursPerMonth, startDate],
   );
-  return row ? {
-    id: row.id,
-    name: row.name,
-    role: row.role,
-    department: row.department,
-    managerId: row.manager_id,
-    managerName: row.manager_name,
-    reportsExternally: row.reports_externally === 1,
-    mentoringHoursPerMonth: row.mentoring_hours_per_month,
-  } : null;
+  return getEmployee(result.lastID);
+}
+
+const activeDirectReports = (managerId) => all(
+  "SELECT id, name, role FROM employees WHERE manager_id = ? AND employment_status = 'active' ORDER BY name ASC",
+  [managerId],
+);
+
+async function reassignReports(fromManagerId, toManagerId) {
+  const result = await run(
+    "UPDATE employees SET manager_id = ? WHERE manager_id = ? AND employment_status = 'active'",
+    [toManagerId, fromManagerId],
+  );
+  return result.changes;
+}
+
+async function setEmploymentStatus(id, status, now) {
+  await run(
+    'UPDATE employees SET employment_status = ?, archived_at = ? WHERE id = ?',
+    [status, status === 'archived' ? now : null, id],
+  );
 }
 
 async function updateEmployee(id, fields) {
   const columns = { name: 'name', role: 'role', department: 'department', managerId: 'manager_id',
-    reportsExternally: 'reports_externally', mentoringHoursPerMonth: 'mentoring_hours_per_month' };
+    reportsExternally: 'reports_externally', mentoringHoursPerMonth: 'mentoring_hours_per_month', startDate: 'start_date' };
   const entries = Object.entries(fields).filter(([key, value]) => columns[key] && value !== undefined);
   if (entries.length === 0) return;
   await run(`UPDATE employees SET ${entries.map(([key]) => `${columns[key]} = ?`).join(', ')} WHERE id = ?`,
@@ -146,6 +202,7 @@ async function assertIdsExist(table, ids) {
 }
 
 module.exports = {
+  listEmployees, createEmployee, activeDirectReports, reassignReports, setEmploymentStatus,
   getEvidence, deleteEvidence, getEmployee, updateEmployee, wouldCreateCycle, roleExists, getRole, getSkill,
   getFutureRequirement, updateFutureRequirement, deleteFutureRequirement, getResource, upsertResource,
   getRoleRequirement, upsertRoleRequirement, deleteRoleRequirement, missingIds: assertIdsExist,

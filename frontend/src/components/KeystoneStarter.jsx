@@ -6,6 +6,7 @@ import ActivityLog from './ActivityLog';
 import AIWorkbench from './AIWorkbench';
 import AuditLog from './AuditLog';
 import DataQuality from './DataQuality';
+import EmployeeDirectory from './EmployeeDirectory';
 import HelpGuide from './HelpGuide';
 import { can } from './format';
 import KeystonePeople from './KeystonePeople';
@@ -79,6 +80,7 @@ export default function KeystoneStarter({ view, params }) {
   else if (view === 'audit') content = <AuditLog workforce={workforce} params={params} />;
   else if (view === 'profile') content = <MyProfile onChanged={refreshAll} />;
   else if (view === 'users') content = <UsersAdmin workforce={workforce} onOrganizationChanged={loadWorkforce} />;
+  else if (view === 'directory') content = <EmployeeDirectory workforce={workforce} onChanged={refreshAll} />;
   else if (error) content = <ErrorState error={error} onRetry={loadWorkforce} />;
   else if (NEEDS_WORKFORCE.has(view) && !workforce) content = <div className="panel"><Skeleton lines={6} /></div>;
   else if (view === 'overview') content = <Overview risks={risks} quality={quality} organization={organization} onChanged={refreshAll} />;

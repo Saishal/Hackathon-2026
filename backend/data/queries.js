@@ -223,13 +223,17 @@ async function addFutureRequirement(input = {}) {
 }
 
 async function getHeatmapData() {
+  // Archived employees are excluded here and in the matrix join below, so their evidence cannot
+  // count as coverage; the risk engine reads holders straight from matrix edges.
   const employeesRows = await all(
-    'SELECT id, name, role, department FROM employees ORDER BY name ASC',
+    "SELECT id, name, role, department FROM employees WHERE employment_status = 'active' ORDER BY name ASC",
   );
   const skillsRows = await all('SELECT id, name FROM skills WHERE future_only = 0 ORDER BY name ASC');
-  const matrix = await all(
-    'SELECT employee_id AS employeeId, skill_id AS skillId, proficiency FROM employee_skills',
-  );
+  const matrix = await all(`
+    SELECT es.employee_id AS employeeId, es.skill_id AS skillId, es.proficiency
+    FROM employee_skills es
+    JOIN employees e ON e.id = es.employee_id AND e.employment_status = 'active'
+  `);
 
   return {
     employees: employeesRows,

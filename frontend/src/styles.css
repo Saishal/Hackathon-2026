@@ -489,6 +489,8 @@ tbody tr:last-child > * { border-bottom: 0; }
 .btn:disabled { cursor: not-allowed; }
 
 .btn-primary { background: var(--ink); color: #fff; }
+.btn-danger { background: var(--danger); color: #fff; border-color: var(--danger); }
+.btn-danger:disabled { background: var(--danger-soft); color: var(--danger); border-color: transparent; }
 .btn-primary:disabled { background: #b9bec6; }
 
 .btn-secondary {
@@ -1736,3 +1738,29 @@ th .help-topic { margin-left: 2px; }
   cursor: pointer;
 }
 .btn-link:focus-visible { outline: none; box-shadow: var(--focus-ring); border-radius: 2px; }
+
+/* ============================================================
+   Employee directory: sectioned forms, archive impact, muted rows
+   ============================================================ */
+
+.form-sections { display: grid; gap: 18px; }
+.form-section { margin: 0; padding: 0; border: 0; min-width: 0; }
+.form-section > legend, .form-section > h3 {
+  margin: 0 0 10px;
+  padding: 0;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.preview-section { padding-top: 14px; border-top: 1px solid var(--line); }
+.impact-section { padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface-2); }
+.impact-section h3 { display: flex; align-items: center; gap: 8px; margin: 0 0 8px; font-size: 14px; color: var(--ink); }
+.impact-section p { margin: 0 0 8px; color: var(--ink-2); font-size: 13.5px; line-height: 1.5; }
+.impact-section p:last-child { margin-bottom: 0; }
+.impact-danger { color: var(--ink) !important; }
+.impact-list { margin: 0; padding-left: 18px; display: grid; gap: 4px; font-size: 13px; color: var(--ink-2); }
+.impact-list .tag { margin-left: 6px; }
+.confirm-line { margin-top: 4px; font-weight: 600; }
+.row-muted th, .row-muted td { color: var(--ink-3); }
+.row-muted th a { color: var(--ink-2); }
