@@ -42,21 +42,23 @@ Everything in §5 and §6 is polish; everything in §7 is out of scope.
 
 Item 1 is the bottleneck. Three branches carry 101 passing tests and none of it is on `main`.
 
-## 2a. Found during the UX review on 2026-09-12
+## 2a. Delivered on `feature/p1-help` on 2026-09-12/13 (on top of the governance branch)
 
-Verified by calling the API directly; each has a clear owner.
+The branch name is historical; it carries six phases, each browser-verified, 178 backend tests.
 
-| Finding | Cause | Owner | Severity |
-|---|---|---|---|
-| **A development plan cannot be generated for a skill nobody holds yet.** Save a reviewed requirement for a new skill (it gets a real id, e.g. 23), then `POST /development-plan {skillId:23}` → `Unknown skillId`. In the UI the skill never appears in "Skill to develop" at all. | `loadWorkforce` filters `future_only = 0` so the skill is absent from `workforce.skills`, and `recommend()` validates against that list. Correct for risk scoring (a future skill is not uncovered *today*), wrong for planning — which is exactly when you want a plan. | Member 4 (`recommend` should accept a future-only skill and propose sourcing) with a small data-layer helper from Member 1 | medium — the "strategy → save → plan" story dead-ends |
-| **In demo mode the strategy never proposes a genuinely new skill.** "We are launching a mobile banking app" returns AI Governance, Cybersecurity, Legacy Billing Recovery — the three weakest existing skills. | By design: the offline fallback derives proposals from current coverage. Proposing new capabilities from free text needs the live provider. | Configuration, not code: `KEYSTONE_AI_PROVIDER=openai` + key + model in `backend/.env` (Matias) | low — but say so in the demo rather than let a judge discover it |
-| **Certification is `not_applicable` for Legacy Billing Recovery** even though the catalogue has `cert-billing-recovery`. | Not investigated — either the CSV catalogue marks it unverified or the grounding filter differs from the earlier in-memory list. | Member 4 to confirm | low |
+| Phase | What shipped | Where |
+|---|---|---|
+| 1 Help | Header Help button and `?` key, 14 contextual `?` buttons, side drawer on the existing Dialog, `#/help` guide with deep links, 12 terms and 8 task walkthroughs; Time Machine month clamp; Time Machine and AI advisor no longer lose state on navigation | `frontend/src/help/`, `HelpTopic`, `HelpDrawer`, `HelpGuide` |
+| 2 User admin | Plain-language role summary before assigning (served from `permissions.js`), confirmation listing consequences before role change/disable/unlink, accounts search/filter/sort, History link, audit log seeds filters from the URL | `UsersAdmin`, `AuditLog`, `describeRole` |
+| 3 Employee directory | `GET/POST /employees`, `PATCH`, `GET /:id/impact`, archive with report reassignment and account disable, restore; archived people leave every score (filtered on the matrix join); before/after preview and risk-impact warnings on edit | `EmployeeDirectory`, migration `governance-006-employment` |
+| 4 Global search | `GET /search` scoped with `scopeFor`, grouped results with deep links, combobox with debounce and arrow/Enter/Escape, help topics merged client-side, not audited | `services/search.js`, `GlobalSearch` |
+| 6 Suggestions | `GET /suggestions` from deterministic rules over scoped data, each labelled by basis (official / pending / unverified / scenario) with safe actions; per-user dismiss and restore, not audited | `services/suggestions.js`, `Suggestions`, migration `governance-007-suggestions` |
+| 5 Filters everywhere | **In progress** — shared URL-backed filter state, removable chips, reset, saved views per user, applied across the decision tables | — |
 
-A branch `feature/ux-polish` (off `feature/keystone-ui`) fixes the four UX problems raised the
-same day — section state lost on navigation, months selectable beyond the horizon, no help,
-no per-section URL or transition — and is waiting for Member 3 to review and merge.
+Deferred by decision: CSV import (spec marks it optional).
 
----
+**Still true from the earlier review:** a development plan cannot be generated for a skill nobody holds yet (`Unknown skillId`); the demo strategy never proposes a genuinely new skill without the live provider configured.
+
 
 ## 3. The five questions the demo must answer
 
@@ -243,7 +245,7 @@ Every "✅" above was checked, not assumed. Method: clean `npm ci` on both packa
 test suite, lint, build, both servers started, every endpoint probed with no API key in
 the environment. Results on `fix/docs-sync` at `f662c7c`:
 
-- Backend: 108 tests, 0 failures
+- Backend: 178 tests, 0 failures
 - Frontend: lint exit 0 (one pre-existing warning in `App.jsx`), build exit 0
 - Both servers up; `/api/health` → `{"status":"ok"}`; frontend HTTP 200
 - Fresh database seeds 44 employees, 22 skills, 21 roles, 226 records, 16 catalogue entries
