@@ -1,3 +1,6 @@
+// Server entry point: prepare the database (schema, migrations, demo seed when empty), clear sessions
+// that expired while the server was down, then start listening. app.js builds the HTTP app separately
+// so tests can run it without a real port or database file.
 const { createApp } = require('./app');
 const { initializeDatabase } = require('./data');
 const { loadConfig } = require('./config');

@@ -2,7 +2,7 @@ import { useT } from '../../preferences/context';
 import { formatDate } from '../format';
 import Icon from '../Icon';
 
-
+// Shown for missing values: an absent record is unknown, never zero.
 const DASH = '—';
 
 function EvidenceList({ rows }) {

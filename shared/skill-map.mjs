@@ -1,3 +1,8 @@
+// Skill map model shared by the React Skill map and the backend CSV export, so the file a user
+// downloads contains exactly the rows the screen shows for the same filters. Pure functions only.
+
+// Applies the Skill map filters to an already permission-scoped workforce snapshot. `edges` are the
+// evidence records that pass every filter; lookup helpers are returned for the views.
 export function buildSkillMap(workforce, risks, { department = 'all', minProficiency = 3, concentratedOnly = false, q = '' } = {}) {
   const employees = workforce?.employees ?? [];
   const skills = workforce?.skills ?? [];
@@ -40,8 +45,8 @@ export function buildSkillMap(workforce, risks, { department = 'all', minProfici
   };
 }
 
-
 // Recorded qualification follows the established risk engine. Verification is reported separately.
+// A single holder is always at risk, even when the target is one, because one absence removes all cover.
 export function heatState(qualified, required, known = true) {
   if (!known || !Number.isFinite(required) || required <= 0) return 'unknown';
   if (qualified === 0) return 'critical';
@@ -49,6 +54,10 @@ export function heatState(qualified, required, known = true) {
   if (qualified >= required) return 'healthy';
   return qualified / required >= 0.8 ? 'watch' : 'at-risk';
 }
+
+// Builds heat-map rows (one per shown skill) with a cell per visible department. Departments have no
+// targets of their own, so every cell compares its holders with the organization-wide requiredHolders.
+// `gap` is the organization target minus all visible holders, used for the "Gap size" sort.
 export function heatRows(map, { minProficiency = 3, sort = 'dependency' } = {}) {
   const departments = [...new Set(map.people.map((person) => person.department))];
   const rows = map.shownSkills.map((skill) => {

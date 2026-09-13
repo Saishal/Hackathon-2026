@@ -10,6 +10,11 @@ const { recordAudit, auditContext } = require('../data/audit');
 const { getOrganization } = require('../data/organization');
 const { HttpError } = require('../errors');
 
+// Sign-in, sign-out and session restore (/api/auth/*). These routes sit before the global requireAuth
+// in app.js because a signed-out browser must reach them.
+
+// What the frontend learns about the signed-in user: identity, role and capability list (used only to
+// decide what to show; the server re-checks permissions on every request). Never includes the token.
 async function mePayload(user, session) {
   const organization = await getOrganization();
   return {

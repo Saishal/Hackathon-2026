@@ -1,3 +1,5 @@
+// Operational monitoring: the /api/health readiness check and optional webhook alerts for 5xx errors
+// (KEYSTONE_ALERT_WEBHOOK_URL). Neither ever includes request bodies or workforce data.
 const { get } = require('./data');
 const ai = require('./services/recommendations');
 

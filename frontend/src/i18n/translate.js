@@ -1,3 +1,5 @@
+// Interface translation. English (en.js) is the complete reference dictionary; other languages may
+// omit keys and fall back to English. Long-form help and server-generated text are not translated.
 import en from './en';
 import es from './es';
 

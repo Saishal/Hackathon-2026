@@ -400,19 +400,26 @@ module.exports = function governanceRoutes() {
     const scope = scopeFor(req.user, workforce);
     const analysis = scopeRisks(scope, analyze(workforce));
     const map = buildSkillMap(scopeWorkforce(scope, workforce), analysis, filters);
+    // One row per visible employee-skill record. Holder counts and risk level describe the whole filtered
+    // scope (so they repeat on every row of a skill); target and dependency score stay organization-wide.
     const rows = map.edges.map((edge) => {
       const person = map.employeeById.get(edge.employeeId);
       const skill = map.skillById.get(edge.skillId);
-      const qualified = map.countAtLeast(skill.id, Math.max(filters.minProficiency, skill.targetProficiency));
+      // Qualification uses the stricter of the selected minimum and the skill's own target level.
+      const level = Math.max(filters.minProficiency, skill.targetProficiency);
+      const visibleRecords = map.matrix.filter((entry) => entry.skillId === skill.id && map.personIds.has(entry.employeeId));
+      const qualified = map.countAtLeast(skill.id, level);
+      // Same rule as the heat map: coverage is Unknown unless some evidence is verified and every
+      // qualifying record is verified, so unconfirmed levels never read as healthy or critical.
+      const known = visibleRecords.some((entry) => entry.lastVerifiedAt)
+        && visibleRecords.filter((entry) => entry.proficiency >= level).every((entry) => entry.lastVerifiedAt);
       return {
         employee_id: person.id, employee_name: person.name, role: person.role, department: person.department,
         skill_id: skill.id, skill_name: skill.name, skill_category: skill.category,
         proficiency: edge.proficiency, verified: Boolean(edge.lastVerifiedAt), evidence_source: edge.evidenceSource,
         last_verified_at: edge.lastVerifiedAt, skill_criticality: skill.criticality,
         required_holders: skill.requiredHolders, qualified_holders: qualified,
-        dependency_score: map.riskScore(skill.id), risk_level: heatState(qualified, skill.requiredHolders,
-          map.matrix.some((entry) => entry.skillId === skill.id && map.personIds.has(entry.employeeId) && entry.lastVerifiedAt)
-          && map.matrix.filter((entry) => entry.skillId === skill.id && map.personIds.has(entry.employeeId) && entry.proficiency >= Math.max(filters.minProficiency, skill.targetProficiency)).every((entry) => entry.lastVerifiedAt)),
+        dependency_score: map.riskScore(skill.id), risk_level: heatState(qualified, skill.requiredHolders, known),
         coverage_scope: scope.kind === 'team' ? 'visible team' : filters.department === 'all' ? 'organization' : 'selected department',
         target_scope: 'organization', dependency_score_scope: 'organization',
       };

@@ -5,16 +5,17 @@ import Icon from './Icon';
 import HelpTopic from './HelpTopic';
 import FilterBar from './FilterBar';
 import { useUrlFilters } from '../filters/useUrlFilters';
-
-const QUALITY_FILTERS = { status: 'active', severity: '', ruleCode: '', q: '' };
-const QUALITY_LABELS = { status: 'Status', severity: 'Severity', ruleCode: 'Rule', q: 'Search' };
-const STATUS_WORDS = { active: 'open and acknowledged', open: 'open', acknowledged: 'acknowledged', resolved: 'resolved recently', '': 'all' };
 import TrustLegend from './TrustLegend';
 import { can, fieldMessages, formatDateTime, hrefForLink, plural } from './format';
 import { EmptyState, ErrorState, FieldError, FormError, SeverityTag, Skeleton, StatusTag } from './ui';
 
+const QUALITY_FILTERS = { status: 'active', severity: '', ruleCode: '', q: '' };
+const QUALITY_LABELS = { status: 'Status', severity: 'Severity', ruleCode: 'Rule', q: 'Search' };
+const STATUS_WORDS = { active: 'open and acknowledged', open: 'open', acknowledged: 'acknowledged', resolved: 'resolved recently', '': 'all' };
+
 const HEALTH = { good: ['Good', 'tag-ok'], needs_attention: ['Needs attention', 'tag-warn'], at_risk: ['At risk', 'tag-danger'] };
 
+// Acknowledging needs a note explaining why the issue is known but not fixed; the issue stays counted.
 function AcknowledgeDialog({ issue, onClose, onDone }) {
   const [note, setNote] = useState('');
   const [busy, setBusy] = useState(false);
@@ -51,6 +52,8 @@ function AcknowledgeDialog({ issue, onClose, onDone }) {
   );
 }
 
+// Data quality page: deterministic rule findings (missing sources, stale or unverified evidence, ...)
+// with URL-backed filters, acknowledgement, reopening and a scoped CSV export for permitted roles.
 export default function DataQuality({ session, canOpen, onChanged }) {
   const quality = useUrlFilters(QUALITY_FILTERS);
   const filters = { status: quality.filters.status, severity: quality.filters.severity, ruleCode: quality.filters.ruleCode };

@@ -3,7 +3,13 @@ import { useT } from '../preferences/context';
 import { VIEWS, isViewAllowed } from '../views';
 import Icon from './Icon';
 
+// Candidate destinations in display order. Each is rendered only if the signed-in role may open that
+// view (the same check the sidebar uses), so an employee never sees a card for a page they cannot use.
 const CARDS = ['overview', 'network', 'people', 'timemachine', 'ai', 'quality', 'profile', 'reviews', 'users', 'help'];
+
+// The calm first page after sign-in: a greeting, one-line purpose, navigation cards and a few headline
+// counts that link to their filtered detail pages. Deliberately no risk tables or alerts; those stay
+// on the detailed Overview.
 export default function Home({ risks, quality }) {
   const session = useSession();
   const t = useT();

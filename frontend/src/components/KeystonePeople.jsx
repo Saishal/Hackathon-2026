@@ -6,11 +6,12 @@ import Icon from './Icon';
 import HelpTopic from './HelpTopic';
 import FilterBar from './FilterBar';
 import { useUrlFilters } from '../filters/useUrlFilters';
+import { ErrorState, ScoreMeter, Skeleton } from './ui';
 
 const PEOPLE_FILTERS = { department: '', role: '', sole: '' };
 const PEOPLE_LABELS = { department: 'Department', role: 'Role', sole: 'Coverage' };
-import { ErrorState, ScoreMeter, Skeleton } from './ui';
 
+// Succession readiness of a candidate against a critical role's recorded skill requirements.
 const readiness = {
   ready: ['Ready now', 'tag-ok'],
   developable: ['Needs development', 'tag-warn'],

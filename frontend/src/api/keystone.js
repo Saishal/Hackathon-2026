@@ -1,3 +1,5 @@
+// The only place the frontend talks to the backend. Screens call authApi / keystoneApi and receive
+// parsed JSON or an ApiError; nothing here stores credentials or tokens in the browser.
 const BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000';
 
 // Errors keep the server's machine-readable code, field details and request reference, so screens can

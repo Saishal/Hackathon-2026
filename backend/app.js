@@ -16,6 +16,9 @@ const { notFound } = require('./errors');
 const recommendationService = require('./services/recommendations');
 const { checkHealth, reportError } = require('./monitoring');
 
+// Turns every thrown error into a JSON body with a stable `code` and the request id. Known client
+// problems (bad JSON, oversized body, constraint conflicts, HttpErrors) keep their message; anything
+// else becomes a generic 500 so stack traces and SQL never reach the browser.
 function errorHandler(err, req, res, _next) {
   if (err.type === 'entity.parse.failed') {
     res.status(400).json({ error: 'The request body is not valid JSON.', code: 'invalid_json', requestId: req.id });

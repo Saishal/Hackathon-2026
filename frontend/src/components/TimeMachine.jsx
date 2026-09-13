@@ -326,7 +326,7 @@ export default function TimeMachine({ workforce, interventions: sharedInterventi
             <label className="check span-all"><input type="checkbox" checked={interventionDraft.assumeVerified}
               onChange={(event) => setInterventionDraft({ ...interventionDraft, assumeVerified: event.target.checked })} /> Verified at completion, so it counts toward coverage</label>
             <div className="span-all">
-              <button className="btn btn-secondary" disabled={busy || !interventionDraft.skillId || !interventionDraft.employeeId}>Add to plan</button>
+              <button className="btn btn-secondary" disabled={busy || !interventionDraft.skillId || !interventionDraft.employeeId || !interventionMonthsValid}>Add to plan</button>
             </div>
           </form>
           {interventions.length === 0 ? <p className="empty-line">No development planned. Actions scheduled from the AI advisor appear here.</p> : <ul className="item-list">

@@ -1,5 +1,8 @@
+// Core workforce schema (employees, skills, evidence, requirements, learning catalogue) and its
+// in-place upgrades. Governance tables (users, sessions, audit, reviews) live in governance-schema.js.
 const { run, all } = require('./db');
 
+// CREATE TABLE IF NOT EXISTS keeps startup idempotent: existing databases are never recreated.
 async function createTables() {
   await run(`
     CREATE TABLE IF NOT EXISTS employees (

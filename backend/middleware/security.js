@@ -1,6 +1,9 @@
+// Request-level hardening applied to every API call before routing: a traceable request id,
+// restrictive response headers, and an Origin allowlist for writes.
 const crypto = require('node:crypto');
 const { HttpError } = require('../errors');
 
+// Every response carries X-Request-Id, and error bodies repeat it, so a user can quote it in a report.
 function requestId(req, res, next) {
   req.id = crypto.randomUUID();
   res.setHeader('X-Request-Id', req.id);

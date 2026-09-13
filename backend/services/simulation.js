@@ -77,6 +77,9 @@ function applyRequirements(snapshot, requirements, horizonMonths) {
   return applied;
 }
 
+// Time Machine: projects coverage at a horizon (0, 12, 36 or 60 months) under hypothetical departures
+// and development interventions, and compares it with the baseline. Pure calculation over a copy of
+// the snapshot; it never writes official data.
 function simulate(workforce, scenario) {
   if (!scenario || ![0, 12, 36, 60].includes(scenario.horizonMonths)) fail('horizonMonths must be 0, 12, 36, or 60');
   const { horizonMonths, departures = [], interventions = [] } = scenario;

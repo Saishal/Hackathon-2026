@@ -1,5 +1,9 @@
 import { heatRows } from '../../../../shared/skill-map.mjs';
 import { useT } from '../../preferences/context';
+
+// Skill map "Heat map" view: skills as rows, visible departments as columns. Each cell is a button
+// showing qualified holders / organization target plus a text state, so colour is never the only cue.
+// The grid scrolls horizontally on narrow screens with the skill column kept visible (CSS sticky).
 export default function HeatMapView({ map, settings, onSelect }) {
   const t = useT();
   const rows = heatRows(map, settings);

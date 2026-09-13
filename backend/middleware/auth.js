@@ -1,9 +1,12 @@
+// Authentication and authorization middleware. The browser holds only a random session token in an
+// HTTP-only cookie; the server looks up its hash, so the page can never read or forge a session.
 const { resolveSession } = require('../security/sessions');
 const { can } = require('../security/permissions');
 const { unauthenticated, forbidden } = require('../errors');
 
 const SESSION_COOKIE = 'keystone_session';
 
+// Minimal cookie parser (avoids a dependency). A malformed percent-encoding is treated as no cookie.
 function readCookie(req, name) {
   const header = req.headers.cookie;
   if (!header) return null;
@@ -43,6 +46,8 @@ function sessionMiddleware(config) {
   };
 }
 
+// Rejects anonymous requests with 401. When the browser sent a cookie that no longer resolves (expired,
+// revoked or signed out elsewhere) the code is `session_ended`, so the sign-in screen can explain why.
 const requireAuth = (req, _res, next) => {
   if (req.user) return next();
   const error = unauthenticated();

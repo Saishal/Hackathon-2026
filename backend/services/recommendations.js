@@ -6,12 +6,19 @@ const { developmentContext, validateDevelopment, normalizeRequirements } = requi
 const { developmentFallback, strategyFallback, unavailableDevelopment } = require('./ai/fallbacks');
 const { previewRequirements } = require('./ai/strategy-preview');
 
+// AI advisor service: development plans for one skill and strategy-driven future requirements.
+// Risk scores and coverage are always computed by risk.js/strategy-preview.js, never by the model;
+// every result is marked requires-review and nothing is persisted here.
+
 function clientError(message) { const error = new Error(message); error.status = 400; throw error; }
 function validateDirection(direction) {
   if (typeof direction !== 'string' || !direction.trim() || direction.length > 2000) clientError('direction must contain 1–2000 characters');
   return direction.trim();
 }
+// The provider is injectable so tests can simulate live, failing and malformed responses.
 function createRecommendationService({ provider = createProvider() } = {}) {
+  // Try the live provider; on any failure use the rule-based fallback; if even that fails validation,
+  // return an explicit "unavailable" payload. `mode` and `fallbackReason` tell the UI which one it got.
   async function generateOrFallback({ name, schema, instructions, context, validate, fallback, unavailable }) {
     try {
       const payload = await provider.generate({ name, schema, instructions, context });

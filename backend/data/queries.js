@@ -1,3 +1,6 @@
+// Direct workforce reads and writes: evidence edits, future requirements, and the queries behind the
+// original SkillSight v1 endpoints (/api/heatmap, /api/gap-analysis, ...), which app.js still serves
+// for compatibility. New screens use the Keystone snapshot from workforce.js instead.
 const { run, all } = require('./db');
 const { withTransaction } = require('./transactions');
 const { isCalendarDate } = require('../services/clock');
@@ -221,6 +224,8 @@ async function addFutureRequirement(input = {}) {
   const validated = validateFutureRequirementInput(input);
   return withTransaction(() => insertFutureRequirement(validated));
 }
+
+// ---- SkillSight v1 compatibility queries (served by the legacy /api/* routes in app.js) ----
 
 async function getHeatmapData() {
   // Archived employees are excluded here and in the matrix join below, so their evidence cannot

@@ -33,7 +33,7 @@ In the app, press **?** on any page (or the Help button) for an explanation of t
 
 See [enterprise governance](docs/ENTERPRISE-GOVERNANCE.md) for sessions, permissions, review workflow, data-quality rules, migrations and security assumptions. The API base remains `http://localhost:4000`; use `VITE_API_BASE_URL` in `frontend/.env.local` only when the frontend must call a different backend.
 
-Optional environment: backend `PORT`, `DB_PATH`, `KEYSTONE_SEED_DIR`, `KEYSTONE_ALERT_WEBHOOK_URL` (POSTs every 5xx to a Discord or Slack webhook; see `docs/API.md`); frontend `VITE_API_BASE_URL` in `frontend/.env.local`. A fresh database is seeded from the CSV files in [`backend/data/demo/`](backend/data/demo/README.md): 44 fictional employees across 21 roles, 22 skills and a 16-entry learning catalogue, including Legacy Billing Recovery (Liam Chen expert, Mason Green learner). Existing DBs are preserved; after editing a CSV, stop the backend and run `npm run seed:reset --prefix backend`. No API credentials are needed for the starter.
+Optional environment: backend `PORT`, `DB_PATH`, `KEYSTONE_SEED_DIR`, `KEYSTONE_ALERT_WEBHOOK_URL` (POSTs every 5xx to a Discord or Slack webhook; see `docs/API.md`); frontend `VITE_API_BASE_URL` in `frontend/.env.local`. No API credentials are needed for the starter.
 
 ## Four member assignments
 
@@ -90,16 +90,17 @@ The backend seeds SQLite with realistic demo data for **20 employees** and **15 
 
 ### 1) Install dependencies
 
+From the repository root:
+
 ```bash
-cd /home/runner/work/Hackathon-2026/Hackathon-2026/frontend && npm install
-cd /home/runner/work/Hackathon-2026/Hackathon-2026/backend && npm install
+npm ci --prefix frontend
+npm ci --prefix backend
 ```
 
 ### 2) Run backend API
 
 ```bash
-cd /home/runner/work/Hackathon-2026/Hackathon-2026/backend
-npm run start
+npm start --prefix backend
 ```
 
 Backend runs on `http://localhost:4000`.
@@ -107,8 +108,7 @@ Backend runs on `http://localhost:4000`.
 ### 3) Run frontend
 
 ```bash
-cd /home/runner/work/Hackathon-2026/Hackathon-2026/frontend
-npm run dev
+npm run dev --prefix frontend
 ```
 
 Frontend runs on `http://localhost:5173` and calls the backend at `http://localhost:4000` by default.

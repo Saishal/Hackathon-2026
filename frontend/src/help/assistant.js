@@ -1,3 +1,6 @@
+// Keystone Assistant brain: a deterministic intent matcher over a small curated catalog. It explains
+// features and suggests where to go; it never reads workforce data, calls a model or gives advice about
+// people. Anything it cannot match confidently gets the fixed FALLBACK pointing to the Help Center.
 import { isViewAllowed } from '../views.js';
 export const FALLBACK = 'I can help you find Keystone features and explain the guide. For that question, please search the Help Center or review the relevant guide.';
 export const QUICK_PROMPTS = ['Where do I manage users?', 'How do I view skill risks?', 'Where is the heat map?', 'How do I export a skill map?', 'What does dependency score mean?', 'How do I update employee evidence?', 'How do I archive an employee?', 'How do I save a filter?'];
@@ -18,6 +21,11 @@ export function answerQuestion(question, session) {
   const input = question.trim().toLowerCase();
   const fallback = { id: 'fallback', text: FALLBACK, shortcuts: [{ label: 'Open Help Center', href: '#/help' }, { label: 'Search Help Center', href: '#/help?search=1' }] };
   // Only basic navigation or definition requests qualify. Never infer a workforce decision from keywords.
+  // The checks run from strictest to loosest:
+  // 1. decision, ranking or credential words always fall back, even inside an otherwise valid question;
+  // 2. longer input must start like a navigation/definition question ("where", "how do", "what is");
+  // 3. every word must come from a small vocabulary, so names or specifics ("Liam", "salaries") fall back;
+  // 4. the first matching intent wins, which is why `intents` is ordered from most to least specific.
   if (input.length > 200 || /\b(fire|firing|lay ?off|terminate|salary|promote|recommend|should|best|worst|rank|who|which employee|predict|ignore|password|token|secret)\b/.test(input)) return fallback;
   if (!/^(where\b|how (do|can|to)\b|what (is|are|does)\b|open\b|show me\b|explain\b)/.test(input) && input.split(/\s+/).length > 3) return fallback;
   const words = input.replace(/[^a-z\s]/g, ' ').split(/\s+/).filter(Boolean);

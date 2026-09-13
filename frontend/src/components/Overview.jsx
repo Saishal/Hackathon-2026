@@ -24,6 +24,8 @@ const LAUNCHERS = [
   ['reviews', 'inbox'], ['quality', 'shield'], ['data', 'data'], ['audit', 'audit'],
 ];
 
+// Risk register rows: coverage against target, criticality, dependency score and the accountable owner.
+// The assign/update button appears only for roles allowed to acknowledge risks.
 function RiskTable({ rows, owners, canAcknowledge, onAcknowledge }) {
   const t = useT();
   return (

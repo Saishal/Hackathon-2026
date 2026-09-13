@@ -1,6 +1,12 @@
 const { categories } = require('./schemas');
 const { normalizeName } = require('./grounding');
 const { analyze } = require('../risk');
+
+// Deterministic, rule-based answers used when no AI provider is configured or the provider fails.
+// They go through the same validation as live output and are labelled "demo rules" in the UI, never AI.
+
+// One action per development category, using only the eligible learners, mentors and verified
+// resources supplied in the context. A category with no supporting evidence is not_applicable.
 function developmentFallback(context) {
   const learner = context.eligibleLearners[0];
   const mentor = context.eligibleMentors.find((entry) => entry.mentoringHoursPerMonth > 0) || context.eligibleMentors[0];

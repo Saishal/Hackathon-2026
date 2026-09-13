@@ -4,6 +4,10 @@ import { useT } from '../preferences/context';
 import { answerQuestion, QUICK_PROMPTS } from '../help/assistant.js';
 import Dialog from './Dialog';
 import Icon from './Icon';
+
+// Top-bar help assistant. Answers come from the local rule-based catalog in help/assistant.js: no
+// network request, no logging and no storage. The question and answer live only in this component's
+// state and are cleared when the dialog closes.
 export default function KeystoneAssistant() {
   const session = useSession();
   const t = useT();
