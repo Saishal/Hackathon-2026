@@ -207,6 +207,13 @@ function ArchiveDialog({ employee, active, onClose, onDone }) {
   const reports = impact?.directReports ?? [];
   const needsManager = reports.length > 0;
   const candidates = active.filter((candidate) => candidate.id !== employee.id);
+  // The likeliest successors first: their own reports, then the rest of the department, then everyone else.
+  const reportIds = new Set(reports.map((report) => report.id));
+  const groups = [
+    ['Their direct reports', candidates.filter((candidate) => reportIds.has(candidate.id))],
+    [`Others in ${employee.department}`, candidates.filter((candidate) => !reportIds.has(candidate.id) && candidate.department === employee.department)],
+    ['Other departments', candidates.filter((candidate) => !reportIds.has(candidate.id) && candidate.department !== employee.department)],
+  ].filter(([, list]) => list.length > 0);
   const uncovered = impact?.coverage?.newlyUncovered ?? [];
   const affected = impact?.coverage?.affectedSkills ?? [];
 
@@ -217,7 +224,9 @@ function ArchiveDialog({ employee, active, onClose, onDone }) {
     try {
       const result = await keystoneApi.archiveEmployee(employee.id, { reassignReportsTo: reassignTo === '' ? null : Number(reassignTo) });
       const parts = [`${result.employee.name} is archived.`];
-      if (result.reassignedReports > 0) parts.push(`${result.reassignedReports} ${result.reassignedReports === 1 ? 'person now reports' : 'people now report'} to ${candidates.find((candidate) => candidate.id === Number(reassignTo))?.name ?? 'their new manager'}.`);
+      const successor = candidates.find((candidate) => candidate.id === Number(reassignTo))?.name ?? 'their new manager';
+      if (result.promotedReport) parts.push(`${successor} stepped into their place in the reporting line.`);
+      if (result.reassignedReports > 0) parts.push(`${result.reassignedReports} ${result.reassignedReports === 1 ? 'person now reports' : 'people now report'} to ${successor}.`);
       if (result.accountDisabled) parts.push('Their sign-in is disabled.');
       onDone(result, { text: parts.join(' '), href: historyHref(result.employee), label: 'See it in history' });
     } catch (failure) {
@@ -274,7 +283,11 @@ function ArchiveDialog({ employee, active, onClose, onDone }) {
                     <select value={reassignTo} onChange={(event) => setReassignTo(event.target.value)} required
                       aria-invalid={Boolean(errors.reassignReportsTo)} aria-describedby="archive-manager-error">
                       <option value="">Choose a new manager</option>
-                      {candidates.map((candidate) => <option key={candidate.id} value={candidate.id}>{candidate.name} · {candidate.role}</option>)}
+                      {groups.map(([label, list]) => (
+                        <optgroup key={label} label={label}>
+                          {list.map((candidate) => <option key={candidate.id} value={candidate.id}>{candidate.name} · {candidate.role}</option>)}
+                        </optgroup>
+                      ))}
                     </select>
                     <FieldError id="archive-manager-error" message={errors.reassignReportsTo} />
                   </label>

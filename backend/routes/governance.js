@@ -725,10 +725,22 @@ module.exports = function governanceRoutes() {
 
     const result = await withTransaction(async () => {
       let reassigned = 0;
+      let promoted = false;
       if (impact.directReports.length > 0) {
+        // Decided before the move: if the new manager is one of the reports, they step into the archived
+        // person's place in the hierarchy (same manager, or external) instead of ending up reporting to
+        // themselves once their siblings are moved under them.
+        promoted = impact.directReports.some((report) => report.id === reassignTo);
         reassigned = await writes.reassignReports(id, reassignTo);
-        // The new manager cannot report to the archived person, so clear that link if it existed.
-        await writes.updateEmployee(reassignTo, (await writes.getEmployee(reassignTo)).managerId === id ? { managerId: null } : {});
+        if (promoted) {
+          reassigned -= 1;
+          await writes.updateEmployee(reassignTo, { managerId: impact.employee.managerId, reportsExternally: impact.employee.reportsExternally });
+          await recordAudit({
+            ...auditContext(req), action: 'employee.updated', entityType: 'employee', entityId: reassignTo, entityLabel: (await writes.getEmployee(reassignTo)).name,
+            summary: `${(await writes.getEmployee(reassignTo)).name} took over ${impact.employee.name}'s reports and reporting line because ${impact.employee.name} was archived`,
+            before: { managerId: id }, after: { managerId: impact.employee.managerId, reportsExternally: impact.employee.reportsExternally }, metadata: { changedFields: ['managerId', 'reportsExternally'], cause: 'employee.archived' },
+          });
+        }
         for (const report of impact.directReports) {
           if (report.id === reassignTo) continue;
           await recordAudit({
@@ -758,7 +770,7 @@ module.exports = function governanceRoutes() {
         metadata: { reassignedReports: reassigned, reassignedTo: reassignTo, accountDisabled, newlyUncovered: impact.coverage?.newlyUncovered ?? [] },
         highSignal: true,
       });
-      return { employee: after, reassignedReports: reassigned, accountDisabled, newlyUncovered: impact.coverage?.newlyUncovered ?? [] };
+      return { employee: after, reassignedReports: reassigned, promotedReport: promoted, accountDisabled, newlyUncovered: impact.coverage?.newlyUncovered ?? [] };
     });
     res.json(result);
   });

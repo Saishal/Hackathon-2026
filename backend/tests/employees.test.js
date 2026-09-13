@@ -195,3 +195,23 @@ test('an account cannot be created for or linked to an archived employee', async
   assert.match(created.body.details[0].message, /archived/);
   await admin.post(`/api/keystone/employees/${person.id}/restore`, {});
 });
+
+test('promoting one of the reports to be the new manager never leaves them reporting to themselves', async () => {
+  const { base } = await started;
+  const admin = await signedIn(base, 'admin');
+  const list = (await admin.get('/api/keystone/employees')).body.items;
+  const manager = list.find((item) => item.employmentStatus === 'active' && item.directReports >= 2);
+  const reports = list.filter((item) => item.managerId === manager.id && item.employmentStatus === 'active');
+  const promoted = reports[0];
+  const result = await admin.post(`/api/keystone/employees/${manager.id}/archive`, { reassignReportsTo: promoted.id });
+  assert.equal(result.status, 200, JSON.stringify(result.body));
+  assert.equal(result.body.promotedReport, true);
+  assert.equal(result.body.reassignedReports, reports.length - 1);
+  const after = (await admin.get('/api/keystone/employees')).body.items;
+  const lead = after.find((item) => item.id === promoted.id);
+  assert.notEqual(lead.managerId, lead.id, 'the promoted report reports to themselves');
+  assert.equal(lead.managerId, manager.managerId);
+  assert.equal(lead.reportsExternally, manager.reportsExternally);
+  for (const sibling of reports.slice(1)) assert.equal(after.find((item) => item.id === sibling.id).managerId, promoted.id);
+  await admin.post(`/api/keystone/employees/${manager.id}/restore`, {});
+});
