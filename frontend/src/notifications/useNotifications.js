@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { keystoneApi } from '../api/keystone';
 import { can, hrefForLink } from '../components/format';
 import { readStored, writeStored } from '../preferences/storage';
@@ -13,6 +13,8 @@ import { isViewAllowed } from '../views';
 export const NOTIFICATION_CATEGORIES = ['reviews', 'risks', 'data', 'updates'];
 
 const POLL_MS = 90 * 1000;
+// Brief visibility flickers (tab switching, embedded previews) must not refetch every source each time.
+const MIN_VISIBLE_REFRESH_MS = 30 * 1000;
 const RECENT_DAYS = 30;
 const MAX_QUALITY_ITEMS = 10;
 const MAX_READ_MARKS = 400;
@@ -98,6 +100,7 @@ export function useNotifications(session) {
   const [updatedAt, setUpdatedAt] = useState(null);
   const [marks, setMarks] = useState(() => normalize(readStored(storageKey, {})));
   const [attempt, setAttempt] = useState(0);
+  const lastLoadedAt = useRef(0);
   const refresh = useCallback(() => setAttempt((value) => value + 1), []);
 
   const readsChanges = can(session, 'changes.submit', 'changes.review.people', 'changes.review.planning');
@@ -115,6 +118,7 @@ export function useNotifications(session) {
       optional(readsAudit, () => keystoneApi.auditLog({ highSignal: 'true', pageSize: 25 })),
     ]).then(([suggestions, changes, quality, acknowledgements, audit]) => {
       if (!live) return;
+      lastLoadedAt.current = Date.now();
       setItems(buildNotifications({ session, suggestions, changes, quality, acknowledgements, audit }));
       setFailed([suggestions, changes, quality, acknowledgements, audit].every((result) => result === null));
       setUpdatedAt(new Date().toISOString());
@@ -125,7 +129,9 @@ export function useNotifications(session) {
   // Poll while the tab is open, and catch up as soon as a hidden tab becomes visible again.
   useEffect(() => {
     const timer = setInterval(refresh, POLL_MS);
-    const onVisible = () => { if (document.visibilityState === 'visible') refresh(); };
+    const onVisible = () => {
+      if (document.visibilityState === 'visible' && Date.now() - lastLoadedAt.current >= MIN_VISIBLE_REFRESH_MS) refresh();
+    };
     document.addEventListener('visibilitychange', onVisible);
     return () => {
       clearInterval(timer);
