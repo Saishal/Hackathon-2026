@@ -1,5 +1,22 @@
 # Member 3 Sync Log
 
+## 2026-09-13 (01:06 CDT, forty-sixth run)
+
+**(a) What teammates changed**
+
+- `feature/p1-help` advanced (`4d10705` → `11b7fbe`): "Add role-scoped global search with keyboard navigation" — new backend `backend/services/search.js` + tests, a new documented endpoint `GET /api/keystone/search?q=` in `docs/API.md` (returns `{query, groups, total, visibility}`, scope applied before matching), plus `GlobalSearch.jsx` and a `search(q)` wrapper in that branch's `keystone.js`.
+- `main` unchanged (`fd002fa`); merge into `feature/keystone-ui` was a no-op. All other heads static.
+
+**(b) What I adapted**
+
+- No changes needed on my branch. The new `search` endpoint exists only on the unmerged p1-help/governance line — a different, much larger app architecture (auth, permissions, employee directory). My `keystone.js` still matches the contract on `main` exactly; adopting p1-help's UI wholesale is the owner's pending "which UI line lands on main" call, not something I'll switch unilaterally.
+- Regenerated `activity.json` (75 commits: Member 3 51, Team 15, Member 1 9). Build: `npm.cmd run build` passes (vite, 31 modules, bundle `index-tPh2cSVb.js` 323.31 kB). Invariants hold: unknowns as dashes, no score recomputation, no secrets, demo fallback labeled.
+- Safety: backup tag `backup/pre-sync-20260913-0106` created at HEAD and pushed to origin.
+
+**(c) Group chat message**
+
+> Member 3 sync ✅ Saw the new role-scoped global search on p1-help (`GET /api/keystone/search?q=`) — nice! It's on the governance line, not main yet, so my branch needs no changes and stays green. Still need the call on which UI line lands on main for the demo! ⏳
+
 ## 2026-09-13 (01:01 CDT, forty-fifth run)
 
 **(a) What teammates changed**
