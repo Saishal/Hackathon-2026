@@ -42,6 +42,20 @@ Everything in §5 and §6 is polish; everything in §7 is out of scope.
 
 Item 1 is the bottleneck. Three branches carry 101 passing tests and none of it is on `main`.
 
+## 2a. Found during the UX review on 2026-09-12
+
+Verified by calling the API directly; each has a clear owner.
+
+| Finding | Cause | Owner | Severity |
+|---|---|---|---|
+| **A development plan cannot be generated for a skill nobody holds yet.** Save a reviewed requirement for a new skill (it gets a real id, e.g. 23), then `POST /development-plan {skillId:23}` → `Unknown skillId`. In the UI the skill never appears in "Skill to develop" at all. | `loadWorkforce` filters `future_only = 0` so the skill is absent from `workforce.skills`, and `recommend()` validates against that list. Correct for risk scoring (a future skill is not uncovered *today*), wrong for planning — which is exactly when you want a plan. | Member 4 (`recommend` should accept a future-only skill and propose sourcing) with a small data-layer helper from Member 1 | medium — the "strategy → save → plan" story dead-ends |
+| **In demo mode the strategy never proposes a genuinely new skill.** "We are launching a mobile banking app" returns AI Governance, Cybersecurity, Legacy Billing Recovery — the three weakest existing skills. | By design: the offline fallback derives proposals from current coverage. Proposing new capabilities from free text needs the live provider. | Configuration, not code: `KEYSTONE_AI_PROVIDER=openai` + key + model in `backend/.env` (Matias) | low — but say so in the demo rather than let a judge discover it |
+| **Certification is `not_applicable` for Legacy Billing Recovery** even though the catalogue has `cert-billing-recovery`. | Not investigated — either the CSV catalogue marks it unverified or the grounding filter differs from the earlier in-memory list. | Member 4 to confirm | low |
+
+A branch `feature/ux-polish` (off `feature/keystone-ui`) fixes the four UX problems raised the
+same day — section state lost on navigation, months selectable beyond the horizon, no help,
+no per-section URL or transition — and is waiting for Member 3 to review and merge.
+
 ---
 
 ## 3. The five questions the demo must answer
