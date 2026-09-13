@@ -123,10 +123,7 @@ against a real backend. This is item 2 in §2.
 
 None of these are required by the brief. Ordered by value per hour.
 
-1. **Interactive network** (Member 3). It is named in the brief's Milestone 6 and in the
-   README's *Remaining*, and is the one visual a judge will remember. Even a simple SVG of
-   employees and skills with the sole-holder edges highlighted answers "where is the
-   dependency" at a glance. If time is short, scope it down rather than drop it.
+1. ~~Interactive network~~ — **done.** Verified running on 2026-09-12: bipartite employee–skill graph with department and level filters, single-holder toggle, legend, and an evidence panel on selection.
 2. **A written demo script** (`docs/DEMO.md`). The brief's acceptance path is exact:
    *inspect Legacy Billing Recovery → remove Liam in month 9 → schedule Mason's verified
    mentoring completion at month 6 → compare coverage.* Write it as numbered clicks with
@@ -156,9 +153,6 @@ true because the AI will only offer a certification it can cite. The brief says 
 invented credentials*. The label is the mitigation. Options: rename the flag to something
 like `inCatalogue`; add a visible "fictional catalogue" banner; or accept the label as
 sufficient. Five-minute decision; should not be made by default.
-
-**Scope of the interactive network.** Full graph with filters and an evidence panel, or a
-minimal SVG highlighting sole-holder edges? Decide before Member 3 starts it.
 
 ---
 
