@@ -57,18 +57,24 @@ export default function KeystoneStarter({ view = 'overview', embedded = false })
   const workbench = <AIWorkbench workforce={workforce} onRequirementsSaved={onRequirementsSaved} onSchedule={schedule} />;
 
   if (embedded) {
+    // Every section stays mounted and is only hidden when inactive. Unmounting would
+    // discard whatever the user built there — a Time Machine scenario, an AI plan under
+    // review, network filters, a search — the moment they looked at another screen.
     return (
       <div>
         {demoMode && <p className="demo-banner" role="status">
           DEMO DATA — backend unreachable ({error}). Rendering Member 1's labeled sample payloads; live endpoints are disabled.
         </p>}
         {!demoMode && error && <p role="alert">{error}</p>}
-        {view === 'overview' && summary}
-        {view === 'people' && <KeystonePeople />}
-        {view === 'network' && <SkillNetwork workforce={workforce} risks={risks} />}
-        {view === 'timemachine' && timeMachine}
-        {view === 'ai' && workbench}
-        {view === 'data' && workforce && <WorkforceSnapshot workforce={workforce} fallbackRequirements={demoMode ? demoFutureRequirements : null} />}
+        {!workforce && !error && <p role="status">Loading workforce…</p>}
+        <div hidden={view !== 'overview'}>{summary}</div>
+        <div hidden={view !== 'people'}><KeystonePeople /></div>
+        <div hidden={view !== 'network'}><SkillNetwork workforce={workforce} risks={risks} /></div>
+        <div hidden={view !== 'timemachine'}>{timeMachine}</div>
+        <div hidden={view !== 'ai'}>{workbench}</div>
+        <div hidden={view !== 'data'}>
+          {workforce && <WorkforceSnapshot workforce={workforce} fallbackRequirements={demoMode ? demoFutureRequirements : null} />}
+        </div>
       </div>
     );
   }

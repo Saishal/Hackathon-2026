@@ -22,16 +22,25 @@ export default function TimeMachine({ workforce, interventions: sharedInterventi
   const employeeName = (id) => workforce?.employees.find((employee) => employee.id === Number(id))?.name ?? `Employee ${id}`;
   const skillName = (id) => workforce?.skills.find((skill) => skill.id === Number(id))?.name ?? `Skill ${id}`;
   const stale = () => { setResult(null); setError(''); };
+  // Months only make sense inside the chosen horizon: a 1-year horizon means months 0–12.
+  // Offering 60 when the horizon is 12 invited events that could never take effect.
+  const monthMax = horizonMonths;
+  const clampMonth = (value) => Math.min(monthMax, Math.max(0, Number(value) || 0));
+  const monthHint = monthMax === 0 ? 'choose a horizon first' : `0–${monthMax}`;
+  const departureMonthValid = Number(departureDraft.month) >= 0 && Number(departureDraft.month) <= monthMax;
+  const interventionMonthsValid = Number(interventionDraft.startMonth) >= 0
+    && Number(interventionDraft.completionMonth) <= monthMax
+    && Number(interventionDraft.completionMonth) >= Number(interventionDraft.startMonth);
 
   function addDeparture() {
-    setDepartures((current) => [...current, { employeeId: Number(departureDraft.employeeId), month: Number(departureDraft.month) }]);
+    setDepartures((current) => [...current, { employeeId: Number(departureDraft.employeeId), month: clampMonth(departureDraft.month) }]);
     setDepartureDraft(emptyDeparture); stale();
   }
   function addIntervention() {
     const draft = interventionDraft;
     setInterventions((current) => [...current, { employeeId: Number(draft.employeeId), skillId: Number(draft.skillId),
-      mentorId: draft.mentorId === '' ? null : Number(draft.mentorId), startMonth: Number(draft.startMonth),
-      completionMonth: Number(draft.completionMonth), targetProficiency: Number(draft.targetProficiency), assumeVerified: draft.assumeVerified }]);
+      mentorId: draft.mentorId === '' ? null : Number(draft.mentorId), startMonth: clampMonth(draft.startMonth),
+      completionMonth: clampMonth(draft.completionMonth), targetProficiency: Number(draft.targetProficiency), assumeVerified: draft.assumeVerified }]);
     setInterventionDraft(emptyIntervention); stale();
   }
   const removeAt = (setter, index) => { setter((current) => current.filter((_item, i) => i !== index)); stale(); };
@@ -74,10 +83,19 @@ export default function TimeMachine({ workforce, interventions: sharedInterventi
     <h3>Time Machine</h3>
     <p>Model departures and development against a horizon. Reviewed future requirements are loaded from the saved plan and apply only when their effective month is reached. The baseline is never changed.</p>
     {error && <p role="alert">{error}</p>}
+    {monthMax === 0 && <p className="hint" role="status">"Baseline" shows today with no time passing. Choose 1, 3 or 5 years to model departures and development.</p>}
 
     <form onSubmit={(event) => { event.preventDefault(); addDeparture(); }}>
       <label>Horizon
-        <select value={horizonMonths} onChange={(event) => { setHorizonMonths(Number(event.target.value)); stale(); }}>
+        <select value={horizonMonths} onChange={(event) => {
+            const next = Number(event.target.value);
+            setHorizonMonths(next);
+            setDepartureDraft((draft) => ({ ...draft, month: Math.min(next, Number(draft.month)) }));
+            setInterventionDraft((draft) => ({ ...draft,
+              startMonth: Math.min(next, Number(draft.startMonth)),
+              completionMonth: Math.min(next, Number(draft.completionMonth)) }));
+            stale();
+          }}>
           {HORIZONS.map(([value, text]) => <option key={value} value={value}>{text}</option>)}
         </select>
       </label>
@@ -87,9 +105,11 @@ export default function TimeMachine({ workforce, interventions: sharedInterventi
           {workforce?.employees.map((employee) => <option key={employee.id} value={employee.id}>{employee.name}</option>)}
         </select>
       </label>
-      <label>Month <input type="number" min="0" max="60" value={departureDraft.month}
-        onChange={(event) => setDepartureDraft({ ...departureDraft, month: event.target.value })} /></label>
-      <button disabled={busy || !departureDraft.employeeId}>Add departure</button>
+      <label>Month <span className="hint">({monthHint})</span> <input type="number" min="0" max={monthMax} value={departureDraft.month}
+        disabled={monthMax === 0}
+        onChange={(event) => setDepartureDraft({ ...departureDraft, month: event.target.value })}
+        onBlur={(event) => setDepartureDraft({ ...departureDraft, month: clampMonth(event.target.value) })} /></label>
+      <button disabled={busy || !departureDraft.employeeId || !departureMonthValid}>Add departure</button>
     </form>
     {departures.length > 0 && <ul>
       {departures.map((departure, index) => <li key={`${departure.employeeId}-${departure.month}-${index}`}>
@@ -122,15 +142,20 @@ export default function TimeMachine({ workforce, interventions: sharedInterventi
             .map((id) => <option key={id} value={id}>{employeeName(id)} ({capacityLabel(id)})</option>)}
         </select>
       </label>
-      <label>Start month <input type="number" min="0" max="60" value={interventionDraft.startMonth}
-        onChange={(event) => setInterventionDraft({ ...interventionDraft, startMonth: event.target.value })} /></label>
-      <label>Completion month <input type="number" min="0" max="60" value={interventionDraft.completionMonth}
-        onChange={(event) => setInterventionDraft({ ...interventionDraft, completionMonth: event.target.value })} /></label>
+      <label>Start month <span className="hint">({monthHint})</span> <input type="number" min="0" max={monthMax} value={interventionDraft.startMonth}
+        disabled={monthMax === 0}
+        onChange={(event) => setInterventionDraft({ ...interventionDraft, startMonth: event.target.value })}
+        onBlur={(event) => setInterventionDraft({ ...interventionDraft, startMonth: clampMonth(event.target.value) })} /></label>
+      <label>Completion month <span className="hint">({monthHint})</span> <input type="number" min="0" max={monthMax} value={interventionDraft.completionMonth}
+        disabled={monthMax === 0}
+        onChange={(event) => setInterventionDraft({ ...interventionDraft, completionMonth: event.target.value })}
+        onBlur={(event) => setInterventionDraft({ ...interventionDraft, completionMonth: clampMonth(event.target.value) })} /></label>
+      {Number(interventionDraft.completionMonth) < Number(interventionDraft.startMonth) && <p className="hint-warning" role="alert">Completion month must be the same as or after the start month.</p>}
       <label>Target proficiency <input type="number" min="1" max="5" value={interventionDraft.targetProficiency}
         onChange={(event) => setInterventionDraft({ ...interventionDraft, targetProficiency: event.target.value })} /></label>
       <label><input type="checkbox" checked={interventionDraft.assumeVerified}
         onChange={(event) => setInterventionDraft({ ...interventionDraft, assumeVerified: event.target.checked })} /> Assume proficiency is independently verified at completion</label>
-      <button disabled={busy || !interventionDraft.skillId || !interventionDraft.employeeId}>Add development</button>
+      <button disabled={busy || !interventionDraft.skillId || !interventionDraft.employeeId || !interventionMonthsValid}>Add development</button>
     </form>
     {interventions.length > 0 && <ul>
       {interventions.map((item, index) => <li key={`${item.employeeId}-${item.skillId}-${index}`}>
