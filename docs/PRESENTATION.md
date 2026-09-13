@@ -94,7 +94,7 @@ PRODUCT
 - Tagline: "Find your keystones before they walk out the door."
 - One-line pitch: Keystone shows leaders exactly which people are secretly holding critical company knowledge together, quantifies the risk if they leave, and simulates whether targeted training and mentoring actually fixes it before it's too late.
 - Metaphor: the keystone is the stone at the top of an arch that holds all the others in place; remove it and the arch falls.
-- Demo organisation (fictional): Harbor & Pine Co., 44 people. Only Liam Chen can perform "Legacy Billing Recovery" (a critical skill, criticality 5). Two people are required; one is qualified; the skill scores 80/100. Closest backup: Mason Green at level 2 (target is 3).
+- Demo organisation (fictional): Harbor & Pine Co., 80 people. Only Liam Chen can perform "Legacy Billing Recovery" (a critical skill, criticality 5). Two people are required; one is qualified; the skill scores 80/100. Closest backup: Mason Green at level 2 (target is 3).
 
 THE BRIEF'S FIVE QUESTIONS AND HOW KEYSTONE ANSWERS EACH (all five are covered)
 1. "What skills and competencies exist across our workforce today?" -> a live skills inventory: every employee-skill relationship with level, evidence source and verification date; network view, matrix, department heat map and charts; CSV export.
@@ -145,7 +145,7 @@ DESIGN
 ## 8. Before you present
 
 - Pull the latest `feature/ux-personalization`; `npm test --prefix backend` (expect 186 passing).
-- Choose the dataset: the 44-person demo tells the story cleanly; `npm run seed:enterprise --prefix backend` (280 people) impresses on scale. The story holds in both.
+- Choose the dataset: the 80-person demo tells the story cleanly; `npm run seed:enterprise --prefix backend` (316 people) impresses on scale. The story holds in both.
 - For "Live AI" on stage put `OPENAI_API_KEY` and `KEYSTONE_AI_MODEL=gpt-4.1-mini` in `backend/.env`; the AI advisor's status line confirms it. Without a key it says "Demo mode" honestly — fine to show.
 - Start both servers; check `http://localhost:4000/api/health` says ok.
 - Sign in as `admin@keystone.demo` with "Keep me signed in"; light theme, English, 1440 px wide, other tabs closed.

@@ -56,7 +56,7 @@ table, described in `backend/data/demo/README.md`:
 | `learning_resources.csv` | the catalogue, with a `verified` flag and provenance |
 | `future_requirements.csv` | requirements that start applying at a future month |
 
-The current dataset is **44 employees, 22 skills, 21 roles and 226 skill records**. The
+The current dataset is **80 employees, 22 skills, 21 roles and 425 skill records**. The
 demo story is intact — **Liam Chen at 5** and **Mason Green at 2** on Legacy Billing
 Recovery, with Liam carrying 4 recorded mentoring hours a month so that mentoring Mason
 by month 6 keeps coverage when Liam leaves in month 9 — and two more stories were added:

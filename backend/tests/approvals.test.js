@@ -181,7 +181,7 @@ test('Time Machine models pending changes only when asked, and labels them as pr
   const employee = await signedIn(ids.base, 'employee');
   const kubernetes = named(ids.workforce.skills, 'Kubernetes');
   const submitted = await employee.post('/api/keystone/change-requests', { type: 'employee_skill',
-    payload: { operation: 'upsert', employeeId: ids.mason.id, skillId: kubernetes.id, proficiency: 3, evidenceSource: 'Cluster upgrade runbook', lastVerifiedAt: '2026-09-01' } });
+    payload: { operation: 'upsert', employeeId: ids.mason.id, skillId: kubernetes.id, proficiency: kubernetes.targetProficiency, evidenceSource: 'Cluster upgrade runbook', lastVerifiedAt: '2026-09-01' } });
   assert.equal(submitted.status, 201);
 
   const official = (await ids.hr.post('/api/keystone/simulate', { horizonMonths: 12 })).body;

@@ -105,8 +105,8 @@ All five answer correctly **with no AI key set** (`ai-status` reports
 ### Member 1 — data and contracts · **complete**
 
 All nine checklist items done, verified, and documented in `docs/member-1-data-layer.md`.
-The dataset now lives in seven validated CSV files (`backend/data/demo/`) with 44
-employees, 22 skills, 21 roles and 226 skill records. 101 backend tests pass.
+The dataset now lives in seven validated CSV files (`backend/data/demo/`) with 80
+employees, 22 skills, 21 roles and 425 skill records. 101 backend tests pass.
 
 Nothing remaining. Two optional follow-ups if time allows (§5).
 

@@ -9,9 +9,9 @@ Seed a fresh database with it: stop the backend, then `npm run seed:enterprise` 
 |---|---|
 | roles.csv | 62 |
 | skills.csv | 68 |
-| employees.csv | 280 |
+| employees.csv | 316 |
 | role_requirements.csv | 225 |
-| employee_skills.csv | 1369 |
+| employee_skills.csv | 1568 |
 | learning_resources.csv | 44 |
 | future_requirements.csv | 12 |
 | users.csv | 11 |

@@ -1,6 +1,7 @@
 # Demo dataset
 
-The workforce Keystone seeds on first start. **Every person, skill, course, date and
+The workforce Keystone seeds on first start: 80 people in 11 departments, holding 425 skill
+records spread across levels 1 to 5. **Every person, skill, course, date and
 requirement here is fictional.** The files are plain CSV so they can be reviewed and edited
 in a spreadsheet; the backend validates all of them before writing anything, and a bad row
 fails the seed with its file and line, for example `employees.csv:4: unknown role "Backend Enginer"`.

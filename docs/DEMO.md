@@ -24,7 +24,7 @@ refresh keeps you on the same view. A refresh does clear anything scheduled in T
 | Time | View | Do | Point out |
 |---|---|---|---|
 | 0:00 | Overview | Nothing, just show it | 3 skills covered by one person, 1 with no one qualified. Skills at risk lists AI Governance, Cybersecurity, Legacy Billing Recovery and Payments Compliance. Scores measure dependency, not who will leave. |
-| 0:25 | Key people | Open Liam Chen's row | Liam Chen, 98: the only qualified person for Legacy Billing Recovery. Who could step into his role is checked against every requirement of that role. |
+| 0:25 | Key people | Open Liam Chen's row | Liam Chen, 96: the only qualified person for Legacy Billing Recovery. Who could step into his role is checked against every requirement of that role. |
 | 0:50 | Skill map | Click **Legacy Billing Recovery** on the right | One thick line to Liam (level 5, project delivery review). Mason Green and Fatima Zahra are at 2, from a self-assessment and a training record. A missing line means unknown, not absent. |
 | 1:15 | AI advisor | Skill: Legacy Billing Recovery → **Generate development plan**. On the Mentoring card tick **I reviewed this action** → **Schedule in Time Machine** | Five action types, each with a milestone and how it is verified. Mason is mentored by Liam; the certification is the catalogue's Billing Recovery Practitioner Assessment. Nothing is marked complete: it is scheduled as not verified. |
 | 1:45 | Time Machine | Departures: Liam Chen, month 9 → **Add departure** → **Compare scenarios** | The scheduled mentoring is tagged not verified. Billing goes 1 today → 0 without development → 0 with development. |

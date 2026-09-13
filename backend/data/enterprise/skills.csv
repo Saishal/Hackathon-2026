@@ -1,24 +1,24 @@
 name,criticality,target_proficiency,required_holders,demand_target,source
-React,3,3,4,,Fictional demo dataset
-TypeScript,3,3,3,,Fictional demo dataset
-Node.js,4,3,6,,Fictional demo dataset
-API Design,4,3,4,,Fictional demo dataset
-SQL & Data Modeling,4,3,5,,Fictional demo dataset
-Python,3,3,5,,Fictional demo dataset
-Data Analysis,3,3,3,9,Fictional demo dataset
-Machine Learning,3,3,3,7,Fictional demo dataset
+React,3,4,5,,Fictional demo dataset
+TypeScript,3,4,5,,Fictional demo dataset
+Node.js,4,4,6,,Fictional demo dataset
+API Design,4,4,6,,Fictional demo dataset
+SQL & Data Modeling,4,4,6,,Fictional demo dataset
+Python,3,3,8,,Fictional demo dataset
+Data Analysis,3,3,10,9,Fictional demo dataset
+Machine Learning,3,4,8,7,Fictional demo dataset
 AI Governance,4,3,2,6,Fictional demo dataset
-DevOps,4,3,4,,Fictional demo dataset
-Kubernetes,4,3,4,,Fictional demo dataset
-Cloud Architecture,4,3,7,10,Fictional demo dataset
+DevOps,4,4,6,,Fictional demo dataset
+Kubernetes,4,4,6,,Fictional demo dataset
+Cloud Architecture,4,4,10,10,Fictional demo dataset
 Cybersecurity,5,4,2,5,Fictional demo dataset
-Incident Response,4,3,5,,Fictional demo dataset
-Test Automation,3,3,3,8,Fictional demo dataset
-UX Research,2,3,2,,Fictional demo dataset
-Accessibility,3,3,3,,Fictional demo dataset
-Project Management,3,3,3,,Fictional demo dataset
-Communication,2,3,5,,Fictional demo dataset
-Leadership,3,3,4,8,Fictional demo dataset
+Incident Response,4,4,9,,Fictional demo dataset
+Test Automation,3,4,6,8,Fictional demo dataset
+UX Research,2,3,6,,Fictional demo dataset
+Accessibility,3,4,6,,Fictional demo dataset
+Project Management,3,3,10,,Fictional demo dataset
+Communication,2,3,20,,Fictional demo dataset
+Leadership,3,4,6,8,Fictional demo dataset
 Payments Compliance,5,4,2,,Fictional demo dataset
 Legacy Billing Recovery,5,3,2,,Fictional demo dataset
 Go,3,3,3,,Fictional enterprise dataset (generated)

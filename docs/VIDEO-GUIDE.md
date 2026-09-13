@@ -8,7 +8,7 @@ Target: **2 minutes 45 seconds**, one take, screen + voice. Devpost and judges s
    - `npm ci --prefix backend` then `npm start --prefix backend`
    - `npm ci --prefix frontend` then `npm run dev --prefix frontend`
    - Open http://localhost:4000/api/health and confirm `"status":"ok"`.
-2. **Dataset.** Use the default 44-person demo (it tells the story most clearly). If you want the "280 people" line on camera, stop the backend, run `npm run seed:enterprise --prefix backend`, start it again — the story still holds.
+2. **Dataset.** Use the default 80-person demo (it tells the story most clearly). If you want the "316 people" line on camera, stop the backend, run `npm run seed:enterprise --prefix backend`, start it again — the story still holds.
 3. **Browser.** Chrome, window exactly 1440 × 900 (or full-screen on a 16:9 display), light theme, English, zoom 100 %, bookmarks bar hidden (Ctrl+Shift+B), only one tab open, notifications off (Windows: Focus assist / Do not disturb).
 4. **Sign in** as `admin@keystone.demo` with "Keep me signed in". Open the overview once so the data is cached and nothing spins during the take.
 5. **Reset the state you'll change on camera:** make sure Legacy Billing Recovery has **no owner** (Overview → Details → if it has one, close it) and the Time Machine has **no departures** (Clear scenario).

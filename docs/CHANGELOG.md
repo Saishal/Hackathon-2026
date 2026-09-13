@@ -1,5 +1,13 @@
 # Keystone changelog
 
+## 2026-09-13 — Larger demo workforce
+
+### Changed
+
+- **Demo dataset grown from 44 to 80 people** (`backend/data/demo/`): 36 new fictional employees across all 11 departments (9 senior, 15 mid, 12 junior), 425 skill records spread over levels 1–5 for every skill. The demo story is unchanged: Liam Chen is still the only qualified holder of Legacy Billing Recovery (Mason Green and Fatima Zahra at 2), Isabella Ross and Nadia Rahman remain the sole holders of Cybersecurity and Payments Compliance, AI Governance has no qualified holder, there are still five Backend Engineers and no ready successor to Liam. Run `npm run seed:reset --prefix backend` to load it.
+- **Skill requirements raised** for the 18 non-story skills in `skills.csv`, so dependency risk spreads beyond the three sole holders. Technical skills now target level 4, and short-staffed skills need more people than are qualified: TypeScript (2 of 5), Node.js, API Design and Kubernetes (4 of 6 each), Machine Learning (7 of 8), Incident Response (7 of 9), Cloud Architecture (8 of 10). DevOps, SQL & Data Modeling, Test Automation, Accessibility and Leadership are covered exactly (6 of 6), with no slack. 42 people now have a dependency score (was 3); Liam Chen scores 96. Legacy Billing Recovery, Payments Compliance, Cybersecurity and AI Governance are unchanged and still score 80; still 1 skill with nobody qualified and 3 with one person.
+- **Enterprise dataset regenerated** from the larger demo: 316 people, 1,568 evidence records (roles, skills, catalogue, future requirements and accounts unchanged in number).
+
 ## 2026-09-13 — QA phase: enterprise data, pagination, live updates, fixes
 
 Branch: `feature/ux-personalization`.
