@@ -1031,3 +1031,22 @@
 **(c) Group chat message**
 
 > Member 3 👋 @Marco's ux-personalization branch keeps growing (calmer Home, skill-map heat map, CSV export, remember-me, local assistant, help search 🔥). Still no new API endpoints — our client covers everything. I'm holding off on integrating until we've reviewed it as a team; it's getting big, so sooner is better than later. Build green on feature/keystone-ui meanwhile ✅
+
+## 2026-09-13 (03:34 CDT) — quiet sync + run-from-GitHub helper; first push in a while
+
+**(a) What teammates changed**
+
+- `feature/ux-personalization` moved c2c9cdd → 941897a (2 commits): skip notification refetches on brief tab-visibility flickers; explanatory comments + fixes from a project sanity check. Still unmerged; still not adopted.
+- New remote branches appeared: `feature/enterprise-trust-governance`, `feature/p1-help`, `feature/reconcile-governance`, `feature/ux-polish`, `redesign/keystone-v2`, `copilot/build-talent-readiness-skills-intelligence-app`. Not reviewed in depth — none are merged to main.
+- `origin/main` unchanged; merge reported "Already up to date."
+
+**(b) What I adapted**
+
+- No changes needed: `docs/API.md` and `backend/routes/` are identical to what our frontend already targets — no endpoint, shape, or field-name changes.
+- Regenerated `frontend/src/data/activity.json` (79 commits; ux-personalization still outside the generator's branch list).
+- Committed `frontend/run-from-github.cmd` (helper that clones/pulls the repo and starts backend + frontend from cmd — written for the owner's "run it from cmd prompt" ask).
+- Build passes (vite, 56 modules, no errors). Pushed feature/keystone-ui (9 local sync commits) + backup tag `backup/pre-sync-20260913-0334`.
+
+**(c) Group chat message**
+
+> Member 3 👋 pushed all pending sync commits to feature/keystone-ui — build green ✅ ux-personalization got 2 small fixes (notification refetch, comments) but still isn't merged; it's now 68 commits ahead of main, so we really should review it soon. Also noticed a bunch of new branches (enterprise-trust-governance, ux-polish, redesign/keystone-v2, p1-help…) — happy to look at any that are heading for main. No API changes, frontend needs nothing 🟢
