@@ -16,7 +16,7 @@ npm ci --prefix frontend
 npm start --prefix backend
 ```
 
-In a second terminal: `npm run dev --prefix frontend`. Open http://localhost:5173; API health is http://localhost:4000/api/health.
+In a second terminal: `npm run dev --prefix frontend`. Open http://localhost:5173; API health is http://localhost:4000/api/health — it returns 503 and names the failing component if the database, schema or seed is broken, so it can be polled by an uptime monitor.
 
 Copy `backend/.env.example` to `backend/.env` to configure a local environment. A fresh demo database is seeded from the CSV files in [`backend/data/demo/`](backend/data/demo/README.md): 44 fictional employees across 21 roles, 22 skills and a 16-entry learning catalogue, including Legacy Billing Recovery (Liam Chen expert, Mason Green learner). Existing databases are upgraded in place; after editing seed CSV, stop the backend and run `npm run seed:reset --prefix backend`.
 
@@ -31,6 +31,8 @@ Keystone now starts at a sign-in screen. In the default `demo` environment, use 
 
 See [enterprise governance](docs/ENTERPRISE-GOVERNANCE.md) for sessions, permissions, review workflow, data-quality rules, migrations and security assumptions. The API base remains `http://localhost:4000`; use `VITE_API_BASE_URL` in `frontend/.env.local` only when the frontend must call a different backend.
 
+Optional environment: backend `PORT`, `DB_PATH`, `KEYSTONE_SEED_DIR`, `KEYSTONE_ALERT_WEBHOOK_URL` (POSTs every 5xx to a Discord or Slack webhook; see `docs/API.md`); frontend `VITE_API_BASE_URL` in `frontend/.env.local`. A fresh database is seeded from the CSV files in [`backend/data/demo/`](backend/data/demo/README.md): 44 fictional employees across 21 roles, 22 skills and a 16-entry learning catalogue, including Legacy Billing Recovery (Liam Chen expert, Mason Green learner). Existing DBs are preserved; after editing a CSV, stop the backend and run `npm run seed:reset --prefix backend`. No API credentials are needed for the starter.
+
 ## Four member assignments
 
 1. [Data and shared contracts](docs/member-1-data.md) — explained in [the data layer handoff](docs/member-1-data-layer.md)
@@ -38,7 +40,7 @@ See [enterprise governance](docs/ENTERPRISE-GOVERNANCE.md) for sessions, permiss
 3. [Frontend and integration](docs/member-3-frontend.md)
 4. [Matias: AI and strategic skill needs](docs/member-4-ai.md)
 
-Read [API contracts](docs/API.md) and [integration workflow](docs/INTEGRATION.md) before changing shared interfaces.
+Read [API contracts](docs/API.md) and [integration workflow](docs/INTEGRATION.md) before changing shared interfaces. For what is done, what is missing and what is out of scope, see [project status](docs/PROJECT-STATUS.md).
 
 ## Implemented vs remaining
 

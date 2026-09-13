@@ -97,6 +97,20 @@ Body `{employeeId, skillId, proficiency, evidenceSource, lastVerifiedAt}`. Inser
 
 Schema upgrades are additive and existing rows are preserved, so an existing `backend/skillsight.db` keeps working. To get a clean seed, point `DB_PATH` at a new file (`DB_PATH=/tmp/fresh.db npm start --prefix backend`) or delete `backend/skillsight.db`; seeding only runs when the employees table is empty.
 
+## GET /api/health
+
+Returns `{status, failing, checks, checkedAt}` with **HTTP 200** when healthy and **HTTP 503** when any component fails, so an uptime monitor can poll it directly.
+
+- `checks.database` — the SQLite file answers a query.
+- `checks.schema` — every table the snapshot reads exists; on failure `missing` names them.
+- `checks.seed` — at least one employee exists; on failure the reason says to run `npm run seed:reset`.
+- `checks.ai` — `{provider, configured, reason}`. Demo mode is by design and never fails the check.
+
+`failing` lists the failed component names so a dashboard can show which one without parsing the rest.
+
+## Error alerting
+
+If `KEYSTONE_ALERT_WEBHOOK_URL` is set in `backend/.env`, every unexpected server error (HTTP 5xx) is POSTed to it as JSON containing `content` (Discord), `text` (Slack) — both the same one-line summary with status, method, path and message — plus `error.message`, `error.stack`, `context` and `at`. Either webhook type works unchanged. Client errors (4xx) are never sent. Delivery is fire-and-forget with a 5 s timeout and can never delay or fail the response that triggered it. Unset means disabled; `/api/health` does not depend on it.
 ## AI status and reviewed preview
 
 GET /api/keystone/ai-status reports configuration without credentials. POST /api/keystone/strategy/preview accepts reviewed:true, horizonMonths, and requirements; it computes read-only gaps through the existing risk engine. Remove response-only coverage and requirementId fields before submitting. See [AI contract details](AI-INTEGRATION.md).

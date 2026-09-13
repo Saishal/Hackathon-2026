@@ -43,25 +43,49 @@ plain SQL.
 ## 3. Where the data comes from
 
 **All of it is fictional demo data, and every row says so.** There is no real company
-and no real people. The source is `backend/data/seed.js`, which holds:
+and no real people. The source is **seven CSV files in `backend/data/demo/`**, one per
+table, described in `backend/data/demo/README.md`:
 
-- 20 employees with a name, role and department.
-- 16 skills, including **Legacy Billing Recovery**, the skill the whole demo is built
-  around.
-- A proficiency profile per role (for example a Backend Engineer is expected at Node.js 5,
-  SQLite 4, and so on). Each employee gets their role's profile, plus a small
-  deterministic spread of adjacent skills so the matrix is not perfectly uniform.
-- Two hand-placed values that create the demo story: **Liam Chen at 5** and **Mason Green
-  at 2** on Legacy Billing Recovery. Liam is the only expert; Mason is a learner. If Liam
-  leaves, coverage is zero. If Mason is mentored to 3 first, there is a backup.
-- Seven legacy "future targets" (how many people we want in a skill), kept from the
-  original SkillSight app.
-- Nine learning-catalogue entries carried over verbatim from Member 4's original
-  in-memory list.
+| File | Holds |
+|---|---|
+| `employees.csv` | name, role, department, mentoring hours (blank = never recorded) |
+| `skills.csv` | name, criticality, target proficiency, required holders, legacy demand target, source |
+| `roles.csv` | the critical roles and their criticality |
+| `role_requirements.csv` | what a successor must already hold, per role |
+| `employee_skills.csv` | the matrix: who holds what at which level, with evidence and verification date |
+| `learning_resources.csv` | the catalogue, with a `verified` flag and provenance |
+| `future_requirements.csv` | requirements that start applying at a future month |
+
+The current dataset is **44 employees, 22 skills, 21 roles and 226 skill records**. The
+demo story is intact — **Liam Chen at 5** and **Mason Green at 2** on Legacy Billing
+Recovery, with Liam carrying 4 recorded mentoring hours a month so that mentoring Mason
+by month 6 keeps coverage when Liam leaves in month 9 — and two more stories were added:
+Payments Compliance and Cybersecurity each rest on one person, and AI Governance has no
+holder at the target level and no ready successor for the AI Specialist role.
+
+Three design choices in these files protect the rules in section 9:
+
+- **Rows reference each other by name, never by id.** `employee_skills.csv` says
+  `Liam Chen,Legacy Billing Recovery,5,…`. SQLite allocates the integer ids on import, so
+  no id ever appears in a CSV and nobody can accidentally hardcode one.
+- **A blank cell means unknown, never zero.** Blank mentoring hours, blank verification
+  date, blank demand target — all stay `NULL` in the database.
+- **Everything is validated before anything is written.** `backend/data/dataset.js` reads
+  all seven files, checks every reference resolves and every number is in range, and if
+  one row is wrong the whole seed fails with the file and line
+  (`employees.csv:4: unknown role "Backend Enginer"`). The import then runs in a single
+  transaction, so a database is either fully seeded or untouched.
+
+This replaced an earlier version where the same data lived as JavaScript arrays inside
+`seed.js` (20 employees, with proficiencies generated from a per-role profile). Moving it
+to CSV means a non-developer can review or edit the dataset in a spreadsheet, and a
+different organisation can be seeded by pointing `KEYSTONE_SEED_DIR` at a folder with the
+same seven files.
 
 Seeding only runs when the `employees` table is **empty**. A database that already has
 data is never re-seeded, so nothing you edit is overwritten on restart. That is the
-"edits survive restart" acceptance criterion from the brief.
+"edits survive restart" acceptance criterion from the brief. To rebuild from the CSVs
+after editing them, stop the backend and run `npm run seed:reset --prefix backend`.
 
 **Provenance is stored, not implied.** Every table that carries a judgement — criticality,
 a coverage requirement, a catalogue entry, a proficiency rating — also carries a text
@@ -83,7 +107,10 @@ change routes without touching data code, or the reverse.
 |---|---|
 | `db.js` | Opens the SQLite file. Wraps the callback-style `sqlite3` API in three Promise helpers: `run` (write), `all` (read many rows), `get` (read one row). Turns on `PRAGMA foreign_keys = ON` as the first statement on the connection. |
 | `schema.js` | `CREATE TABLE IF NOT EXISTS` for every table, plus `migrate()` which adds columns to tables that already exist, plus `backfillDefaults()` which fills new columns with sensible values on an older database. |
-| `seed.js` | The fictional data described above, and the functions that insert it. |
+| `csv.js` | A small CSV parser (quoted fields, blank cells). |
+| `dataset.js` | Reads the seven CSVs from `demo/` (or `KEYSTONE_SEED_DIR`), resolves every name reference, validates every value, and fails with file and line on the first bad row. |
+| `seed.js` | `importDataset()` writes a validated dataset in one transaction, allocating integer ids; `seedDemoData()` calls it only if the database is empty. |
+| `demo/*.csv` | The fictional dataset itself. See section 3. |
 | `queries.js` | Every read and write the app performs, with validation. Nothing outside this folder writes SQL. |
 | `workforce.js` | `loadWorkforce()` — assembles the snapshot that every other module consumes. |
 | `fixture.js` | `createWorkforceFixture()` — a small hand-written snapshot for unit tests, so tests do not need a database. |
@@ -93,9 +120,14 @@ change routes without touching data code, or the reverse.
 separate router so that `backend/index.js` gains one line (`app.use(...)`) rather than
 route bodies, which keeps merges with teammates small.
 
-`backend/tests/data.test.js` is the test suite for all of the above. It points `DB_PATH`
-at a throwaway file before requiring the data layer, so it can never touch a real
-database.
+`backend/scripts/reset-demo-data.js` (run as `npm run seed:reset --prefix backend`)
+deletes the database file and re-seeds it from the CSVs. Stop the backend first — Windows
+will not delete a file another process has open, and the script says so if it hits that.
+
+`backend/tests/data.test.js` is the test suite for all of the above, and
+`backend/tests/seed-csv.test.js` covers the CSV loader and its validation messages. Both
+point `DB_PATH` at a throwaway file before requiring the data layer, so they can never
+touch a real database.
 
 ---
 
@@ -115,26 +147,22 @@ these steps in this exact order. The order matters.
    `criticality` on future requirements). Checks `PRAGMA table_info` first so it is
    idempotent — running it twice does nothing the second time. This is what lets an old
    database upgrade in place instead of being deleted.
-4. **`seedDemoData()`** — inserts the fictional employees, skills, proficiencies and legacy
-   targets, **only if `employees` is empty**.
-5. **`backfillDefaults()`** — gives every existing row the values that `loadWorkforce`
-   used to compute in memory. Sets `evidence_source = 'fictional seed'` where null, and
-   inserts a `skill_requirements` row for every skill that lacks one, using exactly the
-   old hardcoded rule (criticality 5 for Legacy Billing Recovery, 3 otherwise; target
-   proficiency 3; required holders derived from the legacy target). This is why moving
-   the values into the database changed nothing that teammates could see.
-6. **`backfillRoles()`** — one `critical_roles` row per distinct employee role, and the
-   role's skill profile becomes its `role_skill_requirements`. Uses `INSERT OR IGNORE`
-   so it is idempotent.
-7. **`backfillResources()`** — inserts the nine catalogue entries and their skill links.
-   Idempotent via the `UNIQUE` slug.
-8. **`backfillMentoringCapacity()`** — Member 4's rule, now stored: an employee with two
-   or more skills at proficiency 5 gets `mentoring_hours_per_month = 4`. Everyone else
-   stays `NULL`, which means *unknown*, not zero. Exactly 6 of the 20 seeded employees
-   qualify, matching the number Member 4 documented.
+4. **`seedDemoData()`** — **only if `employees` is empty**, reads and validates the seven
+   CSVs and writes everything — employees, skills, the matrix, roles, role requirements,
+   the catalogue, future requirements — in one transaction. Because the CSVs carry roles,
+   catalogue entries and mentoring hours directly, there is nothing left to derive.
+5. **`backfillDefaults()`** — for a database created *before* the persisted columns
+   existed: sets `evidence_source = 'fictional seed'` where null and inserts a
+   `skill_requirements` row for any skill lacking one, using the rule the old in-memory
+   code used (criticality 5 for Legacy Billing Recovery, 3 otherwise). On a database
+   seeded from CSV this finds nothing to do. It stays so an old database still upgrades
+   in place.
 
-Steps 5–8 run on every start, not just the first. That is deliberate: a database created
-before a feature existed still gets that feature's rows the next time the app boots.
+Earlier versions had three more steps here — `backfillRoles`, `backfillResources` and
+`backfillMentoringCapacity` — that *derived* roles from employee roles, inserted the
+catalogue from a JavaScript array, and computed mentoring hours from a rule (two or more
+skills at level 5). They were removed when the data moved to CSV, because each of those
+values is now stated explicitly in a file rather than inferred. Section 11 records them.
 
 ---
 
@@ -311,21 +339,29 @@ test in `data.test.js`, so breaking one fails the suite.
 ## 10. How to do common things
 
 **Start with fresh demo data**
-`DB_PATH=/tmp/fresh.db npm start --prefix backend` — or delete `backend/skillsight.db`.
+Stop the backend, then `npm run seed:reset --prefix backend`. Or start against a new
+file: `DB_PATH=/tmp/fresh.db npm start --prefix backend`.
 
-**Record or change someone's proficiency**
-`PUT /api/keystone/employee-skills` with an `evidenceSource`. Do not edit `seed.js`;
-that only affects databases that have never been seeded.
+**Change the demo dataset itself**
+Edit the CSV in `backend/data/demo/`, then `npm run seed:reset`. Reference other rows by
+name. Leave a cell blank for unknown. A bad row fails the reset with its file and line.
+
+**Seed a different organisation**
+Put the same seven CSV files in a folder and run with `KEYSTONE_SEED_DIR=that/folder`
+and a fresh `DB_PATH`.
+
+**Record or change someone's proficiency in a running app**
+`PUT /api/keystone/employee-skills` with an `evidenceSource`. This changes the database,
+not the CSV — a later `seed:reset` would discard it, so put durable changes in the CSV.
 
 **Change a skill's criticality or coverage requirement**
 Update the row in `skill_requirements` and set `metadata_source` to say who decided.
 There is no HTTP endpoint for this yet; it is a reasonable next addition.
 
 **Add a catalogue entry**
-Insert into `resources` with a unique `slug`, set `verified` to 1 only if a person has
-confirmed it exists, and give a `provenance` naming who. Link skills through
-`resource_skills`. Do not add it to `seed.js` — that array is Member 4's original list
-and exists for fresh databases only.
+Add a row to `learning_resources.csv` with a unique `slug`, `;`-separated skill names,
+`verified` set to `true` only if a person has confirmed it exists, and a `provenance`
+naming who. Then `seed:reset`.
 
 **Add a future requirement**
 `POST /api/keystone/future-requirements`. Leave `status` as `proposed` until reviewed.
@@ -407,6 +443,14 @@ README, a stale comment in `risk.js`, and the sample regeneration command.
 The team checklist in `INTEGRATION.md` marked with what was verified from a clean install
 and what is still open.
 
+**12. `26d485a` (on `fix/docs-sync`) — Document the data layer.**
+The first version of this document.
+
+**13. `67af2e8` and `c221ca2` (on `integrate/parts-1-2-4-csv`, by a teammate) — Seed from CSV.**
+Described in section 12. Verified from a clean install: 101 tests, lint and build clean,
+boots serving 44 employees. This document was then updated to match — sections 3, 4, 5
+and 10 describe the CSV layout; the earlier `seed.js` description is kept only as history.
+
 ---
 
 ## 12. What teammates changed in this layer during integration
@@ -426,6 +470,23 @@ changes to Member 1's files. They are improvements and were kept.
 
 `workforce.js` — the snapshot itself — was not modified by anyone else. The published
 contract is exactly as documented in section 7.
+
+### Second integration: the dataset moved to CSV
+
+On `integrate/parts-1-2-4-csv` (commit `67af2e8`), a teammate replaced the JavaScript
+seed arrays with the seven CSV files described in section 3, added `csv.js` and
+`dataset.js`, cut `seed.js` from ~450 lines to ~110, and removed the three derivation
+steps from startup. The dataset grew from 20 to 44 employees and gained two more demo
+stories. They also added `scripts/reset-demo-data.js`, `tests/seed-csv.test.js` and
+`tests/integration.test.js`, taking the suite to 101 tests.
+
+This was checked against the rules in section 9 before being accepted into this document:
+ids are still allocated by SQLite (CSVs reference by name), blank still means unknown,
+evidence is still required on every matrix row, provenance is still on every judgement
+value, and `loadWorkforce` was not touched — so nothing any consumer reads changed shape.
+The Liam/Mason story is preserved with the same values. A follow-up commit (`c221ca2`)
+made the legacy heat-map panels agree with Keystone risk, which is frontend work outside
+this layer.
 
 ---
 

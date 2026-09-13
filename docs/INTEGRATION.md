@@ -1,5 +1,7 @@
 # Team integration workflow
 
+Current state of every part, what blocks submission, and what is out of scope: [PROJECT-STATUS.md](PROJECT-STATUS.md).
+
 Clone main after backbone publication, then create your assigned branch:
 
 ```sh

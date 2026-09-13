@@ -14,6 +14,7 @@ const { recordAudit, auditContext } = require('./data/audit');
 const { withTransaction } = require('./data/transactions');
 const { notFound } = require('./errors');
 const recommendationService = require('./services/recommendations');
+const { checkHealth, reportError } = require('./monitoring');
 
 function errorHandler(err, req, res, _next) {
   if (err.type === 'entity.parse.failed') {
@@ -32,6 +33,8 @@ function errorHandler(err, req, res, _next) {
   const status = err.status || err.statusCode || 500;
   if (status >= 500) {
     console.error(err);
+    // Fire-and-forget alert to the on-call webhook when configured; never delays the response.
+    void reportError(err, { status: 500, method: req.method, path: req.originalUrl, requestId: req.id });
     res.status(500).json({ error: 'Unexpected server error', code: 'server_error', requestId: req.id });
     return;
   }
@@ -57,8 +60,10 @@ function createApp({ config = loadConfig(), ai = recommendationService, limiter 
   app.use(sessionMiddleware(config));
   app.use(originGuard(config));
 
-  app.get('/api/health', (_req, res) => {
-    res.json({ status: 'ok' });
+  // Real readiness check for an uptime monitor: 503 names the failing component.
+  app.get('/api/health', async (_req, res) => {
+    const health = await checkHealth();
+    res.status(health.status === 'ok' ? 200 : 503).json(health);
   });
 
   app.use('/api/auth', authRoutes({
