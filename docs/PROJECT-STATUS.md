@@ -60,6 +60,28 @@ Deferred by decision: CSV import (spec marks it optional).
 **Still true from the earlier review:** a development plan cannot be generated for a skill nobody holds yet (`Unknown skillId`); the demo strategy never proposes a genuinely new skill without the live provider configured.
 
 
+## 2b. QA phase on `feature/ux-personalization` on 2026-09-13
+
+A systematic pass over every endpoint, page, dialog and role with the enterprise dataset loaded (280 people). Each item was reproduced in the browser, fixed at the root, covered by a test where the backend was involved, and re-verified. Commits `ca78387` → `dc6a3ef` and later.
+
+| Found | Root cause | Fix |
+|---|---|---|
+| Data quality was one 85,000 px page (482 cards); directory, accounts, key people, review queue and the evidence tab (1,369 rows) rendered everything at once | No pagination anywhere | Shared `PagedList`/`Pagination` (25/50/100, page in the URL, resets on filter change, hides when everything fits, translated) on all seven lists |
+| A colleague's approval, archive or acknowledgement only showed after a manual reload | Nothing polled | `GET /activity-stamp` (newest audit id) polled every 20 s and on tab focus; a moved id refreshes shared data and raises `keystone:data-changed`, which every self-loading page and the bell subscribe to |
+| Archiving a manager and promoting one of their reports left the promoted person reporting to themselves | Reports were moved before the "does the new manager report to the archived person" check, so the check saw their own id | Decision made before the move; the promoted report inherits the archived person's manager or external flag, audited, `promotedReport` in the response |
+| Restoring someone whose manager was archived meanwhile left a dangling reporting line that PATCH would reject | Restore did not look at the manager | Line cleared and reported as `managerCleared` / `previousManagerName` |
+| An account could be created for or linked to an archived employee | `assertLinkable` only checked existence | Refused with a field error naming the person |
+| The AI advisor never said why it was in demo mode; `/ai-status` was unused | No UI for provider status | Status line with provider, model, or the missing setting (admins see the exact `.env` key); per-answer fallback reason in words |
+| Strategy proposals for payments, security, cloud, data, expansion or mobile directions fell back to raw coverage gaps | Three templates; first match only | Nine templates, every match merged and deduplicated (cap 8) |
+| Validation messages appeared twice in five dialogs | Top alert and inline field error showed the same detail | `FormError` takes the inline field list and summarises only what is not shown inline |
+| A search hit for a data-quality issue opened the unfiltered quality page | Bare `#/quality` link | Link carries the record label as `q` |
+| New-manager picker on archive was 280 flat names | No grouping | Grouped: their reports, same department, other departments |
+| Help catalog promised HR the employee directory | Wrong text | HR cannot edit official data directly; text corrected |
+
+Verified without a code change: login (wrong password, session ended), every admin dialog (add/edit/archive/restore employee, user edit with consequence confirmation, risk owner, data-quality acknowledgement, approve/reject with comment), Time Machine (departure, comparison, save), AI development plan and strategy save, global search with keyboard, manager scope (13 people, no name leaks, 403 on admin endpoints), employee scope (restricted-page message, evidence rules), Spanish, dark mode, phone width (no horizontal overflow), 19,040-cell matrix renders. Backend 186 tests, frontend 9, lint and build clean.
+
+Still open, by decision: a live provider key is needed to exercise the OpenAI path (the harness in `backend/scripts/verify-live-ai.js` covers it); `verified: true` on fictional credentials; CSV import.
+
 ## 3. The five questions the demo must answer
 
 The brief requires all five to be *shown*, not just served. Status of each:

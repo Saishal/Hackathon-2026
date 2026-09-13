@@ -20,6 +20,8 @@ In a second terminal: `npm run dev --prefix frontend`. Open http://localhost:517
 
 Copy `backend/.env.example` to `backend/.env` to configure a local environment. A fresh demo database is seeded from the CSV files in [`backend/data/demo/`](backend/data/demo/README.md): 44 fictional employees across 21 roles, 22 skills and a 16-entry learning catalogue, including Legacy Billing Recovery (Liam Chen expert, Mason Green learner). Existing databases are upgraded in place; after editing seed CSV, stop the backend and run `npm run seed:reset --prefix backend`.
 
+For a realistic load, seed the **enterprise dataset** instead: stop the backend and run `npm run seed:enterprise --prefix backend`. It is a generated, deterministic superset of the demo organization ([`backend/data/enterprise/`](backend/data/enterprise/README.md)): 280 people in 13 departments, 68 skills, 62 roles, 1,369 evidence records with a realistic share of unverified and stale evidence, 44 catalogue entries, 12 future requirements and 11 sign-in accounts (the four below plus a director, two department heads, a second HR partner, two employees and a second admin, all with the same demo password). The demo story is preserved, so Legacy Billing Recovery, Payments Compliance, Cybersecurity and AI Governance keep the same holders. `npm run dataset:enterprise --prefix backend` regenerates the CSV files.
+
 Keystone restores valid sessions automatically. New sign-ins open the calm, role-aware **Home** workspace. In the default `demo` environment, use one of these development-only accounts with your configured `KEYSTONE_DEMO_PASSWORD` (local demo fallback is defined in `backend/config.js`):
 
 | Account | Role | Typical use |

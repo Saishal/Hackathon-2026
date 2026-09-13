@@ -23,7 +23,7 @@ export default function Pagination({ pager, noun, anchorId }) {
 
   return (
     <nav className="pager" aria-label={t('pager.label')}>
-      <p className="pager-summary" aria-live="polite">{t('pager.range', { from, to, total, noun: noun ?? t('filters.records') })}</p>
+      <p className="pager-summary" aria-live="polite">{t('pager.range', { from, to, total, noun: noun ? t(`pager.noun.${noun}`, { defaultValue: noun }) : t('filters.records') })}</p>
       <div className="pager-controls">
         <label className="field field-inline">{t('pager.rows')}
           <select value={size} onChange={(event) => setSize(event.target.value)}>

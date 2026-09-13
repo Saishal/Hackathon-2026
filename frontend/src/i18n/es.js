@@ -504,4 +504,10 @@ export default {
   'pager.next': 'Página siguiente',
   'pager.nextShort': 'Siguiente',
   'pager.page': 'Página {page} de {pages}',
+  'pager.noun.people': 'personas',
+  'pager.noun.issues': 'incidencias',
+  'pager.noun.accounts': 'cuentas',
+  'pager.noun.changes': 'cambios',
+  'pager.noun.skills': 'habilidades',
+  'pager.noun.records': 'registros',
 };
