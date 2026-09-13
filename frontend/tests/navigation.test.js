@@ -5,7 +5,7 @@ import { HELP_TOPICS, searchHelp } from '../src/help/catalog.js';
 import { answerQuestion, QUICK_PROMPTS, FALLBACK } from '../src/help/assistant.js';
 import { VIEWS, isViewAllowed } from '../src/views.js';
 import { buildSkillMap, heatRows, heatState } from '../../shared/skill-map.mjs';
-const admin = { user: { role: 'admin', employeeId: null }, capabilities: ['users.manage', 'workforce.read.all', 'risk.read.org'] };
+const admin = { user: { role: 'admin', employeeId: null }, capabilities: ['users.manage', 'workforce.read.all', 'risk.read.org', 'employee.edit'] };
 const employee = { user: { role: 'employee', employeeId: 2 }, capabilities: ['workforce.read.self'] };
 test('Home is first and cards use the existing capability guards', () => {
   assert.equal(VIEWS[0].id, 'home');
@@ -33,6 +33,12 @@ test('assistant quick prompts, synonyms, shortcuts, restrictions and decision fa
   for (const question of QUICK_PROMPTS) assert.notEqual(answerQuestion(question, admin).id, 'fallback', question);
   for (const word of ['users', 'roles', 'admin', 'permissions', 'matrix', 'map', 'risks', 'gaps', 'dependency', 'bus factor', 'export', 'download', 'CSV', 'report', 'employees', 'people', 'evidence', 'profile', 'help', 'guide', 'explain']) assert.notEqual(answerQuestion(word, admin).id, 'fallback', word);
   assert.equal(answerQuestion('Where are the users?', admin).shortcuts[0].href, '#/users');
+  assert.equal(answerQuestion('How do I archive an employee?', admin).shortcuts[0].href, '#/directory');
+  assert.equal(answerQuestion('How do I save a filter?', admin).id, 'filters');
+  assert.equal(answerQuestion('Where is search?', admin).id, 'search');
+  assert.equal(answerQuestion('What are suggestions?', admin).id, 'suggestions');
+  assert.ok(answerQuestion('How do I archive an employee?', employee).shortcuts.every((link) => link.href.startsWith('#/help')));
+  for (const query of ['archive', 'saved view', 'suggestions', 'global search']) assert.ok(searchHelp(HELP_TOPICS, query).length, query);
   const restricted = answerQuestion('Where are the users?', employee);
   assert.match(restricted.text, /restricted/);
   assert.ok(restricted.shortcuts.every((link) => link.href.startsWith('#/help')));
