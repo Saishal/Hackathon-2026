@@ -1,24 +1,20 @@
 import activityData from '../data/activity.json';
+import { plural } from './format';
 
-// ActivityLog — who changed what, and when. Generated from git history across
-// all team branches by scripts/generate-activity.mjs (re-run by the sync
-// automation after every fetch, so this panel is always current).
+// ActivityLog: who changed what, and when. Generated from git history across all team branches
+// by scripts/generate-activity.mjs (re-run by the sync automation after every fetch).
 
 const MEMBER_COLORS = {
-  'Member 1': '#2563eb',
-  'Member 2': '#7c3aed',
-  'Member 3': '#059669',
-  'Member 4': '#d97706',
-  'Team': '#64748b',
+  'Member 1': '#2851d8',
+  'Member 2': '#7a4bd1',
+  'Member 3': '#1a7f4b',
+  'Member 4': '#c27a00',
+  Team: '#8a919c',
 };
 
-const fmtDateTime = (iso) => {
-  const d = new Date(iso);
-  return d.toLocaleString(undefined, {
-    month: 'short', day: 'numeric', year: 'numeric',
-    hour: 'numeric', minute: '2-digit',
-  });
-};
+const fmtDateTime = (iso) => new Date(iso).toLocaleString(undefined, {
+  month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit',
+});
 
 const relTime = (iso) => {
   const mins = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
@@ -31,39 +27,43 @@ const relTime = (iso) => {
 
 export default function ActivityLog() {
   const { generatedAt, entries } = activityData;
+  // activity.json is not in date order, so sort here to keep the table newest first.
+  const sorted = [...entries].sort((a, b) => new Date(b.isoDate) - new Date(a.isoDate));
+
   return (
-    <div>
-      <h3>Team activity log</h3>
-      <p className="hint">
-        Every commit from all team branches, newest first. Regenerated from git history
-        {generatedAt ? ` · last synced ${relTime(generatedAt)}` : ''}.
-      </p>
-      <div className="table-wrap compact">
+    <section className="panel panel-flush">
+      <div className="panel-head">
+        <div>
+          <h2>{plural(sorted.length, 'commit')}</h2>
+          <p>Generated from git history across all team branches{generatedAt ? `, last synced ${relTime(generatedAt)}` : ''}.</p>
+        </div>
+      </div>
+      <div className="table-wrap flush">
         <table>
           <thead>
-            <tr><th>When</th><th>Member</th><th>Branch</th><th>Change</th><th>Author</th></tr>
+            <tr><th scope="col">When</th><th scope="col">Who</th><th scope="col">Branch</th><th scope="col">Change</th></tr>
           </thead>
           <tbody>
-            {entries.map((entry) => (
+            {sorted.map((entry) => (
               <tr key={entry.hash}>
                 <td className="nowrap" title={entry.isoDate}>
                   {fmtDateTime(entry.isoDate)}
-                  <div className="hint">{relTime(entry.isoDate)}</div>
+                  <small className="cell-sub">{relTime(entry.isoDate)}</small>
                 </td>
-                <td>
-                  <span className="member-badge" style={{ background: MEMBER_COLORS[entry.member] ?? '#64748b' }}>
+                <td className="nowrap">
+                  <span className="member">
+                    <span className="member-dot" style={{ background: MEMBER_COLORS[entry.member] ?? MEMBER_COLORS.Team }} />
                     {entry.member}
                   </span>
-                  <div className="hint">{entry.role}</div>
+                  <small className="cell-sub">{entry.author}</small>
                 </td>
                 <td className="nowrap"><code>{entry.branch}</code></td>
                 <td>{entry.subject}</td>
-                <td className="hint nowrap">{entry.author}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-    </div>
+    </section>
   );
 }

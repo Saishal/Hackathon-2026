@@ -1,88 +1,115 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { keystoneApi } from '../api/keystone';
+import { useSession } from '../session';
+import { isViewAllowed } from '../views';
+import ActivityLog from './ActivityLog';
 import AIWorkbench from './AIWorkbench';
+import AuditLog from './AuditLog';
+import DataQuality from './DataQuality';
+import EmployeeDirectory from './EmployeeDirectory';
+import HelpGuide from './HelpGuide';
+import { can } from './format';
 import KeystonePeople from './KeystonePeople';
+import MyProfile from './MyProfile';
+import Overview from './Overview';
+import ReviewQueue from './ReviewQueue';
 import SkillNetwork from './SkillNetwork';
 import TimeMachine from './TimeMachine';
+import { ErrorState, Skeleton } from './ui';
+import UsersAdmin from './UsersAdmin';
 import WorkforceSnapshot from './WorkforceSnapshot';
-// Vendored from Member 1's docs/samples (frontend/src/data/). Used ONLY when
-// the backend is unreachable — every screen carries a DEMO DATA label so
-// sample numbers are never mistaken for live analysis.
-import demoWorkforce from '../data/workforce.json';
-import demoRisks from '../data/risks.json';
-import demoFutureRequirements from '../data/future-requirements.json';
 
-// view: 'overview' | 'people' | 'network' | 'timemachine' | 'ai' | 'data'
-// The dashboard shell (App.jsx) owns navigation; this component owns the data
-// and renders the section for the active view.
-export default function KeystoneStarter({ view = 'overview', embedded = false }) {
+const NEEDS_WORKFORCE = new Set(['overview', 'people', 'network', 'timemachine', 'ai', 'data']);
+
+// Loads the data each role may read and renders the active view. It stays mounted across views, so
+// development scheduled from the AI advisor is still there in Time Machine. There is no offline sample
+// mode: every number comes from the server under the signed-in user's permissions.
+export default function KeystoneStarter({ view, params }) {
+  const session = useSession();
+  const canReadWorkforce = can(session, 'workforce.read.all', 'workforce.read.team', 'workforce.read.self');
+  const canReadRisk = can(session, 'risk.read.org', 'risk.read.team');
+  const canReadQuality = can(session, 'dataQuality.read.org', 'dataQuality.read.team');
+
   const [workforce, setWorkforce] = useState(null);
   const [risks, setRisks] = useState(null);
-  const [demoMode, setDemoMode] = useState(false);
-  const [error, setError] = useState('');
-  // Planned development lives here rather than in TimeMachine so actions scheduled from the
-  // AI advisor are still there after switching to the Time Machine view.
+  const [organization, setOrganization] = useState(null);
+  const [quality, setQuality] = useState(null);
+  const [error, setError] = useState(null);
   const [interventions, setInterventions] = useState([]);
-  // Reloads after the AI workbench saves reviewed requirements, so Time Machine and the
-  // snapshot see the new stable skill IDs without a page refresh.
-  async function refresh() {
-    const [data, analysis] = await Promise.all([keystoneApi.workforce(), keystoneApi.risks()]);
-    setWorkforce(data); setRisks(analysis);
-  }
+
+  const loadWorkforce = useCallback(async () => {
+    setError(null);
+    try {
+      const [data, analysis, org] = await Promise.all([
+        canReadWorkforce ? keystoneApi.workforce() : null,
+        canReadRisk ? keystoneApi.risks() : null,
+        keystoneApi.organization(),
+      ]);
+      setWorkforce(data);
+      setRisks(analysis);
+      setOrganization(org);
+    } catch (failure) {
+      setError(failure);
+    }
+  }, [canReadWorkforce, canReadRisk]);
+
+  const loadQuality = useCallback(async () => {
+    if (!canReadQuality) return;
+    try {
+      setQuality(await keystoneApi.dataQuality());
+    } catch (failure) {
+      setQuality({ error: failure });
+    }
+  }, [canReadQuality]);
+
   useEffect(() => {
-    let active = true;
-    Promise.all([keystoneApi.workforce(), keystoneApi.risks()]).then(([data, analysis]) => {
-      if (active) { setWorkforce(data); setRisks(analysis); }
-    }).catch((err) => {
-      if (!active) return;
-      // Offline/demo fallback: labeled sample data, never presented as live.
-      setWorkforce(demoWorkforce);
-      setRisks(demoRisks);
-      setDemoMode(true);
-      setError(err.message);
-    });
-    return () => { active = false; };
-  }, []);
+    loadWorkforce();
+    loadQuality();
+  }, [loadWorkforce, loadQuality]);
 
-  // List every single-holder or uncovered skill the headline counts; a fixed top three hid
-  // skills tied on score.
-  const concentrated = risks?.skills.filter((skill) => skill.busFactor <= 1) ?? [];
-  const summary = risks && <>
-    <p><strong>{risks.singleHolder}</strong> single-holder skills · <strong>{risks.uncovered}</strong> skills without recorded independent coverage</p>
-    <ul>{(concentrated.length ? concentrated : risks.skills.slice(0, 3)).map((skill) => <li key={skill.id}><strong>{skill.name}</strong> — Bus Factor {skill.busFactor}, Keystone Score {skill.keystoneScore}/100. {skill.explanation}</li>)}</ul>
-  </>;
-  const onRequirementsSaved = demoMode ? undefined : refresh;
+  // After an approval or other official change, scores, records and data quality all refresh together.
+  const refreshAll = useCallback(() => Promise.all([loadWorkforce(), loadQuality()]), [loadWorkforce, loadQuality]);
+  const canOpen = (id) => isViewAllowed(session, id);
   const schedule = (item) => setInterventions((current) => [...current, item]);
-  const timeMachine = <TimeMachine workforce={workforce} interventions={interventions} onInterventionsChange={setInterventions} />;
-  const workbench = <AIWorkbench workforce={workforce} onRequirementsSaved={onRequirementsSaved} onSchedule={schedule} />;
 
-  if (embedded) {
-    return (
-      <div>
-        {demoMode && <p className="demo-banner" role="status">
-          DEMO DATA — backend unreachable ({error}). Rendering Member 1's labeled sample payloads; live endpoints are disabled.
-        </p>}
-        {!demoMode && error && <p role="alert">{error}</p>}
-        {view === 'overview' && summary}
-        {view === 'people' && <KeystonePeople />}
-        {view === 'network' && <SkillNetwork workforce={workforce} risks={risks} />}
-        {view === 'timemachine' && timeMachine}
-        {view === 'ai' && workbench}
-        {view === 'data' && workforce && <WorkforceSnapshot workforce={workforce} fallbackRequirements={demoMode ? demoFutureRequirements : null} />}
-      </div>
-    );
-  }
+  let content;
+  if (view === 'activity') content = <ActivityLog />;
+  else if (view === 'help') content = <HelpGuide params={params} />;
+  else if (view === 'quality') content = <DataQuality session={session} canOpen={canOpen} onChanged={refreshAll} />;
+  else if (view === 'reviews') content = <ReviewQueue workforce={workforce} onChanged={refreshAll} />;
+  else if (view === 'audit') content = <AuditLog workforce={workforce} params={params} />;
+  else if (view === 'profile') content = <MyProfile onChanged={refreshAll} />;
+  else if (view === 'users') content = <UsersAdmin workforce={workforce} onOrganizationChanged={loadWorkforce} />;
+  else if (view === 'directory') content = <EmployeeDirectory workforce={workforce} onChanged={refreshAll} />;
+  else if (error) content = <ErrorState error={error} onRetry={loadWorkforce} />;
+  else if (NEEDS_WORKFORCE.has(view) && !workforce) content = <div className="panel"><Skeleton lines={6} /></div>;
+  else if (view === 'overview') content = <Overview risks={risks} quality={quality} organization={organization} onChanged={refreshAll} />;
+  else if (view === 'people') content = <KeystonePeople quality={quality} params={params} />;
+  else if (view === 'network') content = <SkillNetwork workforce={workforce} risks={risks} params={params} />;
+  else if (view === 'timemachine' || view === 'ai') content = null; // rendered below, outside the keyed wrapper
+  else if (view === 'data') content = <WorkforceSnapshot workforce={workforce} quality={quality} params={params} onChanged={refreshAll} />;
 
-  // Standalone fallback (kept for direct component use)
-  return <section className="panel">
-    <h2>Keystone foundation</h2>
-    <p>Demo data · Organizational dependency, not an employee departure prediction.</p>
-    {demoMode && <p className="demo-banner" role="status">DEMO DATA — backend unreachable.</p>}
-    {summary}
-    <WorkforceSnapshot workforce={workforce} fallbackRequirements={demoMode ? demoFutureRequirements : null} />
-    <KeystonePeople />
-    <SkillNetwork workforce={workforce} risks={risks} />
-    {timeMachine}
-    {workbench}
-  </section>;
+  // Following a link to another record on the same page (#/data?tab=people&q=…) remounts the view so it
+  // opens on that record.
+  const linkKey = ['data', 'people', 'network', 'audit'].includes(view) ? `${view}?${new URLSearchParams(params)}` : view;
+
+  // Time Machine and the AI advisor hold the most user-entered state (a half-built scenario, a plan
+  // under review). They live outside the keyed wrapper and are hidden rather than unmounted, so
+  // visiting another page and coming back finds everything exactly as it was left.
+  const showPersistent = workforce && !error;
+  return (
+    <>
+      <div className="view" key={linkKey}>{content}</div>
+      {showPersistent && (
+        <div className="view" hidden={view !== 'timemachine'}>
+          <TimeMachine workforce={workforce} interventions={interventions} onInterventionsChange={setInterventions} params={params} />
+        </div>
+      )}
+      {showPersistent && can(session, 'ai.development', 'ai.strategy') && (
+        <div className="view" hidden={view !== 'ai'}>
+          <AIWorkbench workforce={workforce} onRequirementsSaved={refreshAll} onSchedule={schedule} />
+        </div>
+      )}
+    </>
+  );
 }

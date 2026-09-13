@@ -1,5 +1,22 @@
 # Member 3 Sync Log
 
+## 2026-09-13 (01:30 CDT, forty-seventh run)
+
+**(a) What teammates changed**
+
+- Overnight the team shipped the integrated P0/P1 line on `feature/p1-help` (tip `11b7fbe`) plus `feature/enterprise-trust-governance`, `feature/reconcile-governance`, `feature/ux-polish`, and `redesign/keystone-v2`. `main` itself is still unmoved (`fd002fa`) — the PRs are not merged yet.
+- `docs/NEXT-SESSION.md` (on p1-help) spells out the requirements: login with roles (scrypt, session cookie, seeded demo users), route protection, append-only audit log, employee directory, role-scoped global search, help drawer, hash routing, visual refresh. p1-help's frontend implements all of it and is the superset of every other frontend line.
+
+**(b) What I adapted**
+
+- The owner asked for my work to be updated to the team's integrated state, so I adopted the p1-help frontend wholesale onto `feature/keystone-ui`: new views (Login, Overview, Employee Directory, Global Search, Audit Log, Users Admin, Review Queue, Help drawer/guide, My Profile, Data Quality, Risk/Evidence dialogs), new `styles.css`/`views.js`/`session.js`/`format.js`, removed the old `App.css`/`views.css`, refreshed `index.html`. Regenerated `activity.json` (76 commits).
+- Verified end-to-end in the browser against the p1-help backend (temp worktree, port 4100, seeded demo data, demo AI provider): login as `hr@keystone.demo` → Overview, Key people, Skill map, Data & evidence, Time Machine, AI advisor (labeled demo fallback), Data quality, Review queue, Audit history (7 events, append-only), Help, role-scoped global search with keyboard nav, and hash-route refresh persistence all pass. Build passes: vite, 53 modules, `index-CyAANJ_m.js` 442.71 kB. Invariants hold: unknowns render as dashes, no score recomputation in the frontend, no secrets, demo fallback labeled.
+- Safety: backup tag `backup/pre-sync-20260913-0130` created at HEAD and pushed to origin.
+
+**(c) Message for the group chat**
+
+> Hey team — Member 3 here. Our `feature/keystone-ui` now runs the full integrated frontend from p1-help: login + roles, audit log, employee directory, global search, help drawer, the works. I verified it end-to-end against the p1-help backend (demo password `Keystone-Demo-2026!`, e.g. hr@keystone.demo) and the build is green. One blocker for a full-stack demo on main: `main` is still at the old commit — someone please merge the open PRs (#7 etc.) so main's backend matches. Also per your note I've stopped the every-5-minutes quiet-round sync commits.
+
 ## 2026-09-13 (01:06 CDT, forty-sixth run)
 
 **(a) What teammates changed**
