@@ -136,7 +136,7 @@ Home welcomes each person with permitted shortcuts and compact coverage signals.
 
 Sign-in offers **Keep me signed in**, selected by default in demo. HTTP-only cookies, idle/absolute expiration, revocation and rate limits still apply. An unselected checkbox uses a browser-session cookie with a shorter maximum lifetime. The Caps Lock warning uses browser keyboard modifier information. Sign out revokes the server session; failed sign-out offers a retry.
 
-Read the [User guide](docs/USER_GUIDE.md), [Admin guide](docs/ADMIN_GUIDE.md), [Architecture](docs/ARCHITECTURE.md), [Changelog](docs/CHANGELOG.md) and the [Presentation guide](docs/PRESENTATION.md) (pitch, slide script, demo script, judge Q&A, Gemini prompt). Existing theme, language, search, notifications, governance and review controls remain available.
+Read the [User guide](docs/USER_GUIDE.md), [Admin guide](docs/ADMIN_GUIDE.md), [Architecture](docs/ARCHITECTURE.md), [Changelog](docs/CHANGELOG.md) and the [Presentation guide](docs/PRESENTATION.md) (pitch, slide script, demo script, judge Q&A, Gemini prompt) and the [Devpost kit](docs/DEVPOST.md). Existing theme, language, search, notifications, governance and review controls remain available.
 
 ### Judge walkthrough
 
