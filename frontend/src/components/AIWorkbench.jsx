@@ -4,6 +4,7 @@ import { useSession } from '../session';
 import { can, plural } from './format';
 import Icon from './Icon';
 import HelpTopic from './HelpTopic';
+import AIProviderStatus, { fallbackSentence } from './AIProviderStatus';
 
 const labels = { training: 'Training', mentoring: 'Mentoring', certification: 'Certification', job_rotation: 'Job rotation', project_experience: 'Project experience' };
 const editableRequirements = (requirements) => requirements.map(({ requirementId: _id, coverage: _coverage, ...requirement }) => requirement);
@@ -150,6 +151,7 @@ export default function AIWorkbench({ workforce, onRequirementsSaved, onSchedule
   const employeeName = (id) => workforce?.employees.find((employee) => employee.id === id)?.name || 'Not assigned';
 
   return <div>
+    <AIProviderStatus />
     {error && <p role="alert" className="alert">{error}</p>}
 
     {canPlan && <section className="panel">
@@ -170,7 +172,7 @@ export default function AIWorkbench({ workforce, onRequirementsSaved, onSchedule
       </form>
 
       {plan && <div aria-live="polite">
-        <p className="source-line"><ModeTag mode={plan.mode} /> {plan.message}</p>
+        <p className="source-line"><ModeTag mode={plan.mode} /> {plan.message}{fallbackSentence(plan) && <> {fallbackSentence(plan)}</>}</p>
         {onSchedule && scheduledActions.size > 0 && <p className="status-line" role="status">
           <Icon name="check" size={16} />
           <span>{plural(scheduledActions.size, 'action')} added to Time Machine as not verified. They count toward coverage once you mark them verified there.</span>
@@ -238,7 +240,7 @@ export default function AIWorkbench({ workforce, onRequirementsSaved, onSchedule
         <button className="btn btn-primary" disabled={busy || !direction.trim()}>{pending === 'strategy' ? 'Proposing…' : 'Propose future skills'}</button>
       </form>
 
-      {proposal && <p className="source-line"><ModeTag mode={proposal.mode} /> {proposal.message}</p>}
+      {proposal && <p className="source-line"><ModeTag mode={proposal.mode} /> {proposal.message}{fallbackSentence(proposal) && <> {fallbackSentence(proposal)}</>}</p>}
 
       {draft.length > 0 && <>
         <div className="req-list">

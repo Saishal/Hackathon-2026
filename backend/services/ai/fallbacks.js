@@ -54,6 +54,36 @@ const templates = [
     ['AI System Evaluation', 'Test quality and failure behavior before operational use.', 'build'],
     ['Knowledge Base Operations', 'Maintain current, attributable support knowledge.', 'build'],
   ] },
+  { pattern: /payment|fintech|billing|banking|\bpci\b|regulated|compliance|licen[cs]e/i, skills: [
+    ['Payments Compliance', 'Meet card-scheme and regulatory obligations before processing live transactions.', 'build'],
+    ['Cybersecurity', 'Protect cardholder data and transaction systems to the required standard.', 'partner'],
+    ['Data Privacy (GDPR)', 'Handle personal and financial data lawfully across every market served.', 'build'],
+  ] },
+  { pattern: /securit|\bsoc\b|incident|threat|zero[- ]trust|penetration|pentest/i, skills: [
+    ['Cybersecurity', 'Establish a security baseline and ownership for every exposed system.', 'build'],
+    ['Incident Response', 'Detect, contain and review incidents with a rehearsed process.', 'build'],
+    ['Identity & Access Management', 'Control who can reach which system, with reviewable access.', 'partner'],
+  ] },
+  { pattern: /cloud|kubernetes|platform|infrastructure|devops|migrat|automation|\bsre\b|reliab/i, skills: [
+    ['Cloud Architecture', 'Design the target platform and its cost, resilience and security boundaries.', 'build'],
+    ['Kubernetes', 'Run and operate the workloads the initiative depends on.', 'build'],
+    ['DevOps', 'Automate delivery so infrastructure changes are repeatable and reviewed.', 'build'],
+  ] },
+  { pattern: /data platform|analytics|reporting|dashboard|warehouse|machine learning|\bml\b|predict/i, skills: [
+    ['Data Analysis', 'Turn operational data into decisions with reviewable methods.', 'build'],
+    ['SQL & Data Modeling', 'Model the data the initiative reports on so numbers agree across teams.', 'build'],
+    ['Machine Learning', 'Build and validate models only where recorded data supports them.', 'partner'],
+  ] },
+  { pattern: /international|expan|new market|localis|localiz|\beu\b|europe|latam|apac|region/i, skills: [
+    ['Project Management', 'Coordinate market entry across legal, product and operations.', 'build'],
+    ['Data Privacy (GDPR)', 'Meet the data-protection rules of each new market.', 'partner'],
+    ['Communication', 'Keep distributed teams and partners aligned across time zones.', 'build'],
+  ] },
+  { pattern: /mobile|\bios\b|android|\bapp\b/i, skills: [
+    ['Swift & iOS', 'Ship and maintain the iOS application.', 'hire'],
+    ['Kotlin & Android', 'Ship and maintain the Android application.', 'hire'],
+    ['Test Automation', 'Keep release trains safe with automated checks.', 'build'],
+  ] },
 ];
 const clamp = (value, low, high) => Math.min(high, Math.max(low, Math.round(value)));
 const sourcingRationale = (sourcing) => sourcing === 'build' ? 'Assess internal candidates and development capacity before selecting this path.'
@@ -82,9 +112,12 @@ function coverageFallback(workforce) {
     });
 }
 function strategyFallback(direction, workforce) {
-  const template = templates.find((entry) => entry.pattern.test(direction));
-  if (!template) return { requirements: coverageFallback(workforce) };
-  return { requirements: template.skills.map(([skillName, rationale, sourcing]) => ({
+  const matched = templates.filter((entry) => entry.pattern.test(direction));
+  if (matched.length === 0) return { requirements: coverageFallback(workforce) };
+  // A direction that touches several themes (payments + security + cloud) gets each theme's skills once.
+  const seen = new Set();
+  const skills = matched.flatMap((entry) => entry.skills).filter(([skillName]) => !seen.has(skillName) && seen.add(skillName)).slice(0, 8);
+  return { requirements: skills.map(([skillName, rationale, sourcing]) => ({
     skillId: null, skillName, rationale, targetProficiency: 3, requiredHolders: 2, criticality: 3, effectiveMonth: 12,
     sourcing, sourcingRationale: sourcingRationale(sourcing),
     assumptions: ['Curated demo template selected by keywords; not an AI forecast.',

@@ -106,10 +106,10 @@ test('ASP.NET Core is accepted as a new skill and as an existing skill in prose'
   assert.equal(normalizeRequirements({ requirements: [req] }, data)[0].skillId, null);
   data.skills[0].name = 'ASP.NET Core';
   assert.equal(normalizeRequirements({ requirements: [req] }, data)[0].skillId, 1);
-  const result = await liveMock({ requirements: [req] }).proposeStrategy('Modernize billing', data);
+  const result = await liveMock({ requirements: [req] }).proposeStrategy('Refresh the internal wiki', data);
   assert.equal(result.mode, 'live-ai');
   assert.equal(result.requirements[0].skillId, 1);
-  const offline = await demo().proposeStrategy('Modernize billing', data);
+  const offline = await demo().proposeStrategy('Refresh the internal wiki', data);
   assert.equal(offline.fallbackReason, 'missing_api_key');
   assert.equal(offline.requirements[0].skillName, 'ASP.NET Core');
 });
@@ -135,7 +135,7 @@ test('dotted catalog identifiers are allowed but URLs and deceptive domains are 
 
 test('an invalid strategy fallback produces an explicit empty result instead of throwing', async () => {
   const data = workforce(); data.skills[0].name = 'x'.repeat(101);
-  const result = await demo().proposeStrategy('Modernize billing', data);
+  const result = await demo().proposeStrategy('Refresh the internal wiki', data);
   assert.equal(result.mode, 'demo-fallback'); assert.equal(result.fallbackReason, 'fallback_invalid');
   assert.deepEqual(result.requirements, []); assert.match(result.message, /No validated skill requirements/);
 });
@@ -159,9 +159,9 @@ test('HTTP simulation rejects bad skill references and strategy fallback errors 
   });
   const invalid = await post('simulate', { horizonMonths: 12, requirements: [requirement({ skillId: 999 })] });
   assert.equal(invalid.status, 400); assert.match((await invalid.json()).error, /Unknown skill ID/);
-  const valid = await post('strategy', { direction: 'Modernize billing' });
+  const valid = await post('strategy', { direction: 'Refresh the internal wiki' });
   assert.equal(valid.status, 200); assert.equal((await valid.json()).requirements[0].skillName, 'ASP.NET Core');
   data.skills[0].name = 'x'.repeat(101);
-  const recovery = await post('strategy', { direction: 'Modernize billing' });
+  const recovery = await post('strategy', { direction: 'Refresh the internal wiki' });
   assert.equal(recovery.status, 200); assert.equal((await recovery.json()).fallbackReason, 'fallback_invalid');
 });

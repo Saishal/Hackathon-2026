@@ -2692,3 +2692,8 @@ a.hbar-label:focus-visible { border-radius: 2px; }
 .pager-controls .field-inline { gap: 8px; font-size: 12.5px; color: var(--ink-3); }
 .pager-page { font-size: 12.5px; color: var(--ink-2); white-space: nowrap; min-width: 92px; text-align: center; }
 .rotate-180 { transform: rotate(180deg); }
+
+/* AI advisor: which engine is answering, and why demo mode when it is */
+.ai-status { display: flex; align-items: flex-start; gap: 8px; margin: 0 0 14px; padding: 10px 12px; border-radius: var(--radius-md); font-size: 13px; border: 1px solid var(--line-strong); background: var(--surface-2); color: var(--ink); }
+.ai-status svg { flex: none; margin-top: 2px; }
+.ai-status-live { border-color: var(--accent); background: var(--accent-soft); }
