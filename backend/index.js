@@ -4,6 +4,7 @@ const cors = require('cors');
 const keystoneRoutes = require('./routes/keystone');
 const workforceDataRoutes = require('./routes/workforce-data');
 const data = require('./data');
+const { checkHealth, reportError } = require('./monitoring');
 const {
   initializeDatabase,
   loadWorkforce,
@@ -24,8 +25,9 @@ app.use(express.json());
 app.use('/api/keystone', keystoneRoutes(loadWorkforce));
 app.use('/api/keystone', workforceDataRoutes(data));
 
-app.get('/api/health', (_req, res) => {
-  res.json({ status: 'ok' });
+app.get('/api/health', async (_req, res) => {
+  const health = await checkHealth();
+  res.status(health.status === 'ok' ? 200 : 503).json(health);
 });
 
 app.get('/api/heatmap', async (_req, res) => {
@@ -74,8 +76,12 @@ app.put('/api/future-skills', async (req, res) => {
   res.json(payload);
 });
 
-app.use((err, _req, res, _next) => {
+app.use((err, req, res, _next) => {
   console.error(err);
+  const status = err.status || 500;
+  if (status >= 500) {
+    void reportError(err, { status, method: req.method, path: req.originalUrl });
+  }
   res.status(err.status || 500).json({ error: err.status === 400 ? err.message : 'Unexpected server error' });
 });
 

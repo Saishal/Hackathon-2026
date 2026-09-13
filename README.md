@@ -16,9 +16,9 @@ npm ci --prefix frontend
 npm start --prefix backend
 ```
 
-In a second terminal: `npm run dev --prefix frontend`. Open http://localhost:5173; API health is http://localhost:4000/api/health.
+In a second terminal: `npm run dev --prefix frontend`. Open http://localhost:5173; API health is http://localhost:4000/api/health — it returns 503 and names the failing component if the database, schema or seed is broken, so it can be polled by an uptime monitor.
 
-Optional environment: backend `PORT`, `DB_PATH`, `KEYSTONE_SEED_DIR`; frontend `VITE_API_BASE_URL` in `frontend/.env.local`. A fresh database is seeded from the CSV files in [`backend/data/demo/`](backend/data/demo/README.md): 44 fictional employees across 21 roles, 22 skills and a 16-entry learning catalogue, including Legacy Billing Recovery (Liam Chen expert, Mason Green learner). Existing DBs are preserved; after editing a CSV, stop the backend and run `npm run seed:reset --prefix backend`. No API credentials are needed for the starter.
+Optional environment: backend `PORT`, `DB_PATH`, `KEYSTONE_SEED_DIR`, `KEYSTONE_ALERT_WEBHOOK_URL` (POSTs every 5xx to a Discord or Slack webhook; see `docs/API.md`); frontend `VITE_API_BASE_URL` in `frontend/.env.local`. A fresh database is seeded from the CSV files in [`backend/data/demo/`](backend/data/demo/README.md): 44 fictional employees across 21 roles, 22 skills and a 16-entry learning catalogue, including Legacy Billing Recovery (Liam Chen expert, Mason Green learner). Existing DBs are preserved; after editing a CSV, stop the backend and run `npm run seed:reset --prefix backend`. No API credentials are needed for the starter.
 
 ## Four member assignments
 

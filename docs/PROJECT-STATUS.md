@@ -140,8 +140,9 @@ None of these are required by the brief. Ordered by value per hour.
 6. **Endpoints to edit `skill_requirements` and `critical_roles` over HTTP** (Member 1).
    They are editable in the database only. Same pattern as `PUT /employee-skills`, one
    hour of work, makes criticality demonstrably editable on stage.
-7. **Run `npm audit`** on both packages and note the result. Cheap credibility.
-8. **Delete stale branches** after merging (`copilot/…`, `feature/ai-recommendations`,
+7. ~~Real health check and error alerting~~ — **done.** `/api/health` verifies database, schema, seed and AI state and returns 503 naming the failing component; every 5xx is POSTed to `KEYSTONE_ALERT_WEBHOOK_URL` if set. See `docs/API.md`.
+8. **Run `npm audit`** on both packages and note the result. Cheap credibility.
+9. **Delete stale branches** after merging (`copilot/…`, `feature/ai-recommendations`,
    `fix/review-risk-ai` if absorbed). A judge browsing the repo should see three or four
    branches, not nine.
 
@@ -234,7 +235,7 @@ Every "✅" above was checked, not assumed. Method: clean `npm ci` on both packa
 test suite, lint, build, both servers started, every endpoint probed with no API key in
 the environment. Results on `fix/docs-sync` at `f662c7c`:
 
-- Backend: 101 tests, 0 failures
+- Backend: 108 tests, 0 failures
 - Frontend: lint exit 0 (one pre-existing warning in `App.jsx`), build exit 0
 - Both servers up; `/api/health` → `{"status":"ok"}`; frontend HTTP 200
 - Fresh database seeds 44 employees, 22 skills, 21 roles, 226 records, 16 catalogue entries
