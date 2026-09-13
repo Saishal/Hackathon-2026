@@ -1,112 +1,90 @@
 import { useEffect, useState } from 'react';
-import './App.css';
-import './views.css';
-import { keystoneApi } from './api/keystone';
+import './styles.css';
+import Icon, { KeystoneMark } from './components/Icon';
 import KeystoneStarter from './components/KeystoneStarter';
-import ActivityLog from './components/ActivityLog';
-import demoRisks from './data/risks.json';
 
-// Dashboard shell — sidebar navigation in the style of the Certific template
-// (light SaaS dashboard), trimmed to exactly the views Keystone needs:
-// Overview, People & Risk, Skill Network, Time Machine, AI Advisor, Workforce Data, Activity.
-
-const NAV = [
-  ['overview', '📊', 'Overview'],
-  ['people', '👥', 'People & Risk'],
-  ['network', '🕸️', 'Skill Network'],
-  ['timemachine', '⏳', 'Time Machine'],
-  ['ai', '🤖', 'AI Advisor'],
-  ['data', '🗂️', 'Workforce Data'],
-  ['activity', '📜', 'Activity Log'],
+// Dashboard shell: sidebar navigation and page header. Views live at hash routes (#/people,
+// #/network, …) so a refresh keeps the current view and a view can be linked directly.
+// KeystoneStarter owns the data and renders the active view.
+const VIEWS = [
+  { id: 'overview', icon: 'overview', label: 'Overview',
+    description: 'Skills that depend on too few people. Scores measure dependency, not who is likely to leave.' },
+  { id: 'people', icon: 'people', label: 'Key people',
+    description: 'People whose absence would leave a skill without enough qualified colleagues.' },
+  { id: 'network', icon: 'network', label: 'Skill map',
+    description: 'Who holds each skill, at what level, and the evidence behind it.' },
+  { id: 'timemachine', icon: 'timemachine', label: 'Time Machine',
+    description: 'See how coverage changes if people leave or build new skills.' },
+  { id: 'ai', icon: 'ai', label: 'AI advisor',
+    description: 'Draft development plans and future skill needs. Nothing is saved until a person reviews it.' },
+  { id: 'data', icon: 'data', label: 'Data & evidence',
+    description: 'The records behind every score, with their source and last verification date.' },
+  { id: 'activity', icon: 'activity', label: 'Team activity',
+    description: 'Commits from every team branch, newest first.' },
 ];
 
-const pageTitles = {
-  overview: 'Dashboard overview', people: 'People your coverage depends on',
-  network: 'Employee-skill network',
-  timemachine: 'Workforce Time Machine', ai: 'AI development advisor',
-  data: 'Workforce data & evidence', activity: 'Team activity log',
+const viewFromHash = () => {
+  const id = window.location.hash.replace(/^#\/?/, '');
+  return VIEWS.some((item) => item.id === id) ? id : 'overview';
 };
 
 function App() {
-  const [view, setView] = useState('overview');
-  const [risks, setRisks] = useState(null);
-  const [demoMode, setDemoMode] = useState(false);
+  const [view, setView] = useState(viewFromHash);
+  const current = VIEWS.find((item) => item.id === view);
 
   useEffect(() => {
-    let active = true;
-    keystoneApi.risks()
-      .then((data) => { if (active) setRisks(data); })
-      .catch(() => { if (active) { setRisks(demoRisks); setDemoMode(true); } });
-    return () => { active = false; };
+    const onHashChange = () => {
+      setView(viewFromHash());
+      window.scrollTo(0, 0);
+    };
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
 
-  const topRisk = risks?.skills?.[0];
-  const kpis = risks ? [
-    { label: 'Single-holder skills', value: risks.singleHolder, delta: 'only one person can do it', tone: 'critical' },
-    { label: 'Uncovered skills', value: risks.uncovered, delta: 'no recorded independent coverage', tone: 'critical' },
-    { label: 'Skills tracked', value: risks.skills.length, delta: 'in the workforce inventory', tone: 'neutral' },
-    { label: 'Top dependency', value: topRisk ? `${topRisk.keystoneScore}/100` : '—', delta: topRisk?.name ?? '', tone: 'warn' },
-  ] : [];
+  useEffect(() => {
+    document.title = view === 'overview' ? 'Keystone' : `${current.label} · Keystone`;
+  }, [view, current]);
+
+  const skipToContent = (event) => {
+    // A plain #main link would be read as a route, so move focus instead.
+    event.preventDefault();
+    document.getElementById('main')?.focus();
+  };
 
   return (
-    <div className="dash">
+    <div className="app">
+      <a className="skip-link" href="#main" onClick={skipToContent}>Skip to content</a>
       <aside className="sidebar">
-        <div className="brand">
-          <span className="brand-mark">🗝️</span>
-          <div>
+        <a className="brand" href="#/overview">
+          <KeystoneMark />
+          <span>
             <strong>Keystone</strong>
-            <small>Talent readiness</small>
-          </div>
-        </div>
-        <nav>
-          <p className="nav-group">Platform</p>
-          {NAV.map(([key, icon, label]) => (
-            <button key={key} className={`nav-item ${view === key ? 'active' : ''}`} onClick={() => setView(key)}>
-              <span className="nav-icon">{icon}</span> {label}
-            </button>
-          ))}
+            <small>Skill coverage</small>
+          </span>
+        </a>
+        <nav aria-label="Views">
+          <ul>
+            {VIEWS.map((item) => (
+              <li key={item.id}>
+                <a className="nav-link" href={`#/${item.id}`} aria-current={view === item.id ? 'page' : undefined}>
+                  <Icon name={item.icon} /> {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
         </nav>
-        <div className="sidebar-card">
-          <div className="member-badge" style={{ background: '#059669' }}>Member 3</div>
-          <strong>Frontend &amp; integration</strong>
-          <small>Auto-sync every 5 min · branch feature/keystone-ui</small>
-        </div>
+        <p className="sidebar-note">Scores show how much work depends on a person. They never predict whether someone will leave.</p>
       </aside>
 
-      <main className="content">
-        <header className="topbar">
+      <main id="main" className="main" tabIndex={-1}>
+        <header className="page-head">
           <div>
-            <h1>{pageTitles[view]}</h1>
-            <p>{new Date().toLocaleDateString(undefined, { month: 'long', year: 'numeric' })} · Organizational dependency, not a departure prediction</p>
+            <h1>{current.label}</h1>
+            <p>{current.description}</p>
           </div>
-          {demoMode && <span className="demo-pill">DEMO DATA</span>}
+          <span className="tag tag-warn"><Icon name="info" size={14} /> Fictional demo data</span>
         </header>
-
-        {view === 'overview' && (
-          <>
-            <div className="kpi-grid">
-              {kpis.map((kpi) => (
-                <article key={kpi.label} className={`kpi-card ${kpi.tone}`}>
-                  <p className="kpi-label">{kpi.label}</p>
-                  <p className="kpi-value">{kpi.value}</p>
-                  <p className="kpi-delta">{kpi.delta}</p>
-                </article>
-              ))}
-            </div>
-            <section className="panel">
-              <h2>Risk summary</h2>
-              {risks && <KeystoneStarter view="overview" embedded />}
-            </section>
-          </>
-        )}
-
-        {view !== 'overview' && view !== 'activity' && <KeystoneStarter view={view} embedded />}
-        {view === 'activity' && (
-          <section className="panel">
-            <h2>Activity Log</h2>
-            <ActivityLog />
-          </section>
-        )}
+        <KeystoneStarter view={view} />
       </main>
     </div>
   );

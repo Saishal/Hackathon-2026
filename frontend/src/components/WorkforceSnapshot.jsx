@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { keystoneApi } from '../api/keystone';
+import Icon from './Icon';
 import Provenance from './Provenance';
 
-// WorkforceSnapshot — renders the v1 snapshot fields Member 1 shipped:
-// roles (succession), learningResources (catalogue), futureRequirements
-// (effective-dated), demandTarget on skills, mentoring capacity on people,
-// and evidence provenance on matrix edges.
+// WorkforceSnapshot renders the v1 snapshot fields Member 1 shipped, one tab per record type:
+// skills (with demandTarget), roles (succession), learningResources (catalogue),
+// futureRequirements (effective-dated), mentoring capacity on people, and evidence provenance on
+// matrix edges. One search filters every tab.
 //
 // Honest-rendering rules (Member 1's, and they matter for the demo):
 //   - mentoringHoursPerMonth ABSENT  => dash, never 0
@@ -15,11 +16,22 @@ import Provenance from './Provenance';
 
 const DASH = '—';
 const dash = (value) => (value === null || value === undefined || value === '' ? DASH : value);
+const capitalize = (text) => (typeof text === 'string' && text ? text.charAt(0).toUpperCase() + text.slice(1).replaceAll('_', ' ') : dash(text));
+
+const TABS = [
+  ['skills', 'Skills'],
+  ['roles', 'Roles'],
+  ['learning', 'Learning'],
+  ['future', 'Future needs'],
+  ['people', 'People'],
+  ['evidence', 'Evidence'],
+];
 
 export default function WorkforceSnapshot({ workforce, fallbackRequirements = null }) {
   const [futureRequirements, setFutureRequirements] = useState(null);
   const [reqError, setReqError] = useState('');
   const [query, setQuery] = useState('');
+  const [tab, setTab] = useState('skills');
 
   useEffect(() => {
     let active = true;
@@ -39,159 +51,178 @@ export default function WorkforceSnapshot({ workforce, fallbackRequirements = nu
   const employeeName = (id) => employees.find((e) => e.id === id)?.name ?? `Employee ${id}`;
   const skillName = (id) => skills.find((s) => s.id === id)?.name ?? `Skill ${id}`;
 
-  // One search filters the inventory tables (skills, people, evidence) by any visible name.
   const needle = query.trim().toLowerCase();
   const matches = (...values) => !needle || values.some((value) => String(value ?? '').toLowerCase().includes(needle));
   const shownSkills = skills.filter((skill) => matches(skill.name));
+  const shownRoles = roles.filter((role) => matches(role.name, ...(role.incumbentIds ?? []).map(employeeName)));
+  const shownResources = learningResources.filter((resource) => matches(resource.title, resource.category, ...(resource.skillIds ?? []).map(skillName)));
+  const shownFuture = (futureRequirements ?? []).filter((req) => matches(req.skillName ?? skillName(req.skillId), req.status));
   const shownEmployees = employees.filter((employee) => matches(employee.name, employee.role, employee.department));
   const shownMatrix = matrix.filter((edge) => matches(employeeName(edge.employeeId), skillName(edge.skillId), edge.evidenceSource));
+  const withCapacity = employees.filter((employee) => employee.mentoringHoursPerMonth !== undefined).length;
+
+  const counts = {
+    skills: shownSkills.length, roles: shownRoles.length, learning: shownResources.length,
+    future: futureRequirements ? shownFuture.length : null, people: shownEmployees.length, evidence: shownMatrix.length,
+  };
+  const noMatch = (noun) => <p className="empty-line">No {noun} match “{query.trim()}”.</p>;
+
+  const moveTab = (event) => {
+    const index = TABS.findIndex(([id]) => id === tab);
+    const next = event.key === 'ArrowRight' ? (index + 1) % TABS.length
+      : event.key === 'ArrowLeft' ? (index - 1 + TABS.length) % TABS.length : null;
+    if (next === null) return;
+    event.preventDefault();
+    setTab(TABS[next][0]);
+    document.getElementById(`tab-${TABS[next][0]}`)?.focus();
+  };
 
   return (
-    <div className="snapshot">
-      <h3>Workforce snapshot</h3>
-      <p className="hint">
-        Coverage requirement (<code>requiredHolders</code>) and legacy hiring demand (<code>demandTarget</code>) are
-        reported separately — a skill can need coverage with zero hiring demand.
-      </p>
-
-      <form className="search" role="search" onSubmit={(event) => event.preventDefault()}>
-        <label>Search the inventory
-          <input type="search" value={query} onChange={(event) => setQuery(event.target.value)}
-            placeholder="Person, role, department, skill or evidence" />
-        </label>
-      </form>
-      {needle && <p className="hint" role="status">
-        Showing {shownSkills.length} of {skills.length} skills, {shownEmployees.length} of {employees.length} people and {shownMatrix.length} of {matrix.length} evidence records.
-      </p>}
-
-      <div className="table-wrap compact">
-        <table>
-          <thead>
-            <tr>
-              <th>Skill</th><th>Criticality</th><th>Target prof.</th><th>Required holders</th>
-              <th>Demand target</th><th>Source</th>
-            </tr>
-          </thead>
-          <tbody>
-            {shownSkills.map((skill) => (
-              <tr key={skill.id}>
-                <th scope="row">{skill.name}</th>
-                <td>{dash(skill.criticality)}</td>
-                <td>{dash(skill.targetProficiency)}</td>
-                <td>{dash(skill.requiredHolders)}</td>
-                <td>{dash(skill.demandTarget)}</td>
-                <td><Provenance source={skill.metadataSource} /></td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <section className="panel panel-flush">
+      <div className="data-toolbar">
+        <form className="search" role="search" onSubmit={(event) => event.preventDefault()}>
+          <Icon name="search" size={16} />
+          <input type="search" aria-label="Search records" value={query} onChange={(event) => setQuery(event.target.value)}
+            placeholder="Search people, roles, skills or evidence" />
+        </form>
+        {needle && <p className="muted" role="status">Tab counts show matches for “{query.trim()}”.</p>}
       </div>
 
-      <h3>Roles &amp; succession</h3>
-      <p className="hint">Role criticality starts neutral and is meant to be edited — successor qualification is Member 2's calculation, not a stored value.</p>
-      {roles.length === 0 ? <p>No roles recorded.</p> : (
-        <div className="two-col">
-          {roles.map((role) => (
-            <article className="panel" key={role.id}>
-              <h4>{role.name} · criticality {dash(role.criticality)}</h4>
-              <p>
-                Incumbent(s): {role.incumbentIds?.length ? role.incumbentIds.map(employeeName).join(', ') : DASH}
-              </p>
-              <p>Successor requirements:</p>
-              <ul>
-                {role.requirements?.map((req) => (
-                  <li key={req.skillId}>{skillName(req.skillId)} at proficiency {req.minimumProficiency}+</li>
+      <div className="tabs" role="tablist" aria-label="Record types">
+        {TABS.map(([id, label]) => (
+          <button key={id} id={`tab-${id}`} type="button" role="tab" className="tab" aria-selected={tab === id}
+            aria-controls={`tabpanel-${id}`} tabIndex={tab === id ? 0 : -1} onClick={() => setTab(id)} onKeyDown={moveTab}>
+            {label}
+            {counts[id] !== null && <span className="tab-count">{counts[id]}</span>}
+          </button>
+        ))}
+      </div>
+
+      <div className="tab-panel" role="tabpanel" id={`tabpanel-${tab}`} aria-labelledby={`tab-${tab}`}>
+        {tab === 'skills' && <>
+          <p className="tab-note">People needed is how many people should be qualified. The hiring target is tracked separately, so a skill can need coverage without any hiring.</p>
+          {shownSkills.length === 0 ? noMatch('skills') : <div className="table-wrap flush">
+            <table>
+              <thead><tr><th scope="col">Skill</th><th scope="col" className="num">Criticality</th><th scope="col" className="num">Target level</th><th scope="col" className="num">People needed</th><th scope="col" className="num">Hiring target</th><th scope="col">Source</th></tr></thead>
+              <tbody>
+                {shownSkills.map((skill) => (
+                  <tr key={skill.id}>
+                    <th scope="row">{skill.name}</th>
+                    <td className="num">{dash(skill.criticality)}</td>
+                    <td className="num">{dash(skill.targetProficiency)}</td>
+                    <td className="num">{dash(skill.requiredHolders)}</td>
+                    <td className="num">{dash(skill.demandTarget)}</td>
+                    <td><Provenance source={skill.metadataSource} /></td>
+                  </tr>
                 ))}
-                {(!role.requirements || role.requirements.length === 0) && <li>{DASH}</li>}
-              </ul>
-              <Provenance source={role.metadataSource} />
-            </article>
-          ))}
-        </div>
-      )}
+              </tbody>
+            </table>
+          </div>}
+        </>}
 
-      <h3>Learning resource catalogue</h3>
-      <p className="hint"><code>verified</code> means the entry exists in the persisted catalogue — no AI output can set that flag for itself.</p>
-      {learningResources.length === 0 ? <p>No catalogue entries recorded.</p> : (
-        <div className="table-wrap compact">
-          <table>
-            <thead><tr><th>Resource</th><th>Category</th><th>Verified</th><th>Serves skills</th><th>Provenance</th></tr></thead>
-            <tbody>
-              {learningResources.map((resource) => (
-                <tr key={resource.id}>
-                  <th scope="row">{resource.title}</th>
-                  <td>{dash(resource.category)}</td>
-                  <td>{resource.verified ? '✅' : '—'}</td>
-                  <td>{resource.skillIds?.map(skillName).join(', ') || DASH}</td>
-                  <td><Provenance source={resource.provenance} /></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+        {tab === 'roles' && <>
+          <p className="tab-note">What a successor needs for each role. Readiness is calculated from evidence each time, not stored, and role criticality starts neutral until someone edits it.</p>
+          {shownRoles.length === 0 ? noMatch('roles') : <div className="table-wrap flush">
+            <table>
+              <thead><tr><th scope="col">Role</th><th scope="col" className="num">Criticality</th><th scope="col">Current holders</th><th scope="col">Successor needs</th><th scope="col">Source</th></tr></thead>
+              <tbody>
+                {shownRoles.map((role) => (
+                  <tr key={role.id}>
+                    <th scope="row">{role.name}</th>
+                    <td className="num">{dash(role.criticality)}</td>
+                    <td>{role.incumbentIds?.length ? role.incumbentIds.map(employeeName).join(', ') : DASH}</td>
+                    <td>{role.requirements?.length ? role.requirements.map((req) => `${skillName(req.skillId)} ${req.minimumProficiency}+`).join(', ') : DASH}</td>
+                    <td><Provenance source={role.metadataSource} /></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>}
+        </>}
 
-      <h3>Future requirements</h3>
-      <p className="hint">Proposed requirements do not tighten coverage expectations until a person reviews them.</p>
-      {reqError && <p role="alert">{reqError}</p>}
-      {!futureRequirements && !reqError && <p role="status">Loading future requirements…</p>}
-      {futureRequirements && futureRequirements.length === 0 && <p>None recorded.</p>}
-      {futureRequirements && futureRequirements.length > 0 && (
-        <div className="table-wrap compact">
-          <table>
-            <thead><tr><th>Skill</th><th>Required holders</th><th>Target prof.</th><th>Effective month</th><th>Status</th><th>Provenance</th></tr></thead>
-            <tbody>
-              {futureRequirements.map((req) => (
-                <tr key={req.id}>
-                  <th scope="row">{req.skillName ?? skillName(req.skillId)}</th>
-                  <td>{dash(req.requiredHolders)}</td>
-                  <td>{dash(req.targetProficiency)}</td>
-                  <td>{dash(req.effectiveMonth)}</td>
-                  <td>{dash(req.status)}</td>
-                  <td><Provenance source={req.provenance} /></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+        {tab === 'learning' && <>
+          <p className="tab-note">Verified means the resource exists in the saved catalogue. An AI suggestion can never mark itself verified.</p>
+          {shownResources.length === 0 ? noMatch('resources') : <div className="table-wrap flush">
+            <table>
+              <thead><tr><th scope="col">Resource</th><th scope="col">Type</th><th scope="col">Verified</th><th scope="col">Builds skills</th><th scope="col">Source</th></tr></thead>
+              <tbody>
+                {shownResources.map((resource) => (
+                  <tr key={resource.id}>
+                    <th scope="row">{resource.title}</th>
+                    <td>{capitalize(resource.category)}</td>
+                    <td>{resource.verified ? <span className="tag tag-ok"><Icon name="check" size={14} /> Verified</span> : DASH}</td>
+                    <td>{resource.skillIds?.map(skillName).join(', ') || DASH}</td>
+                    <td><Provenance source={resource.provenance} /></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>}
+        </>}
 
-      <h3>People &amp; mentoring capacity</h3>
-      <p className="hint">Capacity is recorded data, not recomputed. Absent means unknown — shown as a dash, never zero. Only {employees.filter((e) => e.mentoringHoursPerMonth !== undefined).length} of {employees.length} have it recorded.</p>
-      <div className="table-wrap compact">
-        <table>
-          <thead><tr><th>Person</th><th>Role</th><th>Department</th><th>Mentoring hrs/month</th></tr></thead>
-          <tbody>
-            {shownEmployees.map((employee) => (
-              <tr key={employee.id}>
-                <th scope="row">{employee.name}</th>
-                <td>{dash(employee.role)}</td>
-                <td>{dash(employee.department)}</td>
-                <td>{employee.mentoringHoursPerMonth === undefined ? DASH : employee.mentoringHoursPerMonth}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        {tab === 'future' && <>
+          <p className="tab-note">Proposed needs don't change coverage targets until a person reviews them.</p>
+          {reqError && <p role="alert" className="alert">{reqError}</p>}
+          {!futureRequirements && !reqError && <p className="empty-line" role="status">Loading future needs…</p>}
+          {futureRequirements && futureRequirements.length === 0 && <p className="empty-line">No future needs recorded.</p>}
+          {futureRequirements && futureRequirements.length > 0 && (shownFuture.length === 0 ? noMatch('future needs') : <div className="table-wrap flush">
+            <table>
+              <thead><tr><th scope="col">Skill</th><th scope="col" className="num">People needed</th><th scope="col" className="num">Target level</th><th scope="col" className="num">Starts in month</th><th scope="col">Status</th><th scope="col">Source</th></tr></thead>
+              <tbody>
+                {shownFuture.map((req) => (
+                  <tr key={req.id}>
+                    <th scope="row">{req.skillName ?? skillName(req.skillId)}</th>
+                    <td className="num">{dash(req.requiredHolders)}</td>
+                    <td className="num">{dash(req.targetProficiency)}</td>
+                    <td className="num">{dash(req.effectiveMonth)}</td>
+                    <td>{capitalize(req.status)}</td>
+                    <td><Provenance source={req.provenance} /></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>)}
+        </>}
+
+        {tab === 'people' && <>
+          <p className="tab-note">Mentoring time is recorded, never estimated. A dash means unknown, not zero. {withCapacity} of {employees.length} people have it on record.</p>
+          {shownEmployees.length === 0 ? noMatch('people') : <div className="table-wrap flush">
+            <table>
+              <thead><tr><th scope="col">Person</th><th scope="col">Role</th><th scope="col">Department</th><th scope="col" className="num">Mentoring h/month</th></tr></thead>
+              <tbody>
+                {shownEmployees.map((employee) => (
+                  <tr key={employee.id}>
+                    <th scope="row">{employee.name}</th>
+                    <td>{dash(employee.role)}</td>
+                    <td>{dash(employee.department)}</td>
+                    <td className="num">{employee.mentoringHoursPerMonth === undefined ? DASH : employee.mentoringHoursPerMonth}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>}
+        </>}
+
+        {tab === 'evidence' && <>
+          <p className="tab-note">A dash under last verified means unknown, not never verified. If a person and skill have no row, there is no evidence on record either way.</p>
+          {shownMatrix.length === 0 ? noMatch('evidence records') : <div className="table-wrap flush">
+            <table>
+              <thead><tr><th scope="col">Person</th><th scope="col">Skill</th><th scope="col" className="num">Level</th><th scope="col">Evidence source</th><th scope="col">Last verified</th></tr></thead>
+              <tbody>
+                {shownMatrix.map((edge) => (
+                  <tr key={`${edge.employeeId}-${edge.skillId}`}>
+                    <th scope="row">{employeeName(edge.employeeId)}</th>
+                    <td>{skillName(edge.skillId)}</td>
+                    <td className="num">{dash(edge.proficiency)}</td>
+                    <td><Provenance source={edge.evidenceSource} /></td>
+                    <td className="nowrap">{edge.lastVerifiedAt ?? DASH}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>}
+        </>}
       </div>
-
-      <h3>Evidence &amp; verification</h3>
-      <p className="hint">A null verification date means unknown — rendered as a dash, not "never verified". Absent edge = unknown proficiency.</p>
-      <div className="table-wrap compact">
-        <table>
-          <thead><tr><th>Person</th><th>Skill</th><th>Proficiency</th><th>Evidence source</th><th>Last verified</th></tr></thead>
-          <tbody>
-            {shownMatrix.map((edge) => (
-              <tr key={`${edge.employeeId}-${edge.skillId}`}>
-                <th scope="row">{employeeName(edge.employeeId)}</th>
-                <td>{skillName(edge.skillId)}</td>
-                <td>{dash(edge.proficiency)}</td>
-                <td><Provenance source={edge.evidenceSource} /></td>
-                <td>{edge.lastVerifiedAt ?? DASH}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+    </section>
   );
 }

@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react';
 
-// Employee-skill network: people on the left, skills on the right, one line per recorded
-// proficiency at or above the chosen level. A missing line means no recorded evidence,
-// which is unknown rather than proof that the person lacks the skill.
+// Skill map: people on the left, skills on the right, one line per recorded level at or above the
+// chosen minimum. A missing line means no evidence on record, which is unknown rather than proof
+// that the person lacks the skill.
 const ROW = 20;
 const TOP = 24;
 const LEFT_X = 190;
@@ -14,14 +14,15 @@ const toneFor = (busFactor) => (busFactor === 0 ? 'uncovered' : busFactor === 1 
 
 function EvidenceList({ rows }) {
   if (rows.length === 0) {
-    return <p className="hint">No recorded evidence. That is unknown, not proof of absence.</p>;
+    return <p className="muted">No evidence on record. That means unknown, not absent.</p>;
   }
 
   return (
     <ul className="evidence-list">
       {rows.map((row) => (
         <li key={row.key}>
-          <strong>{row.label}</strong> · level {row.proficiency}
+          <strong>{row.label}</strong>
+          <span className="level">Level {row.proficiency}</span>
           <small>{row.evidenceSource ?? DASH} · verified {row.lastVerifiedAt ?? DASH}</small>
         </li>
       ))}
@@ -91,40 +92,36 @@ export default function SkillNetwork({ workforce, risks }) {
 
   return (
     <section className="panel">
-      <h2>Skill network</h2>
-      <p className="hint">
-        Each line is recorded evidence at or above the chosen level; thicker lines are higher proficiency. Skills are
-        ordered from the fewest qualified holders. Select a person or skill to see the evidence behind its lines.
-      </p>
-
-      <form className="network-filters" onSubmit={(event) => event.preventDefault()}>
-        <label>Department
-          <select value={department} onChange={(event) => { setDepartment(event.target.value); setSelected(null); }}>
-            <option value="all">All departments</option>
-            {departments.map((name) => <option key={name} value={name}>{name}</option>)}
-          </select>
-        </label>
-        <label>Show lines from level
-          <select value={minProficiency} onChange={(event) => setMinProficiency(Number(event.target.value))}>
-            {[1, 2, 3, 4, 5].map((level) => <option key={level} value={level}>{level}+</option>)}
-          </select>
-        </label>
-        <label><input type="checkbox" checked={concentratedOnly}
-          onChange={(event) => { setConcentratedOnly(event.target.checked); setSelected(null); }} /> Only single-holder or uncovered skills</label>
-      </form>
+      <div className="toolbar">
+        <form className="form-row" onSubmit={(event) => event.preventDefault()}>
+          <label className="field">Department
+            <select value={department} onChange={(event) => { setDepartment(event.target.value); setSelected(null); }}>
+              <option value="all">All departments</option>
+              {departments.map((name) => <option key={name} value={name}>{name}</option>)}
+            </select>
+          </label>
+          <label className="field">Minimum level
+            <select value={minProficiency} onChange={(event) => setMinProficiency(Number(event.target.value))}>
+              {[1, 2, 3, 4, 5].map((level) => <option key={level} value={level}>Level {level}+</option>)}
+            </select>
+          </label>
+          <label className="check"><input type="checkbox" checked={concentratedOnly}
+            onChange={(event) => { setConcentratedOnly(event.target.checked); setSelected(null); }} /> Only at-risk skills</label>
+        </form>
+      </div>
 
       <ul className="legend" aria-label="Legend">
-        <li><span className="swatch uncovered" /> Skill with no qualified holder</li>
-        <li><span className="swatch single" /> Skill with one qualified holder</li>
-        <li><span className="swatch covered" /> Skill with two or more</li>
+        <li><span className="swatch uncovered" /> No one qualified</li>
+        <li><span className="swatch single" /> One qualified person</li>
+        <li><span className="swatch covered" /> Two or more</li>
         <li><span className="swatch person" /> Person</li>
-        <li><span className="swatch-line" /> Recorded proficiency (width = level)</li>
+        <li><span className="swatch-line" /> Thicker line, higher level</li>
       </ul>
 
       <div className="network-layout">
         <div className="network-canvas">
           <svg className="network" viewBox={`0 0 ${WIDTH} ${height}`} width={WIDTH} height={height}
-            role="group" aria-label={`${people.length} people, ${shownSkills.length} skills, ${edges.length} evidence lines`}>
+            role="group" aria-label={`${people.length} people, ${shownSkills.length} skills, ${edges.length} lines of evidence`}>
             <g>
               {edges.map((edge) => (
                 <line key={`${edge.employeeId}-${edge.skillId}`}
@@ -147,7 +144,7 @@ export default function SkillNetwork({ workforce, risks }) {
               {shownSkills.map((skill) => (
                 <g key={skill.id} transform={`translate(${RIGHT_X},${skillY.get(skill.id)})`}
                   className={`node skill ${toneFor(busFactor.get(skill.id))} ${isSelected('skill', skill.id) ? 'selected' : ''} ${isDimmed('skill', skill.id) ? 'dim' : ''}`}
-                  {...nodeProps('skill', skill.id, `${skill.name}, ${busFactor.get(skill.id) ?? 0} qualified holders`)}>
+                  {...nodeProps('skill', skill.id, `${skill.name}, ${busFactor.get(skill.id) ?? 0} qualified people`)}>
                   <circle r="7" />
                   <text x="14" dy="0.35em">{skill.name} · {busFactor.get(skill.id) ?? DASH}</text>
                 </g>
@@ -158,21 +155,21 @@ export default function SkillNetwork({ workforce, risks }) {
 
         <aside className="network-detail" aria-live="polite">
           {!selected && <>
-            <h4>Evidence</h4>
-            <p className="hint">Select a person or a skill in the network.</p>
+            <h3>Evidence</h3>
+            <p className="muted">Select a person or a skill to see the records behind each line. Skills are listed from fewest qualified people.</p>
           </>}
           {selectedEmployee && <>
-            <h4>{selectedEmployee.name}</h4>
-            <p>{selectedEmployee.role} · {selectedEmployee.department}</p>
-            <p>Mentoring capacity: {selectedEmployee.mentoringHoursPerMonth === undefined ? DASH : `${selectedEmployee.mentoringHoursPerMonth} h/month`}</p>
+            <h3>{selectedEmployee.name}</h3>
+            <p className="muted">{selectedEmployee.role} · {selectedEmployee.department}</p>
+            <p>Mentoring time: {selectedEmployee.mentoringHoursPerMonth === undefined ? DASH : `${selectedEmployee.mentoringHoursPerMonth} h per month`}</p>
             <EvidenceList rows={evidenceFor((edge) => edge.employeeId === selectedEmployee.id,
               (edge) => skillById.get(edge.skillId)?.name ?? `Skill ${edge.skillId}`)} />
           </>}
           {selectedSkill && <>
-            <h4>{selectedSkill.name}</h4>
-            <p>
-              Qualified holders {busFactor.get(selectedSkill.id) ?? DASH} of {selectedSkill.requiredHolders} required at
-              level {selectedSkill.targetProficiency}+ · criticality {selectedSkill.criticality}/5
+            <h3>{selectedSkill.name}</h3>
+            <p className="muted">
+              {busFactor.get(selectedSkill.id) ?? DASH} of {selectedSkill.requiredHolders} qualified at
+              level {selectedSkill.targetProficiency}+ · Criticality {selectedSkill.criticality}/5
             </p>
             <EvidenceList rows={evidenceFor((edge) => edge.skillId === selectedSkill.id,
               (edge) => employeeById.get(edge.employeeId)?.name ?? `Employee ${edge.employeeId}`)} />

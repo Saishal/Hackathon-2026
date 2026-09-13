@@ -37,7 +37,7 @@ The workforce inventory is persisted rather than derived in memory: skill critic
 
 Succession matching now compares candidates against the persisted role requirements rather than recorded skill evidence alone.
 
-The dashboard has seven views: Overview, People & Risk, Skill Network, Time Machine, AI Advisor, Workforce Data and Activity Log. Reviewed development actions can be scheduled into Time Machine, and reviewed strategy requirements are saved with stable IDs and applied at their effective month.
+The dashboard has seven views, each at its own hash route: Overview, Key people, Skill map, Time Machine, AI advisor, Data & evidence and Team activity. Reviewed development actions can be scheduled into Time Machine, and reviewed strategy requirements are saved with stable IDs and applied at their effective month.
 
 Remaining: decide whether invented catalogue entries should be marked verified (see [integration checklist](docs/INTEGRATION.md)), then rehearse the [three-minute demo](docs/DEMO.md) and record a backup.
 
