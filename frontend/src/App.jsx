@@ -11,6 +11,7 @@ import { VIEWS, viewLabel } from './views';
 import { HelpProvider } from './help/HelpContext';
 import { useHelp } from './help/context';
 import HelpDrawer from './components/HelpDrawer';
+import GlobalSearch from './components/GlobalSearch';
 
 // Header "?" button. A real button, so it is reachable by keyboard and named for screen readers.
 function HelpButton() {
@@ -158,6 +159,9 @@ function App() {
         </aside>
 
         <main id="main" className="main" tabIndex={-1}>
+          <div className="main-topbar">
+            <GlobalSearch />
+          </div>
           {current && (
             <header className="page-head">
               <div>

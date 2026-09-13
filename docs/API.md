@@ -97,6 +97,13 @@ Body `{employeeId, skillId, proficiency, evidenceSource, lastVerifiedAt}`. Inser
 
 Schema upgrades are additive and existing rows are preserved, so an existing `backend/skillsight.db` keeps working. To get a clean seed, point `DB_PATH` at a new file (`DB_PATH=/tmp/fresh.db npm start --prefix backend`) or delete `backend/skillsight.db`; seeding only runs when the employees table is empty.
 
+## GET /api/keystone/search?q=
+
+Global search for any signed-in user. Returns `{query, groups, total, visibility}` where each group is `{type, label, total, items}` and each item is `{type, id, title, description, status?, href}` with a working in-app link. Groups, in order: people, skills, roles, departments, risks, data-quality issues, saved scenarios, change requests. Up to five items per group; `total` says how many matched.
+
+**Scope is applied before matching.** Each source is included only if the user holds the permission to read it, and people-bearing sources are narrowed with the same `scopeFor` the pages use: a manager only finds their own team, an employee only themselves, and a name outside scope never appears anywhere in the response. Queries under two characters return nothing. Searching is **not** written to the audit log.
+
+The frontend adds a "Help and glossary" group from static help content; it is not part of this endpoint.
 ## Employee directory (admin)
 
 All under `/api/keystone`, all requiring `employee.edit`. Archived employees keep their record, evidence and audit history but are excluded from the workforce snapshot, so they hold no coverage, appear in no team or scope, and are not succession candidates.

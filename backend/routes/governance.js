@@ -3,7 +3,7 @@ const { requirePermission } = require('../middleware/auth');
 const { validateBody, humanize } = require('../validation/ajv');
 const schemas = require('../validation/schemas');
 const { can, ROLES, ROLE_LABELS, describeRole } = require('../security/permissions');
-const { scopeFor, scopeIssues, scopeRisks, inScope } = require('../security/scope');
+const { scopeFor, scopeIssues, scopeRisks, scopeWorkforce, inScope } = require('../security/scope');
 const { destroyUserSessions } = require('../security/sessions');
 const { conflict, notFound, validationError } = require('../errors');
 const { withTransaction } = require('../data/transactions');
@@ -22,6 +22,7 @@ const { simulate } = require('../services/simulation');
 const { summarizeDataQuality, evaluateScenario } = require('../services/data-quality');
 const { buildProfile } = require('../services/profile');
 const { toCsv } = require('../services/csv');
+const { search } = require('../services/search');
 const { today, isCalendarDate, addMonths } = require('../services/clock');
 
 // Governance API: organization settings, audit history, data quality, change review, risk ownership,
@@ -538,6 +539,23 @@ module.exports = function governanceRoutes() {
       await changeRequests.recordCoverageChanges(before, analyze(await loadWorkforce()), ctx, { direct: true });
     });
     res.status(204).end();
+  });
+
+  // Global search. Each source is included only if the user may read it, and every source is
+  // scoped first, so a manager never sees a name outside their team. Not audited: typing is not
+  // an administrative action.
+  router.get('/search', async (req, res) => {
+    const query = String(req.query.q ?? '').slice(0, 100);
+    const workforce = await loadWorkforce();
+    const scope = scopeFor(req.user, workforce);
+    const canWorkforce = can(req.user, 'workforce.read');
+    const visible = canWorkforce ? scopeWorkforce(scope, workforce) : { ...workforce, employees: [], matrix: [], roles: [] };
+    const risks = can(req.user, 'risk.read') ? scopeRisks(scope, analyze(workforce)) : null;
+    const issues = can(req.user, 'dataQuality.read') ? (await scopedQuality(req)).issues : [];
+    const scenarioList = can(req.user, 'scenario.run') ? await scenarios.listScenarios() : [];
+    const changes = can(req.user, 'changes.submit') ? await changeRequests.listChangeRequests({}, req.user, scope) : [];
+    const permissions = new Set(['workforce.read', 'risk.read', 'dataQuality.read'].filter((permission) => can(req.user, permission)));
+    res.json({ ...search({ query, workforce: visible, risks, issues, scenarios: scenarioList, changes, permissions }), visibility: scope.kind });
   });
 
   router.get('/employees', requirePermission('employee.edit'), async (_req, res) => {

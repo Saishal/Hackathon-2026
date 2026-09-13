@@ -95,6 +95,7 @@ export const keystoneApi = {
   rejectFutureRequirement: (id, comment) => post(`/keystone/future-requirements/${id}/reject`, { comment }),
 
   organization: () => request('/keystone/organization'),
+  search: (q) => request(`/keystone/search?q=${encodeURIComponent(q)}`),
   employees: () => request('/keystone/employees'),
   createEmployee: (body) => post('/keystone/employees', body),
   updateEmployee: (id, fields) => request(`/keystone/employees/${id}`, { method: 'PATCH', body: fields }),
