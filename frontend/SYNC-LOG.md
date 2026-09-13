@@ -999,3 +999,35 @@
 **(c) Group chat message**
 
 > Member 3 — still quiet 😴 No new commits anywhere. Build green. Reminder for when you're back: `feature/ux-personalization` review + governance backend to main. ✅
+
+## 2026-09-13 (03:24 CDT) — Quiet sync, no commit this run
+
+**(a) What teammates changed**
+
+- Nothing new on any origin branch since the 03:13 CDT run.
+
+**(b) What I adapted**
+
+- No changes needed. Per the "skip the commit if nothing changed" rule: activity.json regenerated but was timestamp-only (discarded), no tag, no commit. This log entry is left uncommitted in the working tree and will be included in the next real commit. Build verified green (vite, no errors).
+
+**(c) Group chat message**
+
+> Member 3 — quiet sync, no new commits to review this time 😴 Everything green. Ping me when there's work to pick up. ✅
+
+## 2026-09-13 (03:35 CDT) — ux-personalization advanced (still not adopted)
+
+**(a) What teammates changed**
+
+- `feature/ux-personalization` moved f0c3b03 → c2c9cdd (Marco, 4 commits, 03:11 CDT): calmer Home page, skill-map heat map, CSV export, remember-me sessions, local Keystone Assistant, login caps-lock warning, help-center search, and assistant/help catalog entries for directory/search/filters/suggestions. 39 files, +1775/−102; includes small backend session/governance changes on that branch only.
+- Everything else unchanged.
+
+**(b) What I adapted**
+
+- No changes needed: the branch's `docs/API.md` endpoint list is identical to what our `frontend/src/api/keystone.js` already covers — no new endpoints, no shape changes.
+- Still deliberately NOT adopting the branch's frontend (now even larger, still unmerged/in-progress, overlaps all of frontend/). Awaiting owner/team review decision.
+- Note: the Activity Log generator counts a fixed set of origin branches, so ux-personalization's commits (79 total still) aren't in the log yet — worth extending the script's branch list if the team wants them visible.
+- Build passes (vite, no errors). Committed locally only (this entry + the previous run's uncommitted entry). No push.
+
+**(c) Group chat message**
+
+> Member 3 👋 @Marco's ux-personalization branch keeps growing (calmer Home, skill-map heat map, CSV export, remember-me, local assistant, help search 🔥). Still no new API endpoints — our client covers everything. I'm holding off on integrating until we've reviewed it as a team; it's getting big, so sooner is better than later. Build green on feature/keystone-ui meanwhile ✅
