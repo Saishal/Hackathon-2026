@@ -68,7 +68,9 @@ export default function HelpDrawer({ view }) {
         <a className="btn btn-secondary" href="#/help" onClick={close}><Icon name="question" size={14} /> Open the full guide</a>
         <span className="muted small">Press <kbd>?</kbd> anywhere for help · <kbd>Esc</kbd> closes</span>
       </p>}>
-      <div ref={live} className="help-drawer">
+      {/* Every link in the drawer goes somewhere else in the app, so following one closes the drawer.
+          Without this the guide page opened underneath the drawer and Escape no longer reached it. */}
+      <div ref={live} className="help-drawer" onClick={(event) => { if (event.target.closest("a[href]")) close(); }}>
         {current && (current.kind === 'term'
           ? <TermCard id={current.id} highlighted />
           : <TaskCard id={current.id} highlighted />)}
