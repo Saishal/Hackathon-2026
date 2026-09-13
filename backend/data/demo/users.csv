@@ -1,0 +1,5 @@
+email,display_name,role,employee
+admin@keystone.demo,Keystone Administrator,admin,
+hr@keystone.demo,Abigail Lewis,hr,Abigail Lewis
+manager@keystone.demo,Rachel Moreno,manager,Rachel Moreno
+employee@keystone.demo,Mason Green,employee,Mason Green

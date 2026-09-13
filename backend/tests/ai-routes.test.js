@@ -20,7 +20,10 @@ test('HTTP contracts serve async plans/proposals/previews and reject invalid inp
   const plan = await (await post('development-plan', { skillId: 1 })).json();
   assert.equal(plan.actions.length, 5); assert.equal(plan.mode, 'demo-fallback');
   const strategy = await (await post('strategy', { direction: 'e-commerce expansion' })).json();
-  assert.equal(strategy.requirements.length, 3);
+  // 'e-commerce expansion' touches two themes, so both templates contribute (deduplicated).
+  const proposed = strategy.requirements.map((entry) => entry.skillName);
+  assert.ok(proposed.includes('E-commerce Operations') && proposed.includes('Project Management'), proposed.join(', '));
+  assert.equal(new Set(proposed).size, proposed.length);
   assert.equal((await post('strategy', { direction: '' })).status, 400);
   assert.equal((await post('strategy', { direction: 'a'.repeat(2001) })).status, 400);
   assert.equal((await post('development-plan', { skillId: '1' })).status, 400);

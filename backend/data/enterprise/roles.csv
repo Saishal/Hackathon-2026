@@ -1,0 +1,63 @@
+role,criticality,source
+Engineering Manager,4,Fictional demo dataset
+Backend Engineer,4,Fictional demo dataset
+Frontend Engineer,3,Fictional demo dataset
+QA Engineer,3,Fictional demo dataset
+Technical Writer,2,Fictional demo dataset
+DevOps Engineer,4,Fictional demo dataset
+Cloud Engineer,4,Fictional demo dataset
+Site Reliability Engineer,4,Fictional demo dataset
+Solutions Architect,4,Fictional demo dataset
+Security Analyst,5,Fictional demo dataset
+Data Analyst,3,Fictional demo dataset
+Data Scientist,3,Fictional demo dataset
+AI Specialist,3,Fictional demo dataset
+Product Manager,3,Fictional demo dataset
+UX Designer,3,Fictional demo dataset
+Program Manager,3,Fictional demo dataset
+Business Analyst,2,Fictional demo dataset
+Compliance Analyst,5,Fictional demo dataset
+Billing Operations Specialist,4,Fictional demo dataset
+Support Engineer,3,Fictional demo dataset
+People Partner,2,Fictional demo dataset
+Director of Engineering,5,Fictional enterprise dataset (generated)
+Head of Platform,5,Fictional enterprise dataset (generated)
+Head of Data,4,Fictional enterprise dataset (generated)
+Head of Product,4,Fictional enterprise dataset (generated)
+Design Lead,3,Fictional enterprise dataset (generated)
+Head of Security,5,Fictional enterprise dataset (generated)
+Head of Finance,5,Fictional enterprise dataset (generated)
+Head of Compliance,5,Fictional enterprise dataset (generated)
+Head of Operations,4,Fictional enterprise dataset (generated)
+Head of Customer Success,4,Fictional enterprise dataset (generated)
+Head of Sales,4,Fictional enterprise dataset (generated)
+Head of Marketing,3,Fictional enterprise dataset (generated)
+Head of People,4,Fictional enterprise dataset (generated)
+Finance Manager,4,Fictional enterprise dataset (generated)
+Operations Manager,3,Fictional enterprise dataset (generated)
+Customer Success Manager,3,Fictional enterprise dataset (generated)
+Sales Manager,3,Fictional enterprise dataset (generated)
+Marketing Manager,3,Fictional enterprise dataset (generated)
+Staff Engineer,4,Fictional enterprise dataset (generated)
+Mobile Engineer,3,Fictional enterprise dataset (generated)
+Platform Engineer,4,Fictional enterprise dataset (generated)
+Data Engineer,4,Fictional enterprise dataset (generated)
+ML Engineer,3,Fictional enterprise dataset (generated)
+Analytics Engineer,3,Fictional enterprise dataset (generated)
+Product Designer,3,Fictional enterprise dataset (generated)
+Security Engineer,5,Fictional enterprise dataset (generated)
+Finance Analyst,3,Fictional enterprise dataset (generated)
+Accountant,4,Fictional enterprise dataset (generated)
+Payroll Specialist,5,Fictional enterprise dataset (generated)
+Legal Counsel,4,Fictional enterprise dataset (generated)
+Procurement Specialist,3,Fictional enterprise dataset (generated)
+IT Support Specialist,2,Fictional enterprise dataset (generated)
+Customer Success Specialist,3,Fictional enterprise dataset (generated)
+Account Executive,3,Fictional enterprise dataset (generated)
+Sales Engineer,3,Fictional enterprise dataset (generated)
+Sales Development Representative,2,Fictional enterprise dataset (generated)
+Content Strategist,2,Fictional enterprise dataset (generated)
+Growth Marketer,3,Fictional enterprise dataset (generated)
+Marketing Analyst,3,Fictional enterprise dataset (generated)
+Recruiter,3,Fictional enterprise dataset (generated)
+Learning & Development Specialist,3,Fictional enterprise dataset (generated)

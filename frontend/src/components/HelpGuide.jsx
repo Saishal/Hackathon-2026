@@ -1,0 +1,114 @@
+import { useEffect, useState } from 'react';
+import Icon from './Icon';
+import { GLOSSARY, TASKS, VIEW_HELP, guideHref } from '../help/content';
+import { HELP_TOPICS, searchHelp } from '../help/catalog.js';
+import { useT } from '../preferences/context';
+import { VIEWS, viewLabel, isViewAllowed } from '../views';
+import { useSession } from '../session';
+
+// The "How Keystone works" page at #/help. Deep links (#/help?topic=keystone-score) scroll to and
+// highlight one entry, so every contextual help button and every glossary cross-reference has a
+// permanent address a colleague can be sent.
+export default function HelpGuide({ params }) {
+  const session = useSession();
+  const t = useT();
+  const topic = params?.topic ?? null;
+  const [query, setQuery] = useState(params?.q ?? '');
+  const needle = query.trim().toLowerCase();
+  const matches = (value) => searchHelp([{ text: value }], query).length > 0;
+  const topics = searchHelp(HELP_TOPICS, query);
+  const terms = Object.entries(GLOSSARY).filter(([, entry]) => matches([entry.term, entry.short, ...entry.long, ...entry.related].join(' ')));
+  const tasks = Object.entries(TASKS).filter(([, entry]) => matches([entry.title, entry.intro, ...entry.steps, ...entry.related].join(' ')));
+
+  useEffect(() => {
+    if (params?.search) document.getElementById('help-search')?.focus();
+    if (!topic) return;
+    const node = document.getElementById(`guide-${topic}`);
+    if (node) {
+      node.scrollIntoView({ block: 'start' });
+      node.focus({ preventScroll: true });
+    }
+  }, [topic, params?.search]);
+
+  const pages = VIEWS.filter((view) => view.id !== 'help' && view.allowed(session) && matches(`${viewLabel(view, session)} ${view.description} ${VIEW_HELP[view.id]?.purpose ?? ''}`));
+  const count = terms.length + tasks.length + topics.length + pages.length;
+
+  return (
+    <div className="help-guide">
+      <nav className="panel help-guide-nav" aria-label="Guide contents">
+        <h2>Contents</h2><ul>{topics.map((entry) => <li key={entry.id}><a href={guideHref(entry.id)}>{entry.title}</a></li>)}</ul>
+        <ol>
+          <li><a href={guideHref("what")}>What Keystone is for</a></li>
+          <li><a href={guideHref("terms")}>Terms</a>
+            <ul>{terms.map(([id, entry]) => <li key={id}><a href={guideHref(id)}>{entry.term}</a></li>)}</ul>
+          </li>
+          <li><a href={guideHref("tasks")}>How to</a>
+            <ul>{tasks.map(([id, task]) => <li key={id}><a href={guideHref(id)}>{task.title}</a></li>)}</ul>
+          </li>
+          <li><a href={guideHref("pages")}>Pages</a></li>
+        </ol>
+      </nav>
+
+      <div className="help-guide-body">
+        <section className="panel" aria-label="Search help">
+          <label className="field">Search help topics
+            <input id="help-search" type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search help topics" />
+          </label>
+          {needle && <p className="muted small" role="status">{count} matching topic{count === 1 ? '' : 's'}{count === 0 && <>. <button className="btn-link" type="button" onClick={() => setQuery('')}>Clear search</button></>}</p>}
+        </section>
+        {topics.map((entry) => <article className={`panel help-entry ${topic === entry.id ? 'help-entry-current' : ''}`} key={entry.id} id={`guide-${entry.id}`} tabIndex={-1}><h2><a href={guideHref(entry.id)}>{entry.title}</a></h2><p>{entry.description}</p>{entry.faq.map((text) => <p key={text}>{text}</p>)}{entry.view && isViewAllowed(session, entry.view) && <a className="btn btn-secondary" href={`#/${entry.view}`}>{t(`views.${entry.view}.label`)}</a>}</article>)}
+        <section hidden={Boolean(needle)} tabIndex={-1} className="panel" id="guide-what" aria-labelledby="guide-what-h">
+          <h2 id="guide-what-h">What Keystone is for</h2>
+          <p>Keystone answers one question: <strong>if this person were away tomorrow, what would break?</strong> It finds skills that depend on too few people, ranks them, shows who could step in, and lets you test a plan before committing to it.</p>
+          <p>Three rules hold everywhere. Every number comes from <em>recorded evidence</em>, never from a guess. A proposal changes nothing until a person approves it. And a scenario is a "what if" — it never touches official data.</p>
+        </section>
+
+        <section hidden={!terms.length} tabIndex={-1} className="panel" id="guide-terms" aria-labelledby="guide-terms-h">
+          <h2 id="guide-terms-h">Terms</h2>
+          {terms.map(([id, entry]) => (
+            <article key={id} id={`guide-${id}`} tabIndex={-1} className={`help-entry ${topic === id ? 'help-entry-current' : ''}`}>
+              <h3>{entry.term}</h3>
+              <p className="help-short">{entry.short}</p>
+              {entry.long.map((paragraph, index) => <p key={index}>{paragraph}</p>)}
+              {entry.related.length > 0 && (
+                <p className="help-links">Related: {entry.related.map((related, index) => (
+                  <span key={related}>{index > 0 && ', '}<a href={guideHref(related)}>{GLOSSARY[related]?.term ?? TASKS[related]?.title ?? related}</a></span>
+                ))}</p>
+              )}
+            </article>
+          ))}
+        </section>
+
+        <section hidden={!tasks.length} tabIndex={-1} className="panel" id="guide-tasks" aria-labelledby="guide-tasks-h">
+          <h2 id="guide-tasks-h">How to</h2>
+          {tasks.map(([id, task]) => (
+            <article key={id} id={`guide-${id}`} tabIndex={-1} className={`help-entry ${topic === id ? 'help-entry-current' : ''}`}>
+              <h3>{task.title}</h3>
+              <p className="help-short">{task.intro}</p>
+              <ol className="help-steps">{task.steps.map((step, index) => <li key={index}>{step}</li>)}</ol>
+              <p className="help-links">
+                {task.view && isViewAllowed(session, task.view) && <a className="btn btn-secondary btn-small" href={`#/${task.view}`}><Icon name="arrow" size={14} /> Open the page</a>}
+                {task.related.length > 0 && <> Related: {task.related.map((related, index) => (
+                  <span key={related}>{index > 0 && ', '}<a href={guideHref(related)}>{GLOSSARY[related]?.term ?? related}</a></span>
+                ))}</>}
+              </p>
+            </article>
+          ))}
+        </section>
+
+        <section hidden={!pages.length} tabIndex={-1} className="panel" id="guide-pages" aria-labelledby="guide-pages-h">
+          <h2 id="guide-pages-h">Pages you can open</h2>
+          <dl className="help-pages">
+            {pages.map((view) => (
+              <div key={view.id}>
+                <dt><a href={`#/${view.id}`}><Icon name={view.icon} size={14} /> {viewLabel(view, session)}</a></dt>
+                <dd>{VIEW_HELP[view.id]?.purpose ?? view.description}</dd>
+              </div>
+            ))}
+          </dl>
+          <p className="muted small">Pages are shown according to your role. The server enforces the same permissions on every request.</p>
+        </section>
+      </div>
+    </div>
+  );
+}

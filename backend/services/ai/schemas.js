@@ -1,3 +1,5 @@
+// JSON schemas for AI output. The same objects are sent to the provider as strict structured-output
+// formats and compiled with Ajv to re-check whatever comes back (live or fallback).
 const Ajv = require('ajv');
 const text = { type: 'string', minLength: 1, maxLength: 1200 };
 const nullableId = { type: ['integer', 'null'], minimum: 1 };

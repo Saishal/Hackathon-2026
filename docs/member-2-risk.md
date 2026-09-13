@@ -4,9 +4,10 @@
 
 - [x] Add employee Keystone Score using incremental criticality-weighted shortage after removal.
 - [x] Show affected skills and newly uncovered capabilities with each score.
-- [~] Successor matching implemented against recorded skill evidence; Member 1 has not defined role requirements, so that substitution is documented in API.md.
+- [x] Match successors against all persisted role requirements; keep single-skill backups separate.
 - [x] Distinguish unmet requirements from unknown evidence.
 - [x] Add approved future requirements with effective months.
+- [x] Load persisted reviewed requirements automatically while preserving explicit scenario overrides.
 - [x] Add mentor capacity and scheduling constraints.
 - [x] Compare baseline/no-intervention/intervention scenarios.
 - [x] Expand tests for arithmetic, timing, unknown data, blocked transfers, and baseline immutability.

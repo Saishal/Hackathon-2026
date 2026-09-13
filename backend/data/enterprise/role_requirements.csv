@@ -1,0 +1,226 @@
+role,skill,minimum_proficiency
+Engineering Manager,Leadership,4
+Engineering Manager,Communication,4
+Engineering Manager,Project Management,3
+Engineering Manager,Node.js,3
+Backend Engineer,Node.js,4
+Backend Engineer,API Design,3
+Backend Engineer,SQL & Data Modeling,3
+Backend Engineer,TypeScript,3
+Backend Engineer,Test Automation,3
+Frontend Engineer,React,4
+Frontend Engineer,TypeScript,3
+Frontend Engineer,Accessibility,3
+Frontend Engineer,UX Research,2
+Frontend Engineer,Test Automation,2
+QA Engineer,Test Automation,4
+QA Engineer,TypeScript,3
+QA Engineer,Communication,3
+Technical Writer,Communication,4
+Technical Writer,API Design,2
+Technical Writer,Project Management,2
+DevOps Engineer,DevOps,4
+DevOps Engineer,Kubernetes,3
+DevOps Engineer,Cloud Architecture,3
+DevOps Engineer,Incident Response,3
+Cloud Engineer,Cloud Architecture,4
+Cloud Engineer,DevOps,3
+Cloud Engineer,Cybersecurity,2
+Site Reliability Engineer,Incident Response,4
+Site Reliability Engineer,Kubernetes,4
+Site Reliability Engineer,DevOps,3
+Site Reliability Engineer,Cloud Architecture,3
+Solutions Architect,Cloud Architecture,4
+Solutions Architect,API Design,4
+Solutions Architect,Communication,4
+Security Analyst,Cybersecurity,4
+Security Analyst,Incident Response,3
+Security Analyst,Cloud Architecture,2
+Data Analyst,Data Analysis,4
+Data Analyst,SQL & Data Modeling,3
+Data Analyst,Python,2
+Data Analyst,Communication,3
+Data Scientist,Machine Learning,4
+Data Scientist,Python,4
+Data Scientist,Data Analysis,3
+AI Specialist,Machine Learning,4
+AI Specialist,Python,4
+AI Specialist,AI Governance,3
+Product Manager,Project Management,4
+Product Manager,Communication,4
+Product Manager,UX Research,3
+Product Manager,Leadership,3
+UX Designer,UX Research,4
+UX Designer,Accessibility,3
+UX Designer,Communication,3
+Program Manager,Project Management,4
+Program Manager,Leadership,4
+Program Manager,Communication,4
+Business Analyst,Data Analysis,3
+Business Analyst,SQL & Data Modeling,2
+Business Analyst,Communication,4
+Compliance Analyst,Payments Compliance,4
+Compliance Analyst,Communication,3
+Compliance Analyst,Data Analysis,2
+Billing Operations Specialist,Payments Compliance,2
+Billing Operations Specialist,Data Analysis,2
+Billing Operations Specialist,Communication,3
+Support Engineer,Communication,4
+Support Engineer,Incident Response,2
+Support Engineer,SQL & Data Modeling,2
+People Partner,Leadership,3
+People Partner,Communication,4
+Director of Engineering,Leadership,4
+Director of Engineering,Communication,4
+Director of Engineering,Stakeholder Management,4
+Director of Engineering,Agile Delivery,3
+Director of Engineering,API Design,3
+Head of Platform,Leadership,4
+Head of Platform,Communication,4
+Head of Platform,Cloud Architecture,4
+Head of Platform,Incident Response,3
+Head of Data,Leadership,4
+Head of Data,Communication,4
+Head of Data,Data Engineering,3
+Head of Data,Statistics,3
+Head of Product,Leadership,4
+Head of Product,Communication,4
+Head of Product,Stakeholder Management,4
+Head of Product,Project Management,3
+Design Lead,Leadership,3
+Design Lead,Communication,4
+Design Lead,Design Systems,4
+Design Lead,UX Research,3
+Head of Security,Leadership,4
+Head of Security,Communication,4
+Head of Security,Threat Modelling,4
+Head of Security,Identity & Access Management,3
+Head of Finance,Leadership,4
+Head of Finance,Communication,4
+Head of Finance,Financial Modelling,4
+Head of Finance,Revenue Recognition,3
+Head of Compliance,Leadership,4
+Head of Compliance,Communication,4
+Head of Compliance,Data Privacy (GDPR),4
+Head of Compliance,Vendor Risk Management,3
+Head of Operations,Leadership,4
+Head of Operations,Communication,4
+Head of Operations,Change Management,4
+Head of Operations,Procurement,3
+Head of Customer Success,Leadership,4
+Head of Customer Success,Communication,4
+Head of Customer Success,Account Management,4
+Head of Customer Success,Customer Onboarding,3
+Head of Sales,Leadership,4
+Head of Sales,Communication,4
+Head of Sales,Solution Selling,4
+Head of Sales,Contract Negotiation,3
+Head of Marketing,Leadership,4
+Head of Marketing,Communication,4
+Head of Marketing,Content Marketing,4
+Head of Marketing,SEO & Web Analytics,3
+Head of People,Leadership,4
+Head of People,Communication,4
+Head of People,Coaching & Mentoring,4
+Head of People,Change Management,3
+Finance Manager,Leadership,3
+Finance Manager,Communication,3
+Finance Manager,Financial Modelling,3
+Finance Manager,ERP Administration,3
+Operations Manager,Leadership,3
+Operations Manager,Communication,3
+Operations Manager,Project Management,3
+Operations Manager,Change Management,3
+Customer Success Manager,Leadership,3
+Customer Success Manager,Communication,3
+Customer Success Manager,Account Management,3
+Customer Success Manager,Customer Onboarding,3
+Sales Manager,Leadership,3
+Sales Manager,Communication,3
+Sales Manager,Solution Selling,3
+Sales Manager,Salesforce Administration,2
+Marketing Manager,Leadership,3
+Marketing Manager,Communication,3
+Marketing Manager,Content Marketing,3
+Marketing Manager,SEO & Web Analytics,2
+Staff Engineer,API Design,4
+Staff Engineer,TypeScript,4
+Staff Engineer,Node.js,4
+Staff Engineer,PostgreSQL,3
+Staff Engineer,Observability,3
+Staff Engineer,Coaching & Mentoring,3
+Mobile Engineer,Swift & iOS,3
+Mobile Engineer,Kotlin & Android,3
+Mobile Engineer,API Design,2
+Mobile Engineer,Test Automation,2
+Platform Engineer,Kubernetes,3
+Platform Engineer,Terraform,3
+Platform Engineer,AWS,3
+Platform Engineer,Observability,3
+Platform Engineer,Go,2
+Data Engineer,Data Engineering,3
+Data Engineer,SQL & Data Modeling,3
+Data Engineer,Python,3
+Data Engineer,Apache Spark,2
+Data Engineer,AWS,2
+ML Engineer,Machine Learning,3
+ML Engineer,MLOps,3
+ML Engineer,Python,3
+ML Engineer,Statistics,2
+Analytics Engineer,Analytics Engineering (dbt),3
+Analytics Engineer,SQL & Data Modeling,3
+Analytics Engineer,Data Visualization,3
+Product Designer,Figma,3
+Product Designer,Design Systems,3
+Product Designer,UX Research,2
+Product Designer,Accessibility,2
+Security Engineer,Identity & Access Management,3
+Security Engineer,Threat Modelling,3
+Security Engineer,Networking,3
+Security Engineer,Penetration Testing,2
+Finance Analyst,Financial Modelling,3
+Finance Analyst,SQL & Data Modeling,2
+Finance Analyst,Data Visualization,2
+Accountant,Revenue Recognition,3
+Accountant,ERP Administration,3
+Accountant,Financial Modelling,2
+Payroll Specialist,Payroll Administration,3
+Payroll Specialist,ERP Administration,2
+Payroll Specialist,Data Privacy (GDPR),2
+Legal Counsel,Contract Negotiation,4
+Legal Counsel,Data Privacy (GDPR),3
+Legal Counsel,Vendor Risk Management,3
+Procurement Specialist,Procurement,3
+Procurement Specialist,Contract Negotiation,3
+Procurement Specialist,ERP Administration,2
+IT Support Specialist,Networking,3
+IT Support Specialist,Identity & Access Management,2
+IT Support Specialist,Communication,2
+Customer Success Specialist,Customer Onboarding,3
+Customer Success Specialist,Account Management,3
+Customer Success Specialist,Communication,3
+Account Executive,Solution Selling,3
+Account Executive,Contract Negotiation,2
+Account Executive,Salesforce Administration,2
+Account Executive,Communication,3
+Sales Engineer,Solution Selling,3
+Sales Engineer,API Design,2
+Sales Engineer,Public Speaking,3
+Sales Development Representative,Solution Selling,2
+Sales Development Representative,Salesforce Administration,2
+Sales Development Representative,Communication,3
+Content Strategist,Content Marketing,3
+Content Strategist,SEO & Web Analytics,2
+Content Strategist,Communication,3
+Growth Marketer,Experimentation & A/B Testing,3
+Growth Marketer,SEO & Web Analytics,3
+Growth Marketer,Data Visualization,2
+Marketing Analyst,Data Analysis,3
+Marketing Analyst,SEO & Web Analytics,3
+Marketing Analyst,Data Visualization,3
+Recruiter,Technical Recruiting,3
+Recruiter,Communication,3
+Recruiter,Stakeholder Management,2
+Learning & Development Specialist,Coaching & Mentoring,3
+Learning & Development Specialist,Change Management,3
+Learning & Development Specialist,Public Speaking,3

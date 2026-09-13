@@ -1,252 +1,229 @@
-import { useEffect, useMemo, useState } from 'react';
-import './App.css';
+import { useEffect, useState } from 'react';
+import './styles.css';
+import { authApi, SIGNED_OUT_EVENT } from './api/keystone';
+import { initials } from './components/format';
+import Icon, { KeystoneMark } from './components/Icon';
 import KeystoneStarter from './components/KeystoneStarter';
+import Login from './components/Login';
+import NotificationBell from './components/NotificationHub';
+import PreferencesMenu from './components/PreferencesMenu';
+import { ForbiddenState, LoadingScreen } from './components/ui';
+import { useT } from './preferences/context';
+import { usePersistentState } from './preferences/usePersistentState';
+import { SessionContext } from './session';
+import { VIEWS, viewLabel } from './views';
+import { HelpProvider } from './help/HelpContext';
+import { useHelp } from './help/context';
+import HelpDrawer from './components/HelpDrawer';
+import GlobalSearch from './components/GlobalSearch';
+import KeystoneAssistant from './components/KeystoneAssistant';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000';
+// Header "?" button. A real button, so it is reachable by keyboard and named for screen readers.
+function HelpButton() {
+  const { open } = useHelp();
+  const t = useT();
+  return (
+    <button type="button" className="btn btn-secondary btn-help" onClick={() => open()} aria-haspopup="dialog" title={t('help.buttonTitle')}>
+      <Icon name="question" size={16} /> {t('help.button')}
+    </button>
+  );
+}
 
-const proficiencyLabel = {
-  0: 'Not recorded',
-  1: 'Beginner',
-  2: 'Novice+',
-  3: 'Intermediate',
-  4: 'Advanced',
-  5: 'Expert',
-};
+// "?" opens help from anywhere except inside a text field, where the character is being typed.
+function HelpShortcut() {
+  const { toggle } = useHelp();
+  useEffect(() => {
+    const onKey = (event) => {
+      if (event.key !== '?' || event.ctrlKey || event.metaKey || event.altKey) return;
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(event.target.tagName) || event.target.isContentEditable) return;
+      event.preventDefault();
+      toggle();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [toggle]);
+  return null;
+}
+
+// App shell: session bootstrap, role-aware navigation and hash routes (#/people, #/data?tab=evidence).
+function parseHash() {
+  const [path = '', search = ''] = window.location.hash.replace(/^#\/?/, '').split('?');
+  return { id: path, params: Object.fromEntries(new URLSearchParams(search)) };
+}
+
+// Page names and descriptions come from the translations; views.js keeps the English originals as the fallback.
+function viewText(view, session, t) {
+  const key = view.id === 'reviews' && viewLabel(view, session) !== 'Review queue' ? 'submissions' : view.id;
+  return {
+    label: t(`views.${key}.label`, { defaultValue: viewLabel(view, session) }),
+    description: t(`views.${view.id}.description`, { defaultValue: view.description }),
+  };
+}
 
 function App() {
-  const [heatmap, setHeatmap] = useState(null);
-  const [critical, setCritical] = useState([]);
-  const [gaps, setGaps] = useState([]);
-  const [recommendations, setRecommendations] = useState([]);
-  const [targets, setTargets] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [savingTargets, setSavingTargets] = useState(false);
-  const [error, setError] = useState('');
-  const [riskRevision, setRiskRevision] = useState(0);
-
-  const matrixLookup = useMemo(() => {
-    if (!heatmap?.matrix) {
-      return new Map();
-    }
-
-    return new Map(heatmap.matrix.map((entry) => [`${entry.employeeId}:${entry.skillId}`, entry.proficiency]));
-  }, [heatmap]);
-
-  const loadData = async () => {
-    try {
-      const [heatmapRes, criticalRes, gapsRes, recommendationsRes, targetsRes] = await Promise.all([
-        fetch(`${API_BASE}/api/heatmap`),
-        fetch(`${API_BASE}/api/critical-skills`),
-        fetch(`${API_BASE}/api/gap-analysis`),
-        fetch(`${API_BASE}/api/recommendations`),
-        fetch(`${API_BASE}/api/future-skills`),
-      ]);
-
-      if ([heatmapRes, criticalRes, gapsRes, recommendationsRes, targetsRes].some((res) => !res.ok)) {
-        throw new Error('One or more API requests failed');
-      }
-
-      const [heatmapData, criticalData, gapData, recommendationData, targetData] = await Promise.all([
-        heatmapRes.json(),
-        criticalRes.json(),
-        gapsRes.json(),
-        recommendationsRes.json(),
-        targetsRes.json(),
-      ]);
-
-      setHeatmap(heatmapData);
-      setCritical(criticalData);
-      setGaps(gapData);
-      setRecommendations(recommendationData);
-      setTargets(targetData);
-    } catch (fetchError) {
-      setError(fetchError.message || 'Unable to load Keystone data');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const t = useT();
+  const [session, setSession] = useState(undefined);
+  // Notices are stored as translation keys, so they follow a language change made on the sign-in page.
+  const [notice, setNotice] = useState('');
+  const [signOutError, setSignOutError] = useState(false);
+  const [bootError, setBootError] = useState(null);
+  const [route, setRoute] = useState(parseHash);
 
   useEffect(() => {
-    loadData();
+    let active = true;
+    authApi.me()
+      .then((me) => { if (active) setSession(me); })
+      .catch((error) => {
+        if (!active) return;
+        if (error.status !== 401) setBootError(error);
+        if (error.code === 'session_ended') setNotice('session.ended');
+        setSession(null);
+      });
+    return () => { active = false; };
   }, []);
 
-  const updateTarget = (id, targetPeople) => {
-    setTargets((current) =>
-      current.map((item) =>
-        item.id === id ? { ...item, targetPeople: Number.isNaN(targetPeople) ? 0 : targetPeople } : item,
-      ),
-    );
-  };
+  useEffect(() => {
+    const onHashChange = () => {
+      setRoute(parseHash());
+      window.scrollTo(0, 0);
+    };
+    const onSignedOut = () => {
+      setSession(null);
+      setNotice('session.ended');
+    };
+    window.addEventListener('hashchange', onHashChange);
+    window.addEventListener(SIGNED_OUT_EVENT, onSignedOut);
+    return () => {
+      window.removeEventListener('hashchange', onHashChange);
+      window.removeEventListener(SIGNED_OUT_EVENT, onSignedOut);
+    };
+  }, []);
 
-  const saveTargets = async () => {
-    setSavingTargets(true);
-    setError('');
+  // Collapsing the sidebar to an icon rail gives every page more width. The choice is remembered in this browser.
+  const [navCollapsed, setNavCollapsed] = usePersistentState('keystone.sidebarCollapsed', false);
 
+  const allowed = session ? VIEWS.filter((view) => view.allowed(session)) : [];
+  const current = VIEWS.find((view) => view.id === route.id);
+  const home = allowed[0];
+
+  useEffect(() => {
+    // An empty or unknown address goes to the first page this role can use.
+    if (session && home && !current) window.location.replace(`#/${home.id}`);
+  }, [session, home, current]);
+
+  useEffect(() => {
+    document.title = current && session ? `${viewText(current, session, t).label} · Keystone` : 'Keystone';
+  }, [current, session, t]);
+
+  async function signOut() {
     try {
-      const response = await fetch(`${API_BASE}/api/future-skills`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          targets: targets.map((target) => ({
-            id: target.id,
-            targetPeople: Number(target.targetPeople),
-          })),
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to update targets');
-      }
-
-      const updatedGaps = await response.json();
-      setGaps(updatedGaps);
-      setRiskRevision((revision) => revision + 1);
-
-      const recommendationRes = await fetch(`${API_BASE}/api/recommendations`);
-      setRecommendations(await recommendationRes.json());
-    } catch (saveError) {
-      setError(saveError.message || 'Unable to save future skill targets');
-    } finally {
-      setSavingTargets(false);
+      await authApi.logout();
+      setSignOutError(false);
+      setNotice('session.signedOut');
+    } catch {
+      setSignOutError(true);
+      return;
     }
+    setSession(null);
+  }
+
+  const skipToContent = (event) => {
+    // A plain #main link would be read as a route, so move focus instead.
+    event.preventDefault();
+    document.getElementById('main')?.focus();
   };
 
-  if (loading) {
-    return (
-      <main className="app-shell">
-        <h1>Keystone</h1>
-        <p>Loading talent readiness data...</p>
-      </main>
-    );
+  if (session === undefined) return <LoadingScreen />;
+  if (!session) {
+    return <Login notice={notice ? t(notice) : ''} bootError={bootError} onSignedIn={(me) => { setNotice(''); setBootError(null); setSession(me); window.location.hash = '/home'; }} />;
   }
 
-  if (error) {
-    return (
-      <main className="app-shell">
-        <h1>Keystone</h1>
-        <p className="error">{error}</p>
-      </main>
-    );
-  }
+  const viewAllowed = Boolean(current) && current.allowed(session);
+  const groups = [...new Set(allowed.map((view) => view.group))];
+  const currentText = current ? viewText(current, session, t) : null;
 
   return (
-    <main className="app-shell">
-      <header>
-        <h1>Keystone</h1>
-        <p>Find your keystones before they walk out the door.</p>
-      </header>
-      <KeystoneStarter key={riskRevision} />
+    <HelpProvider>
+    <SessionContext.Provider value={session}>
+      <div className={navCollapsed ? 'app nav-collapsed' : 'app'}>
+        <a className="skip-link" href="#main" onClick={skipToContent}>{t('nav.skip')}</a>
+        <aside className="sidebar">
+          <div className="sidebar-head">
+            <a className="brand" href={home ? `#/${home.id}` : '#/'} title={navCollapsed ? 'Keystone' : undefined}>
+              <KeystoneMark />
+              <span>
+                <strong>Keystone</strong>
+                <small>{session.organization.name}</small>
+              </span>
+            </a>
+            <button type="button" className="btn-icon sidebar-toggle" onClick={() => setNavCollapsed((collapsed) => !collapsed)}
+              aria-controls="app-nav" aria-expanded={!navCollapsed}
+              aria-label={t(navCollapsed ? 'nav.expand' : 'nav.collapse')} title={t(navCollapsed ? 'nav.expand' : 'nav.collapse')}>
+              <Icon name="sidebar" size={18} />
+            </button>
+          </div>
+          <nav id="app-nav" aria-label={t('nav.pages')}>
+            {groups.map((group) => (
+              <div className="nav-section" key={group}>
+                <p className="nav-group" id={`nav-${group}`}>{t(`nav.groups.${group}`, { defaultValue: group })}</p>
+                <ul aria-labelledby={`nav-${group}`}>
+                  {allowed.filter((view) => view.group === group).map((view) => (
+                    <li key={view.id}>
+                      <a className="nav-link" href={`#/${view.id}`} aria-current={route.id === view.id ? 'page' : undefined}
+                        title={navCollapsed ? viewText(view, session, t).label : undefined}>
+                        <Icon name={view.icon} /> <span className="nav-label">{viewText(view, session, t).label}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </nav>
+          <div className="user-card">
+            <span className="avatar" aria-hidden="true">{initials(session.user.displayName)}</span>
+            <span className="user-meta">
+              <strong>{session.user.displayName}</strong>
+              <small>{t(`roles.${session.user.role}`, { defaultValue: session.user.roleLabel })}</small>
+            </span>
+            <button type="button" className="btn-icon btn-signout" onClick={signOut} aria-label={t('nav.signOut')} title={t('nav.signOut')}>
+              <Icon name="logout" size={18} />
+            </button>
+          </div>
+        </aside>
 
-      <section className="panel">
-        <h2>Skills Heat Map</h2>
-        <div className="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Employee</th>
-                {heatmap.skills.map((skill) => (
-                  <th key={skill.id}>{skill.name}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {heatmap.employees.map((employee) => (
-                <tr key={employee.id}>
-                  <th scope="row">
-                    <div>{employee.name}</div>
-                    <small>
-                      {employee.role} · {employee.department}
-                    </small>
-                  </th>
-                  {heatmap.skills.map((skill) => {
-                    const proficiency = matrixLookup.get(`${employee.id}:${skill.id}`) || 0;
-                    return (
-                      <td key={skill.id} className={`p-${proficiency}`} title={proficiencyLabel[proficiency]}>
-                        {proficiency || '—'}
-                      </td>
-                    );
-                  })}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <div className="two-col">
-        <section className="panel">
-          <h2>Critical Skills at Risk</h2>
-          <p>Skills held at intermediate level or above by fewer than 2 people.</p>
-          {critical.length === 0 ? (
-            <p>No critical skill concentration risks detected.</p>
-          ) : (
-            <ul>
-              {critical.map((skill) => (
-                <li key={skill.id}>
-                  <strong>{skill.name}</strong>: {skill.holderCount} holder(s)
-                  {skill.holders ? ` (${skill.holders})` : ''}
-                </li>
-              ))}
-            </ul>
+        <main id="main" className="main" tabIndex={-1}>
+          <div className="main-topbar">
+            <GlobalSearch />
+            <div className="topbar-actions">
+              <KeystoneAssistant />
+              <NotificationBell session={session} />
+              <PreferencesMenu />
+            </div>
+          </div>
+          {signOutError && <p className="alert" role="alert">{t('session.signOutFailed')} <button type="button" className="btn btn-secondary" onClick={signOut}>{t('nav.signOut')}</button></p>}
+          {current && (
+            <header className="page-head">
+              <div>
+                <h1>{currentText.label}</h1>
+                <p>{currentText.description}</p>
+              </div>
+              <div className="page-head-actions">
+                {session.organization.environment === 'demo' && (
+                  <span className="tag tag-warn"><Icon name="info" size={14} /> {t('common.demo')}</span>
+                )}
+                <HelpButton />
+              </div>
+            </header>
           )}
-        </section>
-
-        <section className="panel">
-          <h2>Recommendations</h2>
-          {recommendations.length === 0 ? (
-            <p>Current capability meets configured future demand.</p>
-          ) : (
-            <ul>
-              {recommendations.map((item) => (
-                <li key={item.skill}>
-                  <strong>{item.skill}</strong> — {item.action}
-                  <div>{item.detail}</div>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
+          {current && (viewAllowed
+            ? <KeystoneStarter view={current.id} params={route.params} />
+            : <ForbiddenState roleLabel={session.user.roleLabel} homeHref={home ? `#/${home.id}` : null} />)}
+        </main>
       </div>
-
-      <section className="panel">
-        <h2>Gap Analysis</h2>
-        <p>Update target headcount to configure future skill demand.</p>
-        <div className="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Skill</th>
-                <th>Current (≥3)</th>
-                <th>Future Target</th>
-                <th>Gap</th>
-              </tr>
-            </thead>
-            <tbody>
-              {gaps.map((gap) => (
-                <tr key={gap.id}>
-                  <th scope="row">{gap.name}</th>
-                  <td>{gap.currentPeople}</td>
-                  <td>
-                    <input
-                      type="number"
-                      min="0"
-                      value={targets.find((item) => item.id === gap.id)?.targetPeople ?? gap.targetPeople}
-                      onChange={(event) => updateTarget(gap.id, Number(event.target.value))}
-                    />
-                  </td>
-                  <td className={gap.gap > 0 ? 'gap-positive' : ''}>{gap.gap}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <button type="button" onClick={saveTargets} disabled={savingTargets}>
-          {savingTargets ? 'Saving...' : 'Save Future Skill Targets'}
-        </button>
-      </section>
-    </main>
+      <HelpShortcut />
+      <HelpDrawer view={current?.id} />
+    </SessionContext.Provider>
+    </HelpProvider>
   );
 }
 

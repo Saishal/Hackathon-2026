@@ -150,3 +150,14 @@ test('real SDK transport retries one transient failure and parses structured out
   assert.deepEqual(await provider.generate({ name: 'test', schema: {}, instructions: 'test', context: {} }), { ok: true });
   assert.equal(attempts, 2);
 });
+
+test('strategy templates cover payments, security, cloud, data, expansion and mobile, and merge without duplicates', () => {
+  const merged = strategyFallback('Launch a regulated payments product in the EU with PCI-grade security and cloud automation').requirements;
+  const names = merged.map((entry) => entry.skillName);
+  assert.equal(new Set(names).size, names.length, 'a skill appeared twice');
+  for (const expected of ['Payments Compliance', 'Cybersecurity', 'Data Privacy (GDPR)', 'Incident Response', 'Cloud Architecture']) assert.ok(names.includes(expected), expected);
+  assert.ok(merged.length <= 8);
+  assert.ok(merged.every((entry) => entry.assumptions.some((line) => /not an AI forecast/.test(line))));
+  assert.equal(strategyFallback('Open a chain of bakeries').requirements.length, 0, 'no workforce means no coverage fallback');
+  assert.ok(strategyFallback('Build the Android and iOS app').requirements.some((entry) => entry.skillName === 'Kotlin & Android'));
+});

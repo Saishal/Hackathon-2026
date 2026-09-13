@@ -28,3 +28,6 @@ yarn-error.log*
 .DS_Store
 .vscode/
 .idea/
+
+# impeccable downloads its platform binary on first run
+.claude/skills/impeccable/scripts/bin/

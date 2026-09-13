@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { analyze } = require('../services/risk');
+const { analyze, analyzeEmployees, analyzeSuccession } = require('../services/risk');
 const { simulate } = require('../services/simulation');
 const { createRecommendationService } = require('../services/recommendations');
 const { createProvider } = require('../services/ai/provider');
@@ -44,13 +44,15 @@ test('recommendations and strategy disclose their deterministic fallbacks', asyn
   assert.equal((await proposeStrategy('Automate production')).mode, 'demo-fallback');
 });
 
-const { analyzeEmployees } = require('../services/risk');
 const succession = {
-  employees: [{ id: 1, name: 'Sole expert' }, { id: 2, name: 'Learner' }, { id: 3, name: 'Uninvolved' }],
+  employees: [{ id: 1, name: 'Sole expert', role: 'Billing Lead' }, { id: 2, name: 'Learner', role: 'Analyst' },
+    { id: 3, name: 'Uninvolved', role: 'Analyst' }],
   skills: [{ id: 1, name: 'Billing', criticality: 5, requiredHolders: 2, targetProficiency: 3 },
     { id: 2, name: 'Shared', criticality: 3, requiredHolders: 2, targetProficiency: 3 }],
   matrix: [{ employeeId: 1, skillId: 1, proficiency: 5 }, { employeeId: 2, skillId: 1, proficiency: 2 },
     { employeeId: 1, skillId: 2, proficiency: 4 }, { employeeId: 3, skillId: 2, proficiency: 4 }],
+  roles: [{ id: 1, name: 'Billing Lead', criticality: 5, incumbentIds: [1],
+    requirements: [{ skillId: 1, minimumProficiency: 2 }] }],
 };
 test('employee score is the incremental weighted shortage of removing recorded coverage', () => {
   const { employees } = analyzeEmployees(succession);
@@ -67,20 +69,32 @@ test('an employee nothing depends on scores zero and is not invented into a risk
   assert.equal(learner.recordedSkills, 0);
   assert.match(learner.explanation, /No skill currently depends on this person/);
 });
-test('successors are ranked and classified against the target, never invented', () => {
+test('skill backups are ranked against the skill target, never invented', () => {
   const expert = analyzeEmployees(succession).employees.find((employee) => employee.id === 1);
   const billing = expert.affectedSkills.find((skill) => skill.name === 'Billing');
-  assert.deepEqual(billing.successors, [{ employeeId: 2, name: 'Learner', proficiency: 2, shortfall: 1, status: 'developable' }]);
+  assert.deepEqual(billing.skillBackups, [{ employeeId: 2, name: 'Learner', proficiency: 2, shortfall: 1, status: 'developable' }]);
   const shared = expert.affectedSkills.find((skill) => skill.name === 'Shared');
-  assert.equal(shared.successors[0].status, 'ready');
+  assert.equal(shared.skillBackups[0].status, 'ready');
   assert.equal(shared.becomesUncovered, false);
 });
-test('missing successor evidence is reported as unknown, not as nobody capable', () => {
+test('missing backup evidence is reported as unknown, not as nobody capable', () => {
   const lonely = { ...succession, matrix: succession.matrix.filter((edge) => !(edge.skillId === 1 && edge.employeeId === 2)) };
   const billing = analyzeEmployees(lonely).employees.find((employee) => employee.id === 1)
     .affectedSkills.find((skill) => skill.name === 'Billing');
-  assert.deepEqual(billing.successors, []);
-  assert.match(analyzeEmployees(lonely).methodology, /no evidence on file, never proof that nobody else is capable/);
+  assert.deepEqual(billing.skillBackups, []);
+  assert.match(analyzeEmployees(lonely).methodology, /Missing skill evidence stays unknown, never proof that nobody else is capable/);
+});
+test('successor readiness uses persisted role requirements instead of the skill target stand-in', () => {
+  const expert = analyzeEmployees(succession).employees.find((employee) => employee.id === 1);
+  assert.equal(expert.successionRole.name, 'Billing Lead');
+  assert.equal(expert.successors[0].employeeId, 2);
+  assert.equal(expert.successors[0].status, 'ready');
+  assert.equal(expert.successors[0].requirements[0].minimumProficiency, 2);
+  assert.equal(expert.successors[0].requirements[0].recordedProficiency, 2);
+
+  const roles = analyzeSuccession(succession);
+  assert.equal(roles.roles[0].incumbents[0].candidates[0].employeeId, 2);
+  assert.equal(roles.roles[0].readyNonIncumbents, 1);
 });
 test('employee scoring never mutates the workforce and ranks the keystone first', () => {
   const before = JSON.stringify(succession);
@@ -134,6 +148,16 @@ test('approved future requirements apply at their effective month and never to b
   const notYet = simulate(capacity, { horizonMonths: 12, requirements: [{ ...raise, effectiveMonth: 36 }] });
   assert.equal(notYet.projected.skills.find((skill) => skill.id === 1).requiredHolders, 3);
   assert.deepEqual(notYet.requirementsApplied, []);
+});
+test('persisted requirements use the latest reviewed value due at the selected horizon', () => {
+  const data = { ...capacity, futureRequirements: [
+    { id: 1, skillId: 1, skillName: 'S1', targetProficiency: 3, requiredHolders: 99, criticality: 5, effectiveMonth: 0, status: 'proposed' },
+    { id: 2, skillId: 1, skillName: 'S1', targetProficiency: 3, requiredHolders: 5, criticality: 4, effectiveMonth: 12, status: 'reviewed' },
+    { id: 3, skillId: 1, skillName: 'S1', targetProficiency: 3, requiredHolders: 7, criticality: 4, effectiveMonth: 36, status: 'reviewed' },
+  ] };
+  assert.equal(simulate(data, { horizonMonths: 12 }).projected.skills.find((skill) => skill.id === 1).requiredHolders, 5);
+  assert.equal(simulate(data, { horizonMonths: 60 }).projected.skills.find((skill) => skill.id === 1).requiredHolders, 7);
+  assert.equal(simulate(data, { horizonMonths: 60, requirements: [] }).projected.skills.find((skill) => skill.id === 1).requiredHolders, 3);
 });
 test('a new future skill enters the scenario with a provisional ID and no recorded coverage', () => {
   const result = simulate(capacity, { horizonMonths: 12, requirements: [

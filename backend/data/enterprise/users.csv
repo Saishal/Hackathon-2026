@@ -1,0 +1,12 @@
+email,display_name,role,employee
+admin@keystone.demo,Keystone Administrator,admin,
+hr@keystone.demo,Abigail Lewis,hr,Abigail Lewis
+manager@keystone.demo,Rachel Moreno,manager,Rachel Moreno
+employee@keystone.demo,Mason Green,employee,Mason Green
+director.engineering@keystone.demo,Lucas Mensah,manager,Lucas Mensah
+head.finance@keystone.demo,Omar Ekwueme,manager,Omar Ekwueme
+head.sales@keystone.demo,Dmitri Kowalski,manager,Dmitri Kowalski
+people.partner@keystone.demo,Maya Sørensen,hr,Maya Sørensen
+data.engineer@keystone.demo,Mei Quinn,employee,Mei Quinn
+account.executive@keystone.demo,Ravi Gallagher,employee,Ravi Gallagher
+ops.admin@keystone.demo,Operations Administrator,admin,
