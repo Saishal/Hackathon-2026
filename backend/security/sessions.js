@@ -9,9 +9,10 @@ const { enqueueWrite } = require('../data/transactions');
 const hashToken = (token) => crypto.createHash('sha256').update(token).digest('hex');
 const TOUCH_INTERVAL_MS = 60 * 1000;
 
-async function createSession(userId, config, { userAgent = null, now = new Date() } = {}) {
+async function createSession(userId, config, { userAgent = null, now = new Date(), persistent = true } = {}) {
   const token = crypto.randomBytes(32).toString('base64url');
-  const absolute = new Date(now.getTime() + config.sessionAbsoluteHours * 3600 * 1000);
+  const lifetime = persistent ? config.sessionAbsoluteHours : Math.min(config.sessionShortHours ?? 8, config.sessionAbsoluteHours);
+  const absolute = new Date(now.getTime() + lifetime * 3600 * 1000);
   const idle = new Date(Math.min(now.getTime() + config.sessionIdleMinutes * 60 * 1000, absolute.getTime()));
   await enqueueWrite(() => run(
     `INSERT INTO sessions (token_hash, user_id, created_at, last_seen_at, expires_at, absolute_expires_at, user_agent)

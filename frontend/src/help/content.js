@@ -35,11 +35,11 @@ export const GLOSSARY = {
     related: ['bus-factor', 'keystone-score', 'future-requirement'],
   },
   'evidence-trust': {
-    term: 'Qualified versus unverified evidence',
-    short: 'A recorded skill level with a verification date is qualified; one without is unverified.',
+    term: 'Verified versus unverified evidence',
+    short: 'A recorded skill level with a verification date is verified; one without is unverified.',
     long: [
       'Every skill level in Keystone is a piece of evidence with a source (a review, an assessment, a certification record) and, ideally, the date someone confirmed it.',
-      'Qualified evidence has been verified and counts toward coverage. Unverified evidence is recorded but nobody has confirmed it yet — it is shown with a label, and the data-quality rules flag it when it props up a critical skill.',
+      'Official coverage counts recorded levels at the skill target, with verification shown separately. Unverified evidence is recorded but nobody has confirmed it yet — it is shown with a label, and the data-quality rules flag it when it props up a critical skill.',
       'Stale evidence is verified evidence that is older than the organisation\'s re-verification period. It still counts, but it is flagged so someone can re-check it.',
     ],
     related: ['unknown-vs-unmet', 'data-quality-health', 'pending-vs-approved'],
@@ -263,6 +263,7 @@ export const TASKS = {
 };
 
 export const VIEW_HELP = {
+  home: { purpose: 'Start with a workspace shortcut. Open detailed Overview whenever you want the operational dashboard.', topics: ['keystone-score', 'coverage-target'], tasks: [] },
   overview: {
     purpose: 'Where the organisation depends on too few people, at a glance. Start here, then open a page for detail.',
     topics: ['suggestions', 'keystone-score', 'bus-factor', 'coverage-target', 'risk-acknowledgement'],

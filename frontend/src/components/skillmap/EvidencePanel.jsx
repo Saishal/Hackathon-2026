@@ -1,7 +1,7 @@
 import { useT } from '../../preferences/context';
 import { formatDate } from '../format';
 import Icon from '../Icon';
-import { qualifiedIn } from './model';
+
 
 const DASH = '—';
 
@@ -27,7 +27,7 @@ export default function EvidencePanel({ map, selected, onShowChart }) {
   const t = useT();
   const employee = selected?.type === 'employee' ? map.employeeById.get(selected.id) : null;
   const skill = selected?.type === 'skill' ? map.skillById.get(selected.id) : null;
-  const evidenceFor = (predicate, labelOf) => map.matrix.filter(predicate)
+  const evidenceFor = (predicate, labelOf) => map.edges.filter(predicate)
     .sort((a, b) => b.proficiency - a.proficiency)
     .map((edge) => ({ ...edge, key: `${edge.employeeId}-${edge.skillId}`, label: labelOf(edge) }));
 
@@ -55,9 +55,9 @@ export default function EvidencePanel({ map, selected, onShowChart }) {
       </>}
 
       {skill && <>
-        <h3>{skill.name}</h3>
+        <h3>{skill.name}</h3><p className="muted small">{t('skillmap.evidence.filtered')}</p>
         <p className="muted">{t('skillmap.evidence.skillSummary', {
-          qualified: map.busFactor(skill.id) ?? qualifiedIn(map, skill),
+          qualified: map.edges.filter((edge) => edge.skillId === skill.id && edge.proficiency >= (skill.targetProficiency ?? 3)).length,
           needed: skill.requiredHolders ?? DASH,
           level: skill.targetProficiency ?? DASH,
           criticality: skill.criticality ?? DASH,

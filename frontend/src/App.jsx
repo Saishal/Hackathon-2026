@@ -15,6 +15,7 @@ import { HelpProvider } from './help/HelpContext';
 import { useHelp } from './help/context';
 import HelpDrawer from './components/HelpDrawer';
 import GlobalSearch from './components/GlobalSearch';
+import KeystoneAssistant from './components/KeystoneAssistant';
 
 // Header "?" button. A real button, so it is reachable by keyboard and named for screen readers.
 function HelpButton() {
@@ -63,6 +64,7 @@ function App() {
   const [session, setSession] = useState(undefined);
   // Notices are stored as translation keys, so they follow a language change made on the sign-in page.
   const [notice, setNotice] = useState('');
+  const [signOutError, setSignOutError] = useState(false);
   const [bootError, setBootError] = useState(null);
   const [route, setRoute] = useState(parseHash);
 
@@ -73,6 +75,7 @@ function App() {
       .catch((error) => {
         if (!active) return;
         if (error.status !== 401) setBootError(error);
+        if (error.code === 'session_ended') setNotice('session.ended');
         setSession(null);
       });
     return () => { active = false; };
@@ -111,9 +114,11 @@ function App() {
   async function signOut() {
     try {
       await authApi.logout();
+      setSignOutError(false);
       setNotice('session.signedOut');
     } catch {
-      setNotice('session.signedOutOffline');
+      setSignOutError(true);
+      return;
     }
     setSession(null);
   }
@@ -126,7 +131,7 @@ function App() {
 
   if (session === undefined) return <LoadingScreen />;
   if (!session) {
-    return <Login notice={notice ? t(notice) : ''} bootError={bootError} onSignedIn={(me) => { setNotice(''); setBootError(null); setSession(me); }} />;
+    return <Login notice={notice ? t(notice) : ''} bootError={bootError} onSignedIn={(me) => { setNotice(''); setBootError(null); setSession(me); window.location.hash = '/home'; }} />;
   }
 
   const viewAllowed = Boolean(current) && current.allowed(session);
@@ -178,10 +183,12 @@ function App() {
           <div className="main-topbar">
             <GlobalSearch />
             <div className="topbar-actions">
+              <KeystoneAssistant />
               <NotificationBell session={session} />
               <PreferencesMenu />
             </div>
           </div>
+          {signOutError && <p className="alert" role="alert">{t('session.signOutFailed')} <button type="button" className="btn btn-secondary" onClick={signOut}>{t('nav.signOut')}</button></p>}
           {current && (
             <header className="page-head">
               <div>

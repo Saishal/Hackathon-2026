@@ -2,6 +2,8 @@ import { useEffect, useRef } from 'react';
 import Dialog from './Dialog';
 import Icon from './Icon';
 import { GLOSSARY, TASKS, VIEW_HELP, guideHref, topicFor } from '../help/content';
+import { useSession } from '../session';
+import { isViewAllowed } from '../views';
 import { useHelp } from '../help/context';
 
 // Side drawer opened by the header "?" or any contextual HelpTopic button. Reuses Dialog, so focus
@@ -27,6 +29,7 @@ function TermCard({ id, highlighted }) {
 }
 
 function TaskCard({ id, highlighted }) {
+  const session = useSession();
   const task = TASKS[id];
   if (!task) return null;
   return (
@@ -36,7 +39,7 @@ function TaskCard({ id, highlighted }) {
       {highlighted && <ol className="help-steps">{task.steps.map((step, index) => <li key={index}>{step}</li>)}</ol>}
       <p className="help-links">
         <a href={guideHref(id)}>Read in the guide</a>
-        {task.view && <> · <a href={`#/${task.view}`}>Open the page</a></>}
+        {task.view && isViewAllowed(session, task.view) && <> · <a href={`#/${task.view}`}>Open the page</a></>}
       </p>
     </article>
   );

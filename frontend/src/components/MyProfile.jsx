@@ -20,7 +20,7 @@ const DONE_MESSAGES = {
 
 // The signed-in person's own view: recorded evidence and how far to trust it, what their role asks of
 // them, verified development suggestions, and the status of every change they proposed.
-export default function MyProfile({ onChanged }) {
+export default function MyProfile({ onChanged, section }) {
   const session = useSession();
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
@@ -55,6 +55,14 @@ export default function MyProfile({ onChanged }) {
       setBusy(null);
     }
   }
+
+  useEffect(() => {
+    if (data && section === 'development') {
+      const heading = document.getElementById('profile-development');
+      heading?.scrollIntoView({ block: 'start' });
+      heading?.focus({ preventScroll: true });
+    }
+  }, [data, section]);
 
   if (error && !data) return <ErrorState error={error} onRetry={load} />;
   if (!data) return <div className="panel"><Skeleton lines={8} /></div>;
@@ -190,7 +198,7 @@ export default function MyProfile({ onChanged }) {
       <section className="panel">
         <div className="panel-head">
           <div>
-            <h2>Development suggestions</h2>
+            <h2 id="profile-development" tabIndex={-1}>Development suggestions</h2>
             <p>Drawn only from the verified learning catalogue, for requirements you don't meet on record.</p>
           </div>
         </div>

@@ -18,6 +18,7 @@ function loadConfig(env = process.env) {
     allowedOrigins: origins.map((origin) => origin.trim()).filter(Boolean),
     cookieSecure: env.KEYSTONE_COOKIE_SECURE === 'true' || environment === 'production',
     sessionIdleMinutes: bounded(env.KEYSTONE_SESSION_IDLE_MINUTES, 480, 24 * 60),
+    sessionShortHours: bounded(env.KEYSTONE_SESSION_SHORT_HOURS, 8, 24),
     sessionAbsoluteHours: bounded(env.KEYSTONE_SESSION_ABSOLUTE_HOURS, 24, 24 * 14),
     loginMaxFailures: bounded(env.KEYSTONE_LOGIN_MAX_FAILURES, 5, 100),
     loginWindowMinutes: bounded(env.KEYSTONE_LOGIN_WINDOW_MINUTES, 15, 24 * 60),

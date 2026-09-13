@@ -21,6 +21,7 @@ const { analyze, analyzeEmployees } = require('../services/risk');
 const { simulate } = require('../services/simulation');
 const { summarizeDataQuality, evaluateScenario } = require('../services/data-quality');
 const { buildProfile } = require('../services/profile');
+const { buildSkillMap, heatState } = require('../../shared/skill-map.mjs');
 const { toCsv } = require('../services/csv');
 const { search } = require('../services/search');
 const { buildSuggestions } = require('../services/suggestions');
@@ -388,6 +389,45 @@ module.exports = function governanceRoutes() {
   });
 
   // ---- exports (scoped exactly like the screens they come from) ----
+  router.get('/exports/skill-map.csv', requirePermission('workforce.read.all', 'workforce.read.team'), async (req, res) => {
+    const filters = {
+      department: queryText(req, 'department') ?? 'all',
+      q: queryText(req, 'q') ?? '',
+      minProficiency: queryInt(req, 'minProficiency', { min: 1, max: 5, fallback: 3 }),
+      concentratedOnly: queryEnum(req, 'concentratedOnly', ['true', 'false']) === 'true',
+    };
+    const workforce = await loadWorkforce();
+    const scope = scopeFor(req.user, workforce);
+    const analysis = scopeRisks(scope, analyze(workforce));
+    const map = buildSkillMap(scopeWorkforce(scope, workforce), analysis, filters);
+    const rows = map.edges.map((edge) => {
+      const person = map.employeeById.get(edge.employeeId);
+      const skill = map.skillById.get(edge.skillId);
+      const qualified = map.countAtLeast(skill.id, Math.max(filters.minProficiency, skill.targetProficiency));
+      return {
+        employee_id: person.id, employee_name: person.name, role: person.role, department: person.department,
+        skill_id: skill.id, skill_name: skill.name, skill_category: skill.category,
+        proficiency: edge.proficiency, verified: Boolean(edge.lastVerifiedAt), evidence_source: edge.evidenceSource,
+        last_verified_at: edge.lastVerifiedAt, skill_criticality: skill.criticality,
+        required_holders: skill.requiredHolders, qualified_holders: qualified,
+        dependency_score: map.riskScore(skill.id), risk_level: heatState(qualified, skill.requiredHolders,
+          map.matrix.some((entry) => entry.skillId === skill.id && map.personIds.has(entry.employeeId) && entry.lastVerifiedAt)
+          && map.matrix.filter((entry) => entry.skillId === skill.id && map.personIds.has(entry.employeeId) && entry.proficiency >= Math.max(filters.minProficiency, skill.targetProficiency)).every((entry) => entry.lastVerifiedAt)),
+        coverage_scope: scope.kind === 'team' ? 'visible team' : filters.department === 'all' ? 'organization' : 'selected department',
+        target_scope: 'organization', dependency_score_scope: 'organization',
+      };
+    });
+    if (!rows.length) return res.status(422).json({ code: 'empty_export', error: 'No filtered skill-map rows to export. Try clearing the filters.' });
+    const columns = Object.keys(rows[0]).map((key) => ({ label: key, value: key }));
+    await recordAudit({
+      ...auditContext(req), action: 'export.generated', entityType: 'report', entityId: 'skill-map', entityLabel: 'Skill map',
+      summary: `Skill map exported (${rows.length} rows)`,
+      // Search text may contain personal information: record only whether it was applied.
+      metadata: { rows: rows.length, exportType: 'skill-map', filters: { department: filters.department, minProficiency: filters.minProficiency, concentratedOnly: filters.concentratedOnly, searchApplied: Boolean(filters.q) }, visibility: scope.kind },
+    });
+    res.setHeader('Cache-Control', 'no-store');
+    sendCsv(res, `keystone-skill-map-${today()}.csv`, toCsv(columns, rows));
+  });
   router.get('/exports/risks.csv', requirePermission('export.risks'), async (req, res) => {
     const filter = queryEnum(req, 'filter', ['all', 'at-risk']) ?? 'all';
     const workforce = await loadWorkforce();

@@ -64,13 +64,16 @@ module.exports = function authRoutes({ config, limiter }) {
     }
 
     limiter.reset(email);
-    const session = await createSession(candidate.user.id, config, { userAgent: req.get('User-Agent') });
+    const persistent = req.body.keepSignedIn ?? config.environment === 'demo';
+    // A fresh sign-in replaces the current browser session instead of leaving it usable.
+    if (req.session) await destroySession(req.session.tokenHash);
+    const session = await createSession(candidate.user.id, config, { userAgent: req.get('User-Agent'), persistent });
     await users.recordLogin(candidate.user.id);
     await recordAudit({
       ...ctx, actor: candidate.user, action: 'auth.login', entityType: 'user', entityId: candidate.user.id,
       entityLabel: candidate.user.email, summary: `${candidate.user.displayName} signed in`,
     });
-    res.cookie(SESSION_COOKIE, session.token, cookieOptions(config, config.sessionAbsoluteHours * 3600 * 1000));
+    res.cookie(SESSION_COOKIE, session.token, cookieOptions(config, persistent ? config.sessionAbsoluteHours * 3600 * 1000 : undefined));
     res.json(await mePayload(candidate.user, session));
   });
 

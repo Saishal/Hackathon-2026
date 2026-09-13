@@ -27,6 +27,10 @@ function sessionMiddleware(config) {
       const token = readCookie(req, SESSION_COOKIE);
       if (token) {
         const session = await resolveSession(token, config);
+        if (!session) {
+          _res.clearCookie(SESSION_COOKIE, cookieOptions(config));
+          req.invalidSession = true;
+        }
         if (session) {
           req.user = session.user;
           req.session = session;
@@ -39,7 +43,12 @@ function sessionMiddleware(config) {
   };
 }
 
-const requireAuth = (req, _res, next) => (req.user ? next() : next(unauthenticated()));
+const requireAuth = (req, _res, next) => {
+  if (req.user) return next();
+  const error = unauthenticated();
+  if (req.invalidSession) error.code = 'session_ended';
+  return next(error);
+};
 
 // Passes when the user holds any of the listed permissions (or permission families).
 const requirePermission = (...permissions) => (req, _res, next) => {

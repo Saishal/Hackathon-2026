@@ -2612,3 +2612,34 @@ a.hbar-label:focus-visible { border-radius: 2px; }
   .hbar { grid-template-columns: minmax(80px, 120px) minmax(0, 1fr) 60px; gap: 8px; }
   .topbar-actions { gap: 6px; }
 }
+
+/* Home and the local navigation assistant use the existing theme tokens. */
+.home-workspace { display: grid; gap: 24px; }
+.home-welcome { padding: clamp(24px, 4vw, 48px); }
+.home-welcome h2 { font-size: clamp(24px, 3vw, 34px); margin-bottom: 12px; }
+.home-welcome p { max-width: 65ch; font-size: 17px; line-height: 1.65; color: var(--ink-2); }
+.home-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 16px; }
+.home-card { display: flex; align-items: center; gap: 16px; min-height: 100px; margin: 0; padding: 24px; color: var(--ink); text-decoration: none; }
+.home-card:hover { background: var(--surface-2); border-color: var(--accent); }
+.home-card strong { flex: 1; }
+.home-signals { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+.home-signals h2 { width: 100%; }
+.home-signals > a:not(.btn) { color: var(--ink-2); }
+.home-signals strong { margin-left: 8px; color: var(--ink); }
+.assistant-prompts { display: flex; flex-wrap: wrap; gap: 10px; }
+.assistant-prompts .btn { white-space: normal; text-align: left; min-height: 44px; }
+.assistant-form { display: flex; align-items: end; gap: 12px; margin: 24px 0; }
+.assistant-form .field { flex: 1; min-width: 0; }
+.heat-cell { display: grid; gap: 4px; width: 100%; min-width: 118px; min-height: 64px; border: 1px solid var(--line-strong); border-radius: var(--radius-sm); padding: 10px; cursor: pointer; }
+.heat-state { padding: 4px 8px; border-radius: 4px; }
+.heat-critical { background: var(--danger-soft); color: var(--danger); }
+.heat-at-risk { background: var(--warn-soft); color: var(--warn); }
+.heat-watch { background: var(--accent-soft); color: var(--accent); }
+.heat-healthy { background: var(--ok-soft); color: var(--ok); }
+.heat-unknown { background: var(--surface-3); color: var(--ink-2); }
+.coverage-grid th:first-child { position: sticky; left: 0; z-index: 1; background: var(--surface); min-width: 150px; }
+.coverage-grid { max-width: 100%; }
+@media (max-width: 600px) { .main-topbar, .topbar-actions { flex-wrap: wrap; } .home-signals { align-items: stretch; flex-direction: column; } .assistant-form { flex-wrap: wrap; } }
+
+.skillmap-toolbar .segmented-field { max-width: 100%; min-width: 0; }
+.skillmap-toolbar .segmented-inline { flex-wrap: wrap; }

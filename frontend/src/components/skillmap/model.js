@@ -3,50 +3,13 @@
 // A missing evidence record is unknown, never a zero level.
 
 export const LEVELS = [1, 2, 3, 4, 5];
-export const MAP_MODES = [['network', 'network'], ['matrix', 'matrix'], ['charts', 'pie']];
+export const MAP_MODES = [['network', 'network'], ['matrix', 'matrix'], ['heatmap', 'matrix'], ['charts', 'pie']];
 export const CHART_TYPES = [['coverage', 'pie'], ['qualified', 'hbars'], ['departments', 'stacked'], ['person', 'user'], ['skill', 'bars']];
 export const DENSITIES = ['compact', 'comfortable', 'spacious'];
 
 export const coverageTone = (qualified) => (qualified === 0 ? 'uncovered' : qualified === 1 ? 'single' : 'covered');
 
-export function buildSkillMap(workforce, risks, { department = 'all', minProficiency = 3, concentratedOnly = false } = {}) {
-  const employees = workforce?.employees ?? [];
-  const skills = workforce?.skills ?? [];
-  const matrix = workforce?.matrix ?? [];
-  const roles = workforce?.roles ?? [];
-  const riskById = new Map((risks?.skills ?? []).map((skill) => [skill.id, skill]));
-  const busFactor = (skillId) => riskById.get(skillId)?.busFactor ?? null;
-
-  const departments = [...new Set(employees.map((employee) => employee.department))].sort((a, b) => a.localeCompare(b));
-  const people = employees
-    .filter((employee) => department === 'all' || employee.department === department)
-    .sort((a, b) => a.department.localeCompare(b.department) || a.name.localeCompare(b.name));
-  const shownSkills = skills
-    .filter((skill) => !concentratedOnly || (busFactor(skill.id) ?? 0) <= 1)
-    .sort((a, b) => (busFactor(a.id) ?? 0) - (busFactor(b.id) ?? 0) || a.name.localeCompare(b.name));
-
-  const personIds = new Set(people.map((employee) => employee.id));
-  const skillIds = new Set(shownSkills.map((skill) => skill.id));
-  const edgeByKey = new Map(matrix.map((edge) => [`${edge.employeeId}:${edge.skillId}`, edge]));
-  const edges = matrix.filter((edge) => edge.proficiency >= minProficiency && personIds.has(edge.employeeId) && skillIds.has(edge.skillId));
-
-  return {
-    employees,
-    skills,
-    matrix,
-    roles,
-    departments,
-    people,
-    shownSkills,
-    edges,
-    personIds,
-    busFactor,
-    employeeById: new Map(employees.map((employee) => [employee.id, employee])),
-    skillById: new Map(skills.map((skill) => [skill.id, skill])),
-    edge: (employeeId, skillId) => edgeByKey.get(`${employeeId}:${skillId}`) ?? null,
-    countAtLeast: (skillId, level) => matrix.filter((edge) => edge.skillId === skillId && personIds.has(edge.employeeId) && edge.proficiency >= level).length,
-  };
-}
+export { buildSkillMap } from '../../../../shared/skill-map.mjs';
 
 // Qualified means recorded at or above the skill's own target level.
 export const qualifiedIn = (map, skill) => map.countAtLeast(skill.id, skill.targetProficiency ?? 3);

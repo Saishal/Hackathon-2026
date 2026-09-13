@@ -1,4 +1,4 @@
-import { can } from './components/format';
+import { can } from './components/format.js';
 
 // Every page, the group it belongs to in the navigation, and which roles may open it. This only decides
 // what to show: the server checks the same permissions on every request, whatever the address.
@@ -6,6 +6,8 @@ const readsWorkforce = (session) => can(session, 'workforce.read.all', 'workforc
 const reviews = (session) => can(session, 'changes.review.people', 'changes.review.planning');
 
 export const VIEWS = [
+  { id: 'home', group: 'Workforce', icon: 'overview', label: 'Home',
+    description: 'Your workspace, at your pace.', allowed: () => true },
   { id: 'overview', group: 'Workforce', icon: 'overview', label: 'Overview',
     description: 'Skills that depend on too few people. Scores measure dependency, not who is likely to leave.',
     allowed: (session) => can(session, 'risk.read.org', 'risk.read.team') },

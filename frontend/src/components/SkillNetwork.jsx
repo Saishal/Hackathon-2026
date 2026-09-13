@@ -1,3 +1,5 @@
+import { keystoneApi } from '../api/keystone';
+import HeatMapView from './skillmap/HeatMapView';
 import { useState } from 'react';
 import { useT } from '../preferences/context';
 import { usePersistentState } from '../preferences/usePersistentState';
@@ -46,15 +48,21 @@ export default function SkillNetwork({ workforce, risks, params }) {
   const t = useT();
   const session = useSession();
   const [stored, setStored] = usePersistentState(`keystone.skillmap.${session?.user?.id ?? 'guest'}`, DEFAULTS);
+  const [query, setQuery] = useState(params?.q ?? '');
+  const [modeOverride, setModeOverride] = useState(params?.mode === 'heatmap' ? 'heatmap' : null);
+  const [sort, setSort] = useState('dependency');
+  const [exporting, setExporting] = useState(false);
+  const [exportMessage, setExportMessage] = useState('');
   const [selected, setSelected] = useState(() => initialSelection(params));
 
   if (!workforce) return null;
 
   const departments = [...new Set((workforce.employees ?? []).map((employee) => employee.department))].sort((a, b) => a.localeCompare(b));
-  const settings = sanitize(stored, departments);
-  const update = (patch) => setStored((current) => ({ ...current, ...patch }));
+  const settings = { ...sanitize(stored, departments), q: query, sort };
+  if (modeOverride) settings.mode = modeOverride;
+  const update = (patch) => { if (patch.mode) setModeOverride(null); setStored((current) => ({ ...current, ...patch })); };
   const map = buildSkillMap(workforce, risks, settings);
-  const isDefault = Object.keys(DEFAULTS).every((key) => settings[key] === DEFAULTS[key]);
+  const isDefault = !query && Object.keys(DEFAULTS).every((key) => settings[key] === DEFAULTS[key]);
   // Coverage targets are organization-wide, so they are drawn only when the whole organization is in view.
   const withTargets = settings.department === 'all' && workforce.visibility !== 'team';
 
@@ -62,6 +70,13 @@ export default function SkillNetwork({ workforce, risks, params }) {
   const focusPersonId = selected?.type === 'employee' && map.personIds.has(selected.id) ? selected.id : (map.people[0]?.id ?? null);
   const focusSkillId = selected?.type === 'skill' && map.shownSkills.some((skill) => skill.id === selected.id) ? selected.id : (map.shownSkills[0]?.id ?? null);
   const charting = settings.mode === 'charts';
+
+  async function exportMap() {
+    setExporting(true); setExportMessage('');
+    try { await keystoneApi.exportSkillMap({ department: settings.department, q: query, minProficiency: settings.minProficiency, concentratedOnly: settings.concentratedOnly }); setExportMessage(t('skillmap.exported')); }
+    catch (error) { setExportMessage(error.code === 'empty_export' ? t('skillmap.empty') : t('skillmap.exportFailed')); }
+    finally { setExporting(false); }
+  }
 
   return (
     <>
@@ -77,6 +92,7 @@ export default function SkillNetwork({ workforce, risks, params }) {
           </div>
         </div>
 
+        <label className="field">{t('skillmap.search')}<input type="search" maxLength={200} value={query} onChange={(event) => setQuery(event.target.value)} /></label>
         <label className="field">{t('skillmap.department')}
           <select value={settings.department} onChange={(event) => { update({ department: event.target.value }); setSelected(null); }}>
             <option value="all">{t('skillmap.allDepartments')}</option>
@@ -119,16 +135,19 @@ export default function SkillNetwork({ workforce, risks, params }) {
           {t('skillmap.atRiskOnly')}
         </label>
 
+        {settings.mode === 'heatmap' && <label className="field">{t('heat.sort')}<select value={sort} onChange={(event) => setSort(event.target.value)}>{['dependency', 'name', 'criticality', 'gap'].map((key) => <option key={key} value={key}>{t(`heat.sort.${key}`)}</option>)}</select></label>}
         <div className="toolbar-end">
+          <button type="button" className="btn btn-secondary" disabled={exporting || !map.edges.length} onClick={exportMap}>{t(exporting ? 'skillmap.exporting' : 'skillmap.export')}</button>
           <button type="button" className="btn btn-quiet btn-sm" disabled={isDefault} aria-describedby="skillmap-reset-note"
-            onClick={() => { setStored(DEFAULTS); setSelected(null); }}>
+            onClick={() => { setStored(DEFAULTS); setQuery(''); setModeOverride(null); setSelected(null); }}>
             <Icon name="refresh" size={14} /> {t('skillmap.reset')}
           </button>
           <span id="skillmap-reset-note" className="sr-only">{t('skillmap.resetTitle')}</span>
         </div>
       </div>
 
-      {charting ? (
+      <p role="status" className="muted small">{exportMessage || (!map.edges.length ? t('skillmap.empty') : '')}</p>
+      {settings.mode === 'heatmap' ? <><HeatMapView map={map} settings={settings} onSelect={(id, department) => { update({ department }); setSelected({ type: 'skill', id }); }} /><EvidencePanel map={map} selected={selected} onShowChart={(chart) => update({ mode: 'charts', chart })} /></> : charting ? (
         <ChartsView map={map} settings={settings} withTargets={withTargets} focusPersonId={focusPersonId} focusSkillId={focusSkillId}
           onChart={(chart) => update({ chart })} onToggleTable={() => update({ showTable: !settings.showTable })} />
       ) : (

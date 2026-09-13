@@ -1,23 +1,25 @@
-import { useCallback, useEffect, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import { keystoneApi } from '../api/keystone';
 import { useSession } from '../session';
 import { isViewAllowed } from '../views';
-import ActivityLog from './ActivityLog';
-import AIWorkbench from './AIWorkbench';
-import AuditLog from './AuditLog';
-import DataQuality from './DataQuality';
-import EmployeeDirectory from './EmployeeDirectory';
-import HelpGuide from './HelpGuide';
 import { can } from './format';
-import KeystonePeople from './KeystonePeople';
 import MyProfile from './MyProfile';
 import Overview from './Overview';
-import ReviewQueue from './ReviewQueue';
-import SkillNetwork from './SkillNetwork';
+import Home from './Home';
 import TimeMachine from './TimeMachine';
 import { ErrorState, Skeleton } from './ui';
-import UsersAdmin from './UsersAdmin';
-import WorkforceSnapshot from './WorkforceSnapshot';
+
+const ActivityLog = lazy(() => import('./ActivityLog'));
+const AIWorkbench = lazy(() => import('./AIWorkbench'));
+const AuditLog = lazy(() => import('./AuditLog'));
+const DataQuality = lazy(() => import('./DataQuality'));
+const EmployeeDirectory = lazy(() => import('./EmployeeDirectory'));
+const HelpGuide = lazy(() => import('./HelpGuide'));
+const KeystonePeople = lazy(() => import('./KeystonePeople'));
+const ReviewQueue = lazy(() => import('./ReviewQueue'));
+const SkillNetwork = lazy(() => import('./SkillNetwork'));
+const UsersAdmin = lazy(() => import('./UsersAdmin'));
+const WorkforceSnapshot = lazy(() => import('./WorkforceSnapshot'));
 
 const NEEDS_WORKFORCE = new Set(['overview', 'people', 'network', 'timemachine', 'ai', 'data']);
 
@@ -73,12 +75,13 @@ export default function KeystoneStarter({ view, params }) {
   const schedule = (item) => setInterventions((current) => [...current, item]);
 
   let content;
-  if (view === 'activity') content = <ActivityLog />;
+  if (view === 'home') content = <Home risks={risks} quality={quality} />;
+  else if (view === 'activity') content = <ActivityLog />;
   else if (view === 'help') content = <HelpGuide params={params} />;
   else if (view === 'quality') content = <DataQuality session={session} canOpen={canOpen} onChanged={refreshAll} />;
   else if (view === 'reviews') content = <ReviewQueue workforce={workforce} onChanged={refreshAll} />;
   else if (view === 'audit') content = <AuditLog workforce={workforce} params={params} />;
-  else if (view === 'profile') content = <MyProfile onChanged={refreshAll} />;
+  else if (view === 'profile') content = <MyProfile onChanged={refreshAll} section={params?.section} />;
   else if (view === 'users') content = <UsersAdmin workforce={workforce} onOrganizationChanged={loadWorkforce} />;
   else if (view === 'directory') content = <EmployeeDirectory workforce={workforce} onChanged={refreshAll} />;
   else if (error) content = <ErrorState error={error} onRetry={loadWorkforce} />;
@@ -91,7 +94,7 @@ export default function KeystoneStarter({ view, params }) {
 
   // Following a link to another record on the same page (#/data?tab=people&q=…) remounts the view so it
   // opens on that record.
-  const linkKey = ['data', 'people', 'network', 'audit'].includes(view) ? `${view}?${new URLSearchParams(params)}` : view;
+  const linkKey = ['data', 'people', 'network', 'audit', 'help'].includes(view) ? `${view}?${new URLSearchParams(params)}` : view;
 
   // Time Machine and the AI advisor hold the most user-entered state (a half-built scenario, a plan
   // under review). They live outside the keyed wrapper and are hidden rather than unmounted, so
@@ -99,7 +102,7 @@ export default function KeystoneStarter({ view, params }) {
   const showPersistent = workforce && !error;
   return (
     <>
-      <div className="view" key={linkKey}>{content}</div>
+      <div className="view" key={linkKey}><Suspense fallback={<Skeleton lines={4} />}>{content}</Suspense></div>
       {showPersistent && (
         <div className="view" hidden={view !== 'timemachine'}>
           <TimeMachine workforce={workforce} interventions={interventions} onInterventionsChange={setInterventions} params={params} />
@@ -107,7 +110,7 @@ export default function KeystoneStarter({ view, params }) {
       )}
       {showPersistent && can(session, 'ai.development', 'ai.strategy') && (
         <div className="view" hidden={view !== 'ai'}>
-          <AIWorkbench workforce={workforce} onRequirementsSaved={refreshAll} onSchedule={schedule} />
+          <Suspense fallback={<Skeleton lines={4} />}><AIWorkbench workforce={workforce} onRequirementsSaved={refreshAll} onSchedule={schedule} /></Suspense>
         </div>
       )}
     </>

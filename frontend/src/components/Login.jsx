@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { capsLockState, defaultPersistence } from '../auth/login-state.js';
 import { authApi } from '../api/keystone';
 import { useT } from '../preferences/context';
 import Icon, { KeystoneMark } from './Icon';
@@ -14,6 +15,7 @@ export default function Login({ notice, bootError, onSignedIn }) {
   const [busy, setBusy] = useState(false);
   const [environment, setEnvironment] = useState(null);
   const [capsLock, setCapsLock] = useState(false);
+  const [keepSignedIn, setKeepSignedIn] = useState(null);
 
   useEffect(() => {
     let active = true;
@@ -28,7 +30,7 @@ export default function Login({ notice, bootError, onSignedIn }) {
     setBusy(true);
     setError(null);
     try {
-      onSignedIn(await authApi.login(email, password));
+      onSignedIn(await authApi.login(email, password, keepSignedIn ?? defaultPersistence(environment?.environment)));
     } catch (failure) {
       setError(failure);
       setPassword('');
@@ -37,7 +39,7 @@ export default function Login({ notice, bootError, onSignedIn }) {
   }
 
   // This warning never reads or exposes the password. It only uses the keyboard modifier state.
-  const updateCapsLock = (event) => setCapsLock(Boolean(event.getModifierState?.('CapsLock')));
+  const updateCapsLock = (event) => setCapsLock((previous) => capsLockState(event, previous));
 
   const isDemo = environment?.environment === 'demo';
 
@@ -67,10 +69,12 @@ export default function Login({ notice, bootError, onSignedIn }) {
           <label className="field">{t('login.password')}
             <input type="password" autoComplete="current-password" required value={password} maxLength={200}
               onChange={(event) => { setPassword(event.target.value); updateCapsLock(event); }}
-              onKeyDown={updateCapsLock} onKeyUp={updateCapsLock} onBlur={() => setCapsLock(false)}
+              onFocus={updateCapsLock} onMouseDown={updateCapsLock} onKeyDown={updateCapsLock} onKeyUp={updateCapsLock} onBlur={() => setCapsLock(false)}
               aria-invalid={error?.code === 'invalid_credentials'} aria-describedby={capsLock ? 'caps-lock-warning' : undefined} />
           </label>
-          {capsLock && <p id="caps-lock-warning" className="field-message status-warn" role="status"><Icon name="alert" size={15} /> Caps Lock is on.</p>}
+          {capsLock && <p id="caps-lock-warning" className="field-message status-warn" role="status"><Icon name="alert" size={15} /> {t('login.capsLock')}</p>}
+          <label className="check"><input type="checkbox" checked={keepSignedIn ?? isDemo} onChange={(event) => setKeepSignedIn(event.target.checked)} aria-describedby="remember-note" />{t('login.keepSignedIn')}</label>
+          <p id="remember-note" className="muted small">{t('login.rememberNote')}</p>
           <button className="btn btn-primary btn-block" disabled={busy || !email.trim() || !password}>
             {busy ? t('login.signingIn') : t('login.submit')}
           </button>

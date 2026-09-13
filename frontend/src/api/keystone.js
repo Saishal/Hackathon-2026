@@ -72,7 +72,7 @@ async function download(path) {
 export const authApi = {
   environment: () => request('/auth/environment'),
   me: () => request('/auth/me'),
-  login: (email, password) => post('/auth/login', { email, password }),
+  login: (email, password, keepSignedIn) => post('/auth/login', { email, password, keepSignedIn }),
   logout: () => post('/auth/logout'),
 };
 
@@ -143,6 +143,7 @@ export const keystoneApi = {
   updateUser: (id, fields) => request(`/keystone/users/${id}`, { method: 'PATCH', body: fields }),
   resetPassword: (id, password) => post(`/keystone/users/${id}/reset-password`, { password }),
 
+  exportSkillMap: (filters) => download(`/keystone/exports/skill-map.csv${query(filters)}`),
   exportRisks: (filter) => download(`/keystone/exports/risks.csv${query({ filter })}`),
   exportDataQuality: (filters) => download(`/keystone/exports/data-quality.csv${query(filters)}`),
 };

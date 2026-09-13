@@ -13,6 +13,7 @@ const month = (title) => ({ type: 'integer', minimum: 0, maximum: 60, ...(title 
 const object = (properties, required = [], extra = {}) => ({ type: 'object', additionalProperties: false, properties, required, ...extra });
 
 const login = object({
+  keepSignedIn: { type: 'boolean', title: 'Keep me signed in' },
   email: { type: 'string', minLength: 3, maxLength: 254, title: 'Email' },
   password: { type: 'string', minLength: 1, maxLength: 200, title: 'Password' },
 }, ['email', 'password']);
