@@ -44,6 +44,7 @@ const PATHS = {
   sliders: <><path d="M4 7h9M17 7h3M4 17h3M11 17h9" /><circle cx="15" cy="7" r="2" /><circle cx="9" cy="17" r="2" /></>,
   target: <><circle cx="12" cy="12" r="8.5" /><circle cx="12" cy="12" r="4.5" /><circle cx="12" cy="12" r="0.8" /></>,
   checkAll: <path d="m2.5 12.5 4 4 8-8.5M11 16l.5.5 8-8.5" />,
+  sidebar: <><rect x="3.5" y="4.5" width="17" height="15" rx="2" /><path d="M9.5 4.5v15" /></>,
   launch: <><path d="M13.5 4.5h6v6" /><path d="M19.5 4.5 11 13" /><path d="M17.5 14v5a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 19V8A1.5 1.5 0 0 1 5 6.5h5" /></>,
 };
 

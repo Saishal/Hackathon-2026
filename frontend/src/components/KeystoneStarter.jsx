@@ -103,7 +103,7 @@ export default function KeystoneStarter({ view, params }) {
   return (
     <>
       <div className="view" key={linkKey}><Suspense fallback={<Skeleton lines={4} />}>{content}</Suspense></div>
-      {showPersistent && (
+      {showPersistent && can(session, 'scenario.run') && (
         <div className="view" hidden={view !== 'timemachine'}>
           <TimeMachine workforce={workforce} interventions={interventions} onInterventionsChange={setInterventions} params={params} />
         </div>

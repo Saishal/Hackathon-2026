@@ -55,3 +55,5 @@ Unselected uses a browser-session cookie and an 8-hour maximum by default, cappe
 The password field warns **Caps Lock is on.** when keyboard modifier information is available. Turning it off or leaving the field hides the warning. It never reveals password text; browser automation and some keyboards may not report Caps Lock.
 
 The preferences control remains available before and after sign-in. Home, sign-in additions, heat-map labels and assistant controls support English and Spanish and use the existing light/dark/system theme. The long-form Help Center and curated assistant answers remain English. Notifications and global search remain in the top bar.
+
+On wider screens, the button beside the Keystone logo collapses the sidebar to icons so pages have more room; hover an icon to see the page name, and press the button again to expand. Keystone remembers the choice in this browser.

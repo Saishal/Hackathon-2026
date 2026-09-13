@@ -70,6 +70,8 @@ export default {
   'nav.skip': 'Saltar al contenido',
   'nav.pages': 'Páginas',
   'nav.signOut': 'Cerrar sesión',
+  'nav.collapse': 'Contraer barra lateral',
+  'nav.expand': 'Expandir barra lateral',
   'nav.groups.Workforce': 'Personal',
   'nav.groups.Planning': 'Planificación',
   'nav.groups.Governance': 'Gobierno',

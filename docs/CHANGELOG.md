@@ -1,5 +1,17 @@
 # Keystone changelog
 
+## 2026-09-13 — Collapsible sidebar
+
+Branch: `feature/ux-personalization`.
+
+### Added
+
+- **Collapse sidebar** button beside the Keystone logo (desktop and tablet widths above 900px). The sidebar shrinks to a 68px icon rail so pages get more room, and the content width limit grows from 1240px to 1480px. Page names remain as hover titles and screen-reader labels, and the choice is remembered in this browser (`keystone.sidebarCollapsed`). Phones keep the existing one-line top navigation.
+
+### Fixed
+
+- Time Machine is only mounted for roles with `scenario.run`. Previously it loaded hidden for every role, so each manager and employee sign-in sent two refused `GET /api/keystone/scenarios` requests (403) and logged console errors.
+
 ## 2026-09-13 — Calmer workspace, heat map, export, remember-me and local assistant
 
 Branch: `feature/ux-personalization`.

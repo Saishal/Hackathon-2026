@@ -9,6 +9,7 @@ import NotificationBell from './components/NotificationHub';
 import PreferencesMenu from './components/PreferencesMenu';
 import { ForbiddenState, LoadingScreen } from './components/ui';
 import { useT } from './preferences/context';
+import { usePersistentState } from './preferences/usePersistentState';
 import { SessionContext } from './session';
 import { VIEWS, viewLabel } from './views';
 import { HelpProvider } from './help/HelpContext';
@@ -98,6 +99,9 @@ function App() {
     };
   }, []);
 
+  // Collapsing the sidebar to an icon rail gives every page more width. The choice is remembered in this browser.
+  const [navCollapsed, setNavCollapsed] = usePersistentState('keystone.sidebarCollapsed', false);
+
   const allowed = session ? VIEWS.filter((view) => view.allowed(session)) : [];
   const current = VIEWS.find((view) => view.id === route.id);
   const home = allowed[0];
@@ -141,25 +145,33 @@ function App() {
   return (
     <HelpProvider>
     <SessionContext.Provider value={session}>
-      <div className="app">
+      <div className={navCollapsed ? 'app nav-collapsed' : 'app'}>
         <a className="skip-link" href="#main" onClick={skipToContent}>{t('nav.skip')}</a>
         <aside className="sidebar">
-          <a className="brand" href={home ? `#/${home.id}` : '#/'}>
-            <KeystoneMark />
-            <span>
-              <strong>Keystone</strong>
-              <small>{session.organization.name}</small>
-            </span>
-          </a>
-          <nav aria-label={t('nav.pages')}>
+          <div className="sidebar-head">
+            <a className="brand" href={home ? `#/${home.id}` : '#/'} title={navCollapsed ? 'Keystone' : undefined}>
+              <KeystoneMark />
+              <span>
+                <strong>Keystone</strong>
+                <small>{session.organization.name}</small>
+              </span>
+            </a>
+            <button type="button" className="btn-icon sidebar-toggle" onClick={() => setNavCollapsed((collapsed) => !collapsed)}
+              aria-controls="app-nav" aria-expanded={!navCollapsed}
+              aria-label={t(navCollapsed ? 'nav.expand' : 'nav.collapse')} title={t(navCollapsed ? 'nav.expand' : 'nav.collapse')}>
+              <Icon name="sidebar" size={18} />
+            </button>
+          </div>
+          <nav id="app-nav" aria-label={t('nav.pages')}>
             {groups.map((group) => (
               <div className="nav-section" key={group}>
                 <p className="nav-group" id={`nav-${group}`}>{t(`nav.groups.${group}`, { defaultValue: group })}</p>
                 <ul aria-labelledby={`nav-${group}`}>
                   {allowed.filter((view) => view.group === group).map((view) => (
                     <li key={view.id}>
-                      <a className="nav-link" href={`#/${view.id}`} aria-current={route.id === view.id ? 'page' : undefined}>
-                        <Icon name={view.icon} /> {viewText(view, session, t).label}
+                      <a className="nav-link" href={`#/${view.id}`} aria-current={route.id === view.id ? 'page' : undefined}
+                        title={navCollapsed ? viewText(view, session, t).label : undefined}>
+                        <Icon name={view.icon} /> <span className="nav-label">{viewText(view, session, t).label}</span>
                       </a>
                     </li>
                   ))}

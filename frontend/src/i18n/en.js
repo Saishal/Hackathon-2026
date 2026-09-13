@@ -71,6 +71,8 @@ export default {
   'nav.skip': 'Skip to content',
   'nav.pages': 'Pages',
   'nav.signOut': 'Sign out',
+  'nav.collapse': 'Collapse sidebar',
+  'nav.expand': 'Expand sidebar',
   'nav.groups.Workforce': 'Workforce',
   'nav.groups.Planning': 'Planning',
   'nav.groups.Governance': 'Governance',

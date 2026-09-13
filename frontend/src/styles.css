@@ -2643,3 +2643,42 @@ a.hbar-label:focus-visible { border-radius: 2px; }
 
 .skillmap-toolbar .segmented-field { max-width: 100%; min-width: 0; }
 .skillmap-toolbar .segmented-inline { flex-wrap: wrap; }
+
+/* ---------- collapsible sidebar ---------- */
+
+.app { transition: grid-template-columns 180ms var(--ease-out); }
+.sidebar-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+
+@media (hover: hover) and (pointer: fine) {
+  .sidebar-toggle:hover { background: var(--surface-2, var(--accent-soft)); color: var(--ink); }
+}
+
+/* On narrow screens the sidebar is already a one-line top bar, so there is nothing to collapse. */
+@media (max-width: 900px) {
+  .sidebar-toggle { display: none; }
+}
+
+/* Collapsed: an icon rail. Page names stay available to screen readers and as hover titles. */
+@media (min-width: 901px) {
+  .app.nav-collapsed { grid-template-columns: 68px minmax(0, 1fr); }
+  .nav-collapsed .sidebar { padding: 18px 10px; overflow-y: auto; scrollbar-width: none; }
+  .nav-collapsed .sidebar-head { flex-direction: column; gap: 10px; }
+  .nav-collapsed .brand { padding: 4px; }
+  .nav-collapsed .brand > span,
+  .nav-collapsed .nav-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .nav-collapsed .nav-group,
+  .nav-collapsed .user-meta,
+  .nav-collapsed .sidebar-note { display: none; }
+  .nav-collapsed .sidebar nav { gap: 6px; }
+  .nav-collapsed .nav-section + .nav-section { padding-top: 6px; border-top: 1px solid var(--line); }
+  .nav-collapsed .nav-link { justify-content: center; padding: 9px; }
+  .nav-collapsed .user-card { flex-direction: column; gap: 8px; padding: 12px 0 2px; }
+  .app.nav-collapsed .main > * { max-width: 1480px; }
+}
