@@ -14,7 +14,7 @@ Find your keystones before they walk out the door.
 
 - **Code:** https://github.com/Saishal/Hackathon-2026
 - **Try it:** the README's "Setup" section runs it locally in two commands per package (`npm ci` then `npm start` for the backend, `npm ci` then `npm run dev` for the frontend). Demo accounts are in the README; the password is set in `backend/.env` (never on Devpost).
-- **Video:** record 2–3 minutes following `docs/PRESENTATION.md` §4 (the live demo script), upload to YouTube as *Unlisted*, paste the link in Devpost's "Video demo link" field.
+- **Video:** follow `docs/VIDEO-GUIDE.md` (a timed 2:45 script with setup, shot list, editing and upload), upload to YouTube as *Unlisted*, paste the link in Devpost's "Video demo link" field.
 
 ## Built with (tags)
 
