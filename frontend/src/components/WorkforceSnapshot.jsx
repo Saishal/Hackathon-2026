@@ -5,6 +5,7 @@ import Dialog from './Dialog';
 import EvidenceChangeDialog from './EvidenceChangeDialog';
 import { can, fieldMessages, formatDate } from './format';
 import Icon from './Icon';
+import HelpTopic from './HelpTopic';
 import Provenance from './Provenance';
 import TrustLegend from './TrustLegend';
 import { FieldError, FormError } from './ui';
@@ -261,7 +262,7 @@ export default function WorkforceSnapshot({ workforce, quality, params = {}, onC
             <p className="tab-note">People needed is how many people should be qualified. The hiring target is tracked separately, so a skill can need coverage without any hiring.</p>
             {shownSkills.length === 0 ? noMatch('skills') : <div className="table-wrap flush">
               <table>
-                <thead><tr><th scope="col">Skill</th><th scope="col" className="num">Criticality</th><th scope="col" className="num">Target level</th><th scope="col" className="num">People needed</th><th scope="col" className="num">Hiring target</th><th scope="col">Source</th></tr></thead>
+                <thead><tr><th scope="col">Skill</th><th scope="col" className="num">Criticality</th><th scope="col" className="num">Target level</th><th scope="col" className="num">People needed <HelpTopic id="coverage-target" /></th><th scope="col" className="num">Hiring target</th><th scope="col">Source</th></tr></thead>
                 <tbody>
                   {shownSkills.map((skill) => (
                     <tr key={skill.id}>

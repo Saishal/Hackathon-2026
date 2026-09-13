@@ -3,6 +3,7 @@ import { keystoneApi } from '../api/keystone';
 import { useSession } from '../session';
 import { can, plural } from './format';
 import Icon from './Icon';
+import HelpTopic from './HelpTopic';
 
 const labels = { training: 'Training', mentoring: 'Mentoring', certification: 'Certification', job_rotation: 'Job rotation', project_experience: 'Project experience' };
 const editableRequirements = (requirements) => requirements.map(({ requirementId: _id, coverage: _coverage, ...requirement }) => requirement);
@@ -154,7 +155,7 @@ export default function AIWorkbench({ workforce, onRequirementsSaved, onSchedule
     {canPlan && <section className="panel">
       <div className="panel-head">
         <div>
-          <h2>Develop a skill</h2>
+          <h2>Develop a skill <HelpTopic id="evidence-trust" /></h2>
           <p>Get a draft plan that covers training, mentoring, certification, job rotation and project work. Without an AI key, Keystone uses labeled demo rules.</p>
         </div>
       </div>
@@ -218,7 +219,7 @@ export default function AIWorkbench({ workforce, onRequirementsSaved, onSchedule
     {canStrategy && <section className="panel">
       <div className="panel-head">
         <div>
-          <h2>Plan for future skills</h2>
+          <h2>Plan for future skills <HelpTopic id="future-requirement" /></h2>
           <p>
             Describe where the business is heading. Keystone proposes the skills you will need, and nothing is saved until you review it.
             {!saveDirectly && canPropose ? ' Reviewed requirements go to an admin for approval.' : ''}

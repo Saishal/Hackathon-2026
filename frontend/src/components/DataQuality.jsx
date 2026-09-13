@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { keystoneApi } from '../api/keystone';
 import Dialog from './Dialog';
 import Icon from './Icon';
+import HelpTopic from './HelpTopic';
 import TrustLegend from './TrustLegend';
 import { can, fieldMessages, formatDateTime, hrefForLink, plural } from './format';
 import { EmptyState, ErrorState, FieldError, FormError, SeverityTag, Skeleton, StatusTag } from './ui';
@@ -99,7 +100,7 @@ export default function DataQuality({ session, canOpen, onChanged }) {
   return <>
     <section className="panel quality-summary" aria-label="Data health summary">
       <div className="quality-score">
-        <p className="stat-label">Data health</p>
+        <p className="stat-label">Data health <HelpTopic id="data-quality-health" /></p>
         <p className="stat-value">{summary.score}<span className="stat-unit">/100</span></p>
         <span className={`tag ${healthTone}`}>{healthLabel}</span>
       </div>

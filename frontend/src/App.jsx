@@ -8,6 +8,35 @@ import Login from './components/Login';
 import { ForbiddenState, LoadingScreen } from './components/ui';
 import { SessionContext } from './session';
 import { VIEWS, viewLabel } from './views';
+import { HelpProvider } from './help/HelpContext';
+import { useHelp } from './help/context';
+import HelpDrawer from './components/HelpDrawer';
+
+// Header "?" button. A real button, so it is reachable by keyboard and named for screen readers.
+function HelpButton() {
+  const { open } = useHelp();
+  return (
+    <button type="button" className="btn btn-secondary btn-help" onClick={() => open()} aria-haspopup="dialog" title="Help for this page (or press ?)">
+      <Icon name="question" size={16} /> Help
+    </button>
+  );
+}
+
+// "?" opens help from anywhere except inside a text field, where the character is being typed.
+function HelpShortcut() {
+  const { toggle } = useHelp();
+  useEffect(() => {
+    const onKey = (event) => {
+      if (event.key !== '?' || event.ctrlKey || event.metaKey || event.altKey) return;
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(event.target.tagName) || event.target.isContentEditable) return;
+      event.preventDefault();
+      toggle();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [toggle]);
+  return null;
+}
 
 // App shell: session bootstrap, role-aware navigation and hash routes (#/people, #/data?tab=evidence).
 function parseHash() {
@@ -88,6 +117,7 @@ function App() {
   const groups = [...new Set(allowed.map((view) => view.group))];
 
   return (
+    <HelpProvider>
     <SessionContext.Provider value={session}>
       <div className="app">
         <a className="skip-link" href="#main" onClick={skipToContent}>Skip to content</a>
@@ -134,9 +164,12 @@ function App() {
                 <h1>{viewLabel(current, session)}</h1>
                 <p>{current.description}</p>
               </div>
-              {session.organization.environment === 'demo' && (
-                <span className="tag tag-warn"><Icon name="info" size={14} /> Demo environment · fictional data</span>
-              )}
+              <div className="page-head-actions">
+                {session.organization.environment === 'demo' && (
+                  <span className="tag tag-warn"><Icon name="info" size={14} /> Demo environment · fictional data</span>
+                )}
+                <HelpButton />
+              </div>
             </header>
           )}
           {current && (viewAllowed
@@ -144,7 +177,10 @@ function App() {
             : <ForbiddenState roleLabel={session.user.roleLabel} homeHref={home ? `#/${home.id}` : null} />)}
         </main>
       </div>
+      <HelpShortcut />
+      <HelpDrawer view={current?.id} />
     </SessionContext.Provider>
+    </HelpProvider>
   );
 }
 

@@ -42,6 +42,9 @@ export const VIEWS = [
   { id: 'profile', group: 'You', icon: 'user', label: 'My profile',
     description: 'Your recorded skills, what your role asks of you, and the changes you have proposed.',
     allowed: (session) => session.user.employeeId !== null },
+  { id: 'help', group: 'You', icon: 'question', label: 'How Keystone works',
+    description: 'Every term and every task, explained in plain language. Press ? on any page for help in place.',
+    allowed: () => true },
 ];
 
 export const viewLabel = (view, session) => (typeof view.label === 'function' ? view.label(session) : view.label);

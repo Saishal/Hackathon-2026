@@ -1547,3 +1547,136 @@ body.has-dialog { overflow: hidden; }
     transition-duration: 1ms !important;
   }
 }
+
+/* ============================================================
+   Help: contextual "?" buttons, the drawer, and the #/help guide
+   ============================================================ */
+
+.page-head-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.btn-help { white-space: nowrap; }
+
+/* Contextual help beside a metric, heading or form label. Sized to sit inside a line of text. */
+.help-topic {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  margin-left: 4px;
+  padding: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--ink-2);
+  vertical-align: middle;
+  cursor: pointer;
+  transition: color 120ms var(--ease-out), border-color 120ms var(--ease-out), background 120ms var(--ease-out);
+}
+.help-topic:hover,
+.help-topic:focus-visible {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.help-topic:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+h1 .help-topic, h2 .help-topic { width: 22px; height: 22px; }
+th .help-topic { margin-left: 2px; }
+
+/* Inline text link that opens help, for sentences inside dialogs and notes. */
+.help-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+.help-link:focus-visible { outline: none; box-shadow: var(--focus-ring); border-radius: 2px; }
+
+/* Drawer content */
+.help-drawer { display: grid; gap: 18px; }
+.help-drawer h3 {
+  margin: 0 0 8px;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.help-card {
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+}
+.help-card h4 { margin: 0 0 4px; font-size: 14.5px; }
+.help-card p { margin: 0 0 8px; color: var(--ink-2); font-size: 13.5px; line-height: 1.55; }
+.help-card p:last-child { margin-bottom: 0; }
+.help-card-current {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.help-short { color: var(--ink) !important; }
+.help-links { font-size: 12.5px; color: var(--ink-3); }
+.help-links a { color: var(--accent); }
+.help-steps { margin: 6px 0 8px; padding-left: 20px; display: grid; gap: 6px; color: var(--ink-2); font-size: 13.5px; line-height: 1.5; }
+.help-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 0; width: 100%; }
+.help-foot kbd {
+  display: inline-block;
+  padding: 1px 6px;
+  border: 1px solid var(--line-strong);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: var(--surface-2);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+}
+
+/* Guide page: sticky contents on the left, entries on the right; stacks on narrow screens. */
+.help-guide {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+.help-guide-nav { position: sticky; top: 16px; }
+.help-guide-nav h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-3); margin: 0 0 8px; }
+.help-guide-nav ol { margin: 0; padding-left: 18px; display: grid; gap: 4px; font-size: 13.5px; }
+.help-guide-nav ul { margin: 4px 0 0; padding-left: 14px; display: grid; gap: 2px; font-size: 12.5px; color: var(--ink-2); }
+.help-guide-nav a { color: inherit; text-decoration: none; }
+.help-guide-nav a:hover { color: var(--accent); }
+.help-guide-body { display: grid; gap: 20px; min-width: 0; }
+.help-entry {
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+  scroll-margin-top: 24px;
+}
+.help-entry:first-of-type { border-top: 0; padding-top: 4px; }
+.help-entry h3 { margin: 0 0 6px; font-size: 16px; }
+.help-entry p { color: var(--ink-2); line-height: 1.6; margin: 0 0 8px; }
+.help-entry:focus { outline: none; }
+.help-entry-current {
+  margin: 0 -14px;
+  padding-left: 14px;
+  padding-right: 14px;
+  border-left: 3px solid var(--accent);
+  background: var(--accent-soft);
+  border-radius: var(--radius-sm);
+}
+.help-pages { margin: 0; display: grid; gap: 10px; }
+.help-pages dt a { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; color: var(--ink); text-decoration: none; }
+.help-pages dt a:hover { color: var(--accent); }
+.help-pages dd { margin: 2px 0 0; color: var(--ink-2); font-size: 13.5px; }
+.tabs-intro { margin: 0 0 6px; }
+@media (max-width: 860px) {
+  .help-guide { grid-template-columns: 1fr; }
+  .help-guide-nav { position: static; }
+}

@@ -3,6 +3,7 @@ import { keystoneApi } from '../api/keystone';
 import { useSession } from '../session';
 import { can, formatDate, plural } from './format';
 import Icon from './Icon';
+import HelpTopic from './HelpTopic';
 import { ErrorState, ScoreMeter, Skeleton } from './ui';
 
 const readiness = {
@@ -61,7 +62,7 @@ export default function KeystonePeople({ quality, params = {} }) {
         <div>
           <h2>{plural(soleHolders, 'person', 'people')} {soleHolders === 1 ? 'is' : 'are'} the only qualified holder of a skill</h2>
           <p>
-            Ranked by dependency score. Open a row to see which skills are affected and who could step in.
+            Ranked by dependency score <HelpTopic id="keystone-score" />. Open a row to see which skills are affected and who could step in.
             {data.visibility === 'team' ? ' Scores use the whole organization; people outside your team are not named.' : ''}
           </p>
         </div>
@@ -102,7 +103,7 @@ export default function KeystonePeople({ quality, params = {} }) {
                 {open && (
                   <div className="person-detail" id={`person-${employee.id}`}>
                     <div>
-                      <h3>If {firstName(employee.name)} were away</h3>
+                      <h3>If {firstName(employee.name)} were away <HelpTopic id="succession-readiness" /></h3>
                       <ul className="detail-list">
                         {employee.affectedSkills.map((skill) => (
                           <li key={skill.id}>

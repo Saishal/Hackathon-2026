@@ -6,6 +6,7 @@ import ActivityLog from './ActivityLog';
 import AIWorkbench from './AIWorkbench';
 import AuditLog from './AuditLog';
 import DataQuality from './DataQuality';
+import HelpGuide from './HelpGuide';
 import { can } from './format';
 import KeystonePeople from './KeystonePeople';
 import MyProfile from './MyProfile';
@@ -72,6 +73,7 @@ export default function KeystoneStarter({ view, params }) {
 
   let content;
   if (view === 'activity') content = <ActivityLog />;
+  else if (view === 'help') content = <HelpGuide params={params} />;
   else if (view === 'quality') content = <DataQuality session={session} canOpen={canOpen} onChanged={refreshAll} />;
   else if (view === 'reviews') content = <ReviewQueue workforce={workforce} onChanged={refreshAll} />;
   else if (view === 'audit') content = <AuditLog workforce={workforce} />;
@@ -82,13 +84,30 @@ export default function KeystoneStarter({ view, params }) {
   else if (view === 'overview') content = <Overview risks={risks} quality={quality} organization={organization} onChanged={refreshAll} />;
   else if (view === 'people') content = <KeystonePeople quality={quality} params={params} />;
   else if (view === 'network') content = <SkillNetwork workforce={workforce} risks={risks} params={params} />;
-  else if (view === 'timemachine') {
-    content = <TimeMachine workforce={workforce} interventions={interventions} onInterventionsChange={setInterventions} params={params} />;
-  } else if (view === 'ai') content = <AIWorkbench workforce={workforce} onRequirementsSaved={refreshAll} onSchedule={schedule} />;
+  else if (view === 'timemachine' || view === 'ai') content = null; // rendered below, outside the keyed wrapper
   else if (view === 'data') content = <WorkforceSnapshot workforce={workforce} quality={quality} params={params} onChanged={refreshAll} />;
 
   // Following a link to another record on the same page (#/data?tab=people&q=…) remounts the view so it
   // opens on that record.
   const linkKey = ['data', 'people', 'network'].includes(view) ? `${view}?${new URLSearchParams(params)}` : view;
-  return <div className="view" key={linkKey}>{content}</div>;
+
+  // Time Machine and the AI advisor hold the most user-entered state (a half-built scenario, a plan
+  // under review). They live outside the keyed wrapper and are hidden rather than unmounted, so
+  // visiting another page and coming back finds everything exactly as it was left.
+  const showPersistent = workforce && !error;
+  return (
+    <>
+      <div className="view" key={linkKey}>{content}</div>
+      {showPersistent && (
+        <div className="view" hidden={view !== 'timemachine'}>
+          <TimeMachine workforce={workforce} interventions={interventions} onInterventionsChange={setInterventions} params={params} />
+        </div>
+      )}
+      {showPersistent && can(session, 'ai.development', 'ai.strategy') && (
+        <div className="view" hidden={view !== 'ai'}>
+          <AIWorkbench workforce={workforce} onRequirementsSaved={refreshAll} onSchedule={schedule} />
+        </div>
+      )}
+    </>
+  );
 }

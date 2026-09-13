@@ -1,4 +1,5 @@
 import Icon from './Icon';
+import { guideHref } from '../help/content';
 
 // The five ways Keystone labels how far to trust a value. Used wherever those labels appear.
 const ITEMS = [
@@ -21,6 +22,7 @@ export default function TrustLegend() {
           </div>
         ))}
       </dl>
+      <p className="help-links">In the guide: <a href={guideHref('evidence-trust')}>qualified versus unverified evidence</a> · <a href={guideHref('unknown-vs-unmet')}>unknown versus unmet requirement</a></p>
     </details>
   );
 }

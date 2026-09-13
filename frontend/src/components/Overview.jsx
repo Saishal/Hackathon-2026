@@ -3,6 +3,7 @@ import { keystoneApi } from '../api/keystone';
 import { useSession } from '../session';
 import { can, formatDate, plural, relativeTime } from './format';
 import Icon from './Icon';
+import HelpTopic from './HelpTopic';
 import RecentActivity from './RecentActivity';
 import RiskAcknowledgeDialog from './RiskAcknowledgeDialog';
 import { Coverage, FormError, ScoreMeter, Skeleton } from './ui';
@@ -141,12 +142,12 @@ export default function Overview({ risks, quality, organization, onChanged }) {
 
       <section className="stat-strip" aria-label="Summary">
         <div className="stat">
-          <p className="stat-label">No one qualified</p>
+          <p className="stat-label">No one qualified <HelpTopic id="coverage-target" /></p>
           <p className={`stat-value ${risks.uncovered > 0 ? 'text-danger' : ''}`}>{risks.uncovered}</p>
           <p className="stat-note">{risks.uncovered === 1 ? 'skill' : 'skills'} with nobody at the target level</p>
         </div>
         <div className="stat">
-          <p className="stat-label">Covered by one person</p>
+          <p className="stat-label">Covered by one person <HelpTopic id="bus-factor" /></p>
           <p className={`stat-value ${risks.singleHolder > 0 ? 'text-warn' : ''}`}>{risks.singleHolder}</p>
           <p className="stat-note">{risks.singleHolder === 1 ? 'skill' : 'skills'} with a single qualified person</p>
         </div>
@@ -156,7 +157,7 @@ export default function Overview({ risks, quality, organization, onChanged }) {
           <p className="stat-note">in the workforce inventory</p>
         </div>
         <div className="stat">
-          <p className="stat-label">Highest dependency</p>
+          <p className="stat-label">Highest dependency <HelpTopic id="keystone-score" /></p>
           <p className="stat-value">{top ? <>{top.keystoneScore}<span className="stat-unit">/100</span></> : '—'}</p>
           <p className="stat-note">{top?.name ?? 'No skills recorded'}</p>
         </div>
@@ -188,7 +189,7 @@ export default function Overview({ risks, quality, organization, onChanged }) {
             <section className="panel panel-flush">
               <div className="panel-head">
                 <div>
-                  <h2>Acknowledged risks</h2>
+                  <h2>Acknowledged risks <HelpTopic id="risk-acknowledgement" /></h2>
                   <p>Known risks with an owner and a review date. They still count in every score above.</p>
                 </div>
               </div>

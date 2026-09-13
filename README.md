@@ -29,6 +29,8 @@ Keystone now starts at a sign-in screen. In the default `demo` environment, use 
 | `manager@keystone.demo` | Manager | Team-scoped workforce and risk insights |
 | `employee@keystone.demo` | Employee | Personal profile and evidence submissions |
 
+In the app, press **?** on any page (or the Help button) for an explanation of that screen, and open **How Keystone works** in the sidebar for the full glossary and step-by-step guides. Every metric with a small ? beside it opens help for that term.
+
 See [enterprise governance](docs/ENTERPRISE-GOVERNANCE.md) for sessions, permissions, review workflow, data-quality rules, migrations and security assumptions. The API base remains `http://localhost:4000`; use `VITE_API_BASE_URL` in `frontend/.env.local` only when the frontend must call a different backend.
 
 Optional environment: backend `PORT`, `DB_PATH`, `KEYSTONE_SEED_DIR`, `KEYSTONE_ALERT_WEBHOOK_URL` (POSTs every 5xx to a Discord or Slack webhook; see `docs/API.md`); frontend `VITE_API_BASE_URL` in `frontend/.env.local`. A fresh database is seeded from the CSV files in [`backend/data/demo/`](backend/data/demo/README.md): 44 fictional employees across 21 roles, 22 skills and a 16-entry learning catalogue, including Legacy Billing Recovery (Liam Chen expert, Mason Green learner). Existing DBs are preserved; after editing a CSV, stop the backend and run `npm run seed:reset --prefix backend`. No API credentials are needed for the starter.

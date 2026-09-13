@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { keystoneApi } from '../api/keystone';
 import Dialog from './Dialog';
+import { HelpLink } from './HelpTopic';
 import { addDays, fieldMessages, localToday } from './format';
 import { FieldError, FormError } from './ui';
 
@@ -58,7 +59,7 @@ export default function RiskAcknowledgeDialog({ risk, existing, onClose, onSaved
   return (
     <Dialog
       title={existing ? 'Update risk ownership' : 'Assign a risk owner'}
-      description={`${risk.name}. The dependency score stays exactly as calculated.`}
+      description={<>{risk.name}. The dependency score stays exactly as calculated. <HelpLink id="assign-risk-owner">How this works</HelpLink></>}
       onClose={onClose}
       footer={<>
         {existing && (

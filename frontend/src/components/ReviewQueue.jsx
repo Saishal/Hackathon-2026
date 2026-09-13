@@ -4,6 +4,7 @@ import { useSession } from '../session';
 import Dialog from './Dialog';
 import Diff from './Diff';
 import Icon from './Icon';
+import HelpTopic from './HelpTopic';
 import { CHANGE_TYPE_LABELS, ROLE_NAMES, can, fieldMessages, formatDateTime, plural, relativeTime } from './format';
 import { EmptyState, ErrorState, FieldError, FormError, Skeleton, StatusTag } from './ui';
 
@@ -178,6 +179,7 @@ export default function ReviewQueue({ workforce, onChanged }) {
       <FormError error={actionError} />
 
       <section className="panel panel-flush">
+        <p className="tabs-intro muted small">Proposed changes affect official data only after approval <HelpTopic id="pending-vs-approved" /></p>
         <div className="tabs" role="tablist" aria-label="Change requests">
           {tabs.map(([id, label, list]) => (
             <button key={id} type="button" role="tab" className="tab" aria-selected={tab === id} onClick={() => setTab(id)}>
