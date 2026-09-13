@@ -13,6 +13,7 @@ export default function Login({ notice, bootError, onSignedIn }) {
   const [error, setError] = useState(bootError ?? null);
   const [busy, setBusy] = useState(false);
   const [environment, setEnvironment] = useState(null);
+  const [capsLock, setCapsLock] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -34,6 +35,9 @@ export default function Login({ notice, bootError, onSignedIn }) {
       setBusy(false);
     }
   }
+
+  // This warning never reads or exposes the password. It only uses the keyboard modifier state.
+  const updateCapsLock = (event) => setCapsLock(Boolean(event.getModifierState?.('CapsLock')));
 
   const isDemo = environment?.environment === 'demo';
 
@@ -62,8 +66,11 @@ export default function Login({ notice, bootError, onSignedIn }) {
           </label>
           <label className="field">{t('login.password')}
             <input type="password" autoComplete="current-password" required value={password} maxLength={200}
-              onChange={(event) => setPassword(event.target.value)} aria-invalid={error?.code === 'invalid_credentials'} />
+              onChange={(event) => { setPassword(event.target.value); updateCapsLock(event); }}
+              onKeyDown={updateCapsLock} onKeyUp={updateCapsLock} onBlur={() => setCapsLock(false)}
+              aria-invalid={error?.code === 'invalid_credentials'} aria-describedby={capsLock ? 'caps-lock-warning' : undefined} />
           </label>
+          {capsLock && <p id="caps-lock-warning" className="field-message status-warn" role="status"><Icon name="alert" size={15} /> Caps Lock is on.</p>}
           <button className="btn btn-primary btn-block" disabled={busy || !email.trim() || !password}>
             {busy ? t('login.signingIn') : t('login.submit')}
           </button>

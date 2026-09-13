@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Icon from './Icon';
 import { GLOSSARY, TASKS, VIEW_HELP, guideHref } from '../help/content';
 import { VIEWS, viewLabel } from '../views';
@@ -10,6 +10,11 @@ import { useSession } from '../session';
 export default function HelpGuide({ params }) {
   const session = useSession();
   const topic = params?.topic ?? null;
+  const [query, setQuery] = useState('');
+  const needle = query.trim().toLowerCase();
+  const matches = (value) => !needle || value.toLowerCase().includes(needle);
+  const terms = Object.entries(GLOSSARY).filter(([, entry]) => matches([entry.term, entry.short, ...entry.long, ...entry.related].join(' ')));
+  const tasks = Object.entries(TASKS).filter(([, entry]) => matches([entry.title, entry.intro, ...entry.steps, ...entry.related].join(' ')));
 
   useEffect(() => {
     if (!topic) return;
@@ -39,6 +44,12 @@ export default function HelpGuide({ params }) {
       </nav>
 
       <div className="help-guide-body">
+        <section className="panel" aria-label="Search help">
+          <label className="field">Search help topics
+            <input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search help topics" />
+          </label>
+          {needle && <p className="muted small">{terms.length + tasks.length} matching topic{terms.length + tasks.length === 1 ? '' : 's'}{terms.length + tasks.length === 0 && <>. <button className="btn-link" type="button" onClick={() => setQuery('')}>Clear search</button></>}</p>}
+        </section>
         <section className="panel" id="guide-what" aria-labelledby="guide-what-h">
           <h2 id="guide-what-h">What Keystone is for</h2>
           <p>Keystone answers one question: <strong>if this person were away tomorrow, what would break?</strong> It finds skills that depend on too few people, ranks them, shows who could step in, and lets you test a plan before committing to it.</p>
@@ -47,7 +58,7 @@ export default function HelpGuide({ params }) {
 
         <section className="panel" id="guide-terms" aria-labelledby="guide-terms-h">
           <h2 id="guide-terms-h">Terms</h2>
-          {Object.entries(GLOSSARY).map(([id, entry]) => (
+          {terms.map(([id, entry]) => (
             <article key={id} id={`guide-${id}`} tabIndex={-1} className={`help-entry ${topic === id ? 'help-entry-current' : ''}`}>
               <h3>{entry.term}</h3>
               <p className="help-short">{entry.short}</p>
@@ -63,7 +74,7 @@ export default function HelpGuide({ params }) {
 
         <section className="panel" id="guide-tasks" aria-labelledby="guide-tasks-h">
           <h2 id="guide-tasks-h">How to</h2>
-          {Object.entries(TASKS).map(([id, task]) => (
+          {tasks.map(([id, task]) => (
             <article key={id} id={`guide-${id}`} tabIndex={-1} className={`help-entry ${topic === id ? 'help-entry-current' : ''}`}>
               <h3>{task.title}</h3>
               <p className="help-short">{task.intro}</p>
