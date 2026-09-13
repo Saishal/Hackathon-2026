@@ -1,33 +1,38 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
+import { useT } from '../preferences/context';
+import { usePersistentState } from '../preferences/usePersistentState';
+import { useSession } from '../session';
+import Icon from './Icon';
+import ChartsView from './skillmap/ChartsView';
+import EvidencePanel from './skillmap/EvidencePanel';
+import MatrixView from './skillmap/MatrixView';
+import NetworkView from './skillmap/NetworkView';
+import { CHART_TYPES, DENSITIES, LEVELS, MAP_MODES, buildSkillMap } from './skillmap/model';
 
-// Skill map: people on the left, skills on the right, one line per recorded level at or above the
-// chosen minimum. A missing line means no evidence on record, which is unknown rather than proof
-// that the person lacks the skill.
-const ROW = 20;
-const TOP = 24;
-const LEFT_X = 190;
-const RIGHT_X = 560;
-const WIDTH = 820;
-const DASH = '—';
+// Skill map: one filter row scopes three ways of looking at the same evidence - a network, a people × skills
+// matrix and a set of charts. Each person's choice of view, chart and filters is remembered in this browser.
+const DEFAULTS = {
+  mode: 'network',
+  chart: 'coverage',
+  department: 'all',
+  minProficiency: 3,
+  concentratedOnly: false,
+  density: 'comfortable',
+  showTable: false,
+};
 
-const toneFor = (busFactor) => (busFactor === 0 ? 'uncovered' : busFactor === 1 ? 'single' : 'covered');
+const oneOf = (value, options, fallback) => (options.includes(value) ? value : fallback);
 
-function EvidenceList({ rows }) {
-  if (rows.length === 0) {
-    return <p className="muted">No evidence on record. That means unknown, not absent.</p>;
-  }
-
-  return (
-    <ul className="evidence-list">
-      {rows.map((row) => (
-        <li key={row.key}>
-          <strong>{row.label}</strong>
-          <span className="level">Level {row.proficiency}</span>
-          <small>{row.evidenceSource ?? DASH} · verified {row.lastVerifiedAt ?? DASH}</small>
-        </li>
-      ))}
-    </ul>
-  );
+function sanitize(stored, departments) {
+  return {
+    mode: oneOf(stored.mode, MAP_MODES.map(([id]) => id), DEFAULTS.mode),
+    chart: oneOf(stored.chart, CHART_TYPES.map(([id]) => id), DEFAULTS.chart),
+    department: oneOf(stored.department, ['all', ...departments], 'all'),
+    minProficiency: oneOf(Number(stored.minProficiency), LEVELS, DEFAULTS.minProficiency),
+    concentratedOnly: stored.concentratedOnly === true,
+    density: oneOf(stored.density, DENSITIES, DEFAULTS.density),
+    showTable: stored.showTable === true,
+  };
 }
 
 // Links from other pages preselect a node: #/network?skill=12 or #/network?employee=4.
@@ -38,151 +43,113 @@ const initialSelection = (params = {}) => {
 };
 
 export default function SkillNetwork({ workforce, risks, params }) {
-  const [department, setDepartment] = useState('all');
-  const [minProficiency, setMinProficiency] = useState(3);
-  const [concentratedOnly, setConcentratedOnly] = useState(false);
+  const t = useT();
+  const session = useSession();
+  const [stored, setStored] = usePersistentState(`keystone.skillmap.${session?.user?.id ?? 'guest'}`, DEFAULTS);
   const [selected, setSelected] = useState(() => initialSelection(params));
-  const busFactor = useMemo(() => new Map((risks?.skills ?? []).map((skill) => [skill.id, skill.busFactor])), [risks]);
 
   if (!workforce) return null;
 
-  const { employees = [], skills = [], matrix = [] } = workforce;
-  const employeeById = new Map(employees.map((employee) => [employee.id, employee]));
-  const skillById = new Map(skills.map((skill) => [skill.id, skill]));
-  const departments = [...new Set(employees.map((employee) => employee.department))].sort();
+  const departments = [...new Set((workforce.employees ?? []).map((employee) => employee.department))].sort((a, b) => a.localeCompare(b));
+  const settings = sanitize(stored, departments);
+  const update = (patch) => setStored((current) => ({ ...current, ...patch }));
+  const map = buildSkillMap(workforce, risks, settings);
+  const isDefault = Object.keys(DEFAULTS).every((key) => settings[key] === DEFAULTS[key]);
+  // Coverage targets are organization-wide, so they are drawn only when the whole organization is in view.
+  const withTargets = settings.department === 'all' && workforce.visibility !== 'team';
 
-  const people = employees
-    .filter((employee) => department === 'all' || employee.department === department)
-    .sort((a, b) => a.department.localeCompare(b.department) || a.name.localeCompare(b.name));
-  const shownSkills = skills
-    .filter((skill) => !concentratedOnly || (busFactor.get(skill.id) ?? 0) <= 1)
-    .sort((a, b) => (busFactor.get(a.id) ?? 0) - (busFactor.get(b.id) ?? 0) || a.name.localeCompare(b.name));
-
-  // Both columns span the same height so lines stay readable whichever side is longer.
-  const span = (Math.max(people.length, shownSkills.length, 1) - 1) * ROW;
-  const height = span + TOP * 2;
-  const step = (count) => (count > 1 ? span / (count - 1) : 0);
-  const personY = new Map(people.map((employee, index) => [employee.id, TOP + index * step(people.length)]));
-  const skillY = new Map(shownSkills.map((skill, index) => [skill.id, TOP + index * step(shownSkills.length)]));
-
-  const edges = matrix.filter((edge) => edge.proficiency >= minProficiency
-    && personY.has(edge.employeeId) && skillY.has(edge.skillId));
-  const touches = (edge) => (selected.type === 'employee' ? edge.employeeId === selected.id : edge.skillId === selected.id);
-  const litEdges = selected ? edges.filter(touches) : [];
-  // Employee and skill IDs overlap numerically, so neighbours are kept per node type.
-  const litPeople = new Set(litEdges.map((edge) => edge.employeeId));
-  const litSkills = new Set(litEdges.map((edge) => edge.skillId));
-
-  const isSelected = (type, id) => selected?.type === type && selected.id === id;
-  const isDimmed = (type, id) => Boolean(selected) && !isSelected(type, id)
-    && !(type === 'employee' ? selected.type === 'skill' && litPeople.has(id) : selected.type === 'employee' && litSkills.has(id));
   const toggle = (type, id) => setSelected((current) => (current?.type === type && current.id === id ? null : { type, id }));
-  const nodeProps = (type, id, label) => ({
-    role: 'button',
-    tabIndex: 0,
-    'aria-pressed': isSelected(type, id),
-    'aria-label': label,
-    onClick: () => toggle(type, id),
-    onKeyDown: (event) => {
-      if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        toggle(type, id);
-      }
-    },
-  });
-
-  const selectedEmployee = selected?.type === 'employee' ? employeeById.get(selected.id) : null;
-  const selectedSkill = selected?.type === 'skill' ? skillById.get(selected.id) : null;
-  const evidenceFor = (predicate, labelOf) => matrix.filter(predicate)
-    .sort((a, b) => b.proficiency - a.proficiency)
-    .map((edge) => ({ ...edge, key: `${edge.employeeId}-${edge.skillId}`, label: labelOf(edge) }));
+  const focusPersonId = selected?.type === 'employee' && map.personIds.has(selected.id) ? selected.id : (map.people[0]?.id ?? null);
+  const focusSkillId = selected?.type === 'skill' && map.shownSkills.some((skill) => skill.id === selected.id) ? selected.id : (map.shownSkills[0]?.id ?? null);
+  const charting = settings.mode === 'charts';
 
   return (
-    <section className="panel">
-      <div className="toolbar">
-        <form className="form-row" onSubmit={(event) => event.preventDefault()}>
-          <label className="field">Department
-            <select value={department} onChange={(event) => { setDepartment(event.target.value); setSelected(null); }}>
-              <option value="all">All departments</option>
-              {departments.map((name) => <option key={name} value={name}>{name}</option>)}
-            </select>
-          </label>
-          <label className="field">Minimum level
-            <select value={minProficiency} onChange={(event) => setMinProficiency(Number(event.target.value))}>
-              {[1, 2, 3, 4, 5].map((level) => <option key={level} value={level}>Level {level}+</option>)}
-            </select>
-          </label>
-          <label className="check"><input type="checkbox" checked={concentratedOnly}
-            onChange={(event) => { setConcentratedOnly(event.target.checked); setSelected(null); }} /> Only at-risk skills</label>
-        </form>
-      </div>
-
-      <ul className="legend" aria-label="Legend">
-        <li><span className="swatch uncovered" /> No one qualified</li>
-        <li><span className="swatch single" /> One qualified person</li>
-        <li><span className="swatch covered" /> Two or more</li>
-        <li><span className="swatch person" /> Person</li>
-        <li><span className="swatch-line" /> Thicker line, higher level</li>
-      </ul>
-
-      <div className="network-layout">
-        <div className="network-canvas">
-          <svg className="network" viewBox={`0 0 ${WIDTH} ${height}`} width={WIDTH} height={height}
-            role="group" aria-label={`${people.length} people, ${shownSkills.length} skills, ${edges.length} lines of evidence`}>
-            <g>
-              {edges.map((edge) => (
-                <line key={`${edge.employeeId}-${edge.skillId}`}
-                  x1={LEFT_X} y1={personY.get(edge.employeeId)} x2={RIGHT_X} y2={skillY.get(edge.skillId)}
-                  className={`edge p${edge.proficiency} ${selected ? (touches(edge) ? 'lit' : 'dim') : ''}`}
-                  strokeWidth={edge.proficiency * 0.7} />
-              ))}
-            </g>
-            <g>
-              {people.map((employee) => (
-                <g key={employee.id} transform={`translate(${LEFT_X},${personY.get(employee.id)})`}
-                  className={`node person ${isSelected('employee', employee.id) ? 'selected' : ''} ${isDimmed('employee', employee.id) ? 'dim' : ''}`}
-                  {...nodeProps('employee', employee.id, `${employee.name}, ${employee.role}`)}>
-                  <circle r="5" />
-                  <text x="-12" dy="0.35em" textAnchor="end">{employee.name}</text>
-                </g>
-              ))}
-            </g>
-            <g>
-              {shownSkills.map((skill) => (
-                <g key={skill.id} transform={`translate(${RIGHT_X},${skillY.get(skill.id)})`}
-                  className={`node skill ${toneFor(busFactor.get(skill.id))} ${isSelected('skill', skill.id) ? 'selected' : ''} ${isDimmed('skill', skill.id) ? 'dim' : ''}`}
-                  {...nodeProps('skill', skill.id, `${skill.name}, ${busFactor.get(skill.id) ?? 0} qualified people`)}>
-                  <circle r="7" />
-                  <text x="14" dy="0.35em">{skill.name} · {busFactor.get(skill.id) ?? DASH}</text>
-                </g>
-              ))}
-            </g>
-          </svg>
+    <>
+      <div className="skillmap-toolbar" role="region" aria-label={t('skillmap.toolbar')}>
+        <div className="segmented-field">
+          <span id="skillmap-mode-label">{t('skillmap.view')}</span>
+          <div className="segmented segmented-inline" role="radiogroup" aria-labelledby="skillmap-mode-label">
+            {MAP_MODES.map(([mode, icon]) => (
+              <button key={mode} type="button" role="radio" aria-checked={settings.mode === mode} onClick={() => update({ mode })}>
+                <Icon name={icon} size={15} /> {t(`skillmap.modes.${mode}`)}
+              </button>
+            ))}
+          </div>
         </div>
 
-        <aside className="network-detail" aria-live="polite">
-          {!selected && <>
-            <h3>Evidence</h3>
-            <p className="muted">Select a person or a skill to see the records behind each line. Skills are listed from fewest qualified people.</p>
-          </>}
-          {selectedEmployee && <>
-            <h3>{selectedEmployee.name}</h3>
-            <p className="muted">{selectedEmployee.role} · {selectedEmployee.department}</p>
-            <p>Mentoring time: {selectedEmployee.mentoringHoursPerMonth === undefined ? DASH : `${selectedEmployee.mentoringHoursPerMonth} h per month`}</p>
-            <EvidenceList rows={evidenceFor((edge) => edge.employeeId === selectedEmployee.id,
-              (edge) => skillById.get(edge.skillId)?.name ?? `Skill ${edge.skillId}`)} />
-          </>}
-          {selectedSkill && <>
-            <h3>{selectedSkill.name}</h3>
-            <p className="muted">
-              {busFactor.get(selectedSkill.id) ?? DASH} of {selectedSkill.requiredHolders} qualified at
-              level {selectedSkill.targetProficiency}+ · Criticality {selectedSkill.criticality}/5
-            </p>
-            <EvidenceList rows={evidenceFor((edge) => edge.skillId === selectedSkill.id,
-              (edge) => employeeById.get(edge.employeeId)?.name ?? `Employee ${edge.employeeId}`)} />
-          </>}
-        </aside>
+        <label className="field">{t('skillmap.department')}
+          <select value={settings.department} onChange={(event) => { update({ department: event.target.value }); setSelected(null); }}>
+            <option value="all">{t('skillmap.allDepartments')}</option>
+            {departments.map((name) => <option key={name} value={name}>{name}</option>)}
+          </select>
+        </label>
+
+        <label className="field">{t('skillmap.minLevel')}
+          <select value={settings.minProficiency} onChange={(event) => update({ minProficiency: Number(event.target.value) })}>
+            {LEVELS.map((level) => <option key={level} value={level}>{t('skillmap.levelPlus', { level })}</option>)}
+          </select>
+        </label>
+
+        {settings.mode === 'network' && (
+          <label className="field">{t('skillmap.density')}
+            <select value={settings.density} onChange={(event) => update({ density: event.target.value })}>
+              {DENSITIES.map((density) => <option key={density} value={density}>{t(`skillmap.densities.${density}`)}</option>)}
+            </select>
+          </label>
+        )}
+
+        {charting && settings.chart === 'person' && map.people.length > 0 && (
+          <label className="field">{t('skillmap.person')}
+            <select value={focusPersonId ?? ''} onChange={(event) => setSelected({ type: 'employee', id: Number(event.target.value) })}>
+              {map.people.map((person) => <option key={person.id} value={person.id}>{person.name}</option>)}
+            </select>
+          </label>
+        )}
+
+        {charting && settings.chart === 'skill' && map.shownSkills.length > 0 && (
+          <label className="field">{t('skillmap.skill')}
+            <select value={focusSkillId ?? ''} onChange={(event) => setSelected({ type: 'skill', id: Number(event.target.value) })}>
+              {map.shownSkills.map((skill) => <option key={skill.id} value={skill.id}>{skill.name}</option>)}
+            </select>
+          </label>
+        )}
+
+        <label className="check">
+          <input type="checkbox" checked={settings.concentratedOnly} onChange={(event) => { update({ concentratedOnly: event.target.checked }); setSelected(null); }} />
+          {t('skillmap.atRiskOnly')}
+        </label>
+
+        <div className="toolbar-end">
+          <button type="button" className="btn btn-quiet btn-sm" disabled={isDefault} aria-describedby="skillmap-reset-note"
+            onClick={() => { setStored(DEFAULTS); setSelected(null); }}>
+            <Icon name="refresh" size={14} /> {t('skillmap.reset')}
+          </button>
+          <span id="skillmap-reset-note" className="sr-only">{t('skillmap.resetTitle')}</span>
+        </div>
       </div>
-    </section>
+
+      {charting ? (
+        <ChartsView map={map} settings={settings} withTargets={withTargets} focusPersonId={focusPersonId} focusSkillId={focusSkillId}
+          onChart={(chart) => update({ chart })} onToggleTable={() => update({ showTable: !settings.showTable })} />
+      ) : (
+        <section className="panel">
+          <ul className="legend" aria-label={t('skillmap.legend.title')}>
+            <li><span className="swatch uncovered" /> {t('skillmap.coverage.uncovered')}</li>
+            <li><span className="swatch single" /> {t('skillmap.coverage.single')}</li>
+            <li><span className="swatch covered" /> {t('skillmap.coverage.covered')}</li>
+            {settings.mode === 'network' && <li><span className="swatch person" /> {t('skillmap.legend.person')}</li>}
+            <li className="legend-divider" aria-hidden="true" />
+            {LEVELS.map((level) => <li key={level}><span className={`swatch lvl lvl-${level}`} /> {level}</li>)}
+            <li>{settings.mode === 'network' ? t('skillmap.legend.lines') : t('skillmap.legend.cells')}</li>
+          </ul>
+          <div className="network-layout">
+            {settings.mode === 'network'
+              ? <NetworkView map={map} selected={selected} onToggle={toggle} density={settings.density} />
+              : <MatrixView map={map} selected={selected} onToggle={toggle} minProficiency={settings.minProficiency} />}
+            <EvidencePanel map={map} selected={selected} onShowChart={(chart) => update({ mode: 'charts', chart })} />
+          </div>
+        </section>
+      )}
+    </>
   );
 }

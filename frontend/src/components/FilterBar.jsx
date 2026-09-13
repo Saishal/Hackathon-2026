@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { keystoneApi } from '../api/keystone';
+import { useT } from '../preferences/context';
 import Dialog from './Dialog';
 import Icon from './Icon';
 import { FieldError, FormError } from './ui';
@@ -13,6 +14,7 @@ import { fieldMessages } from './format';
 // labels: { key: 'Label' } for chips; formatValue(key, value) turns raw values into words.
 
 function SaveViewDialog({ view, filters, onClose, onSaved }) {
+  const t = useT();
   const [name, setName] = useState('');
   const [error, setError] = useState(null);
   const [busy, setBusy] = useState(false);
@@ -30,29 +32,31 @@ function SaveViewDialog({ view, filters, onClose, onSaved }) {
   }
 
   return (
-    <Dialog title="Save this view" description="Saved views are private to you and only remember these filters." onClose={onClose}
+    <Dialog title={t('filters.saveTitle')} description={t('filters.saveDescription')} onClose={onClose}
       footer={<>
-        <button type="button" className="btn btn-quiet" onClick={onClose}>Cancel</button>
-        <button type="submit" form="save-view-form" className="btn btn-primary" disabled={busy || !name.trim()}>{busy ? 'Saving…' : 'Save view'}</button>
+        <button type="button" className="btn btn-quiet" onClick={onClose}>{t('common.cancel')}</button>
+        <button type="submit" form="save-view-form" className="btn btn-primary" disabled={busy || !name.trim()}>{busy ? t('common.saving') : t('filters.saveSubmit')}</button>
       </>}>
       <form id="save-view-form" onSubmit={submit}>
         <FormError error={error && !error.details?.length ? error : null} />
-        <label className="field">Name
+        <label className="field">{t('filters.name')}
           <input type="text" value={name} onChange={(event) => setName(event.target.value)} maxLength={60} required data-autofocus
-            placeholder="For example: Unowned critical skills" aria-invalid={Boolean(errors.name)} aria-describedby="save-view-error" />
+            placeholder={t('filters.namePlaceholder')} aria-invalid={Boolean(errors.name)} aria-describedby="save-view-error" />
           <FieldError id="save-view-error" message={errors.name} />
         </label>
-        <p className="muted small">Saving with a name you already used replaces that view.</p>
+        <p className="muted small">{t('filters.replaceNote')}</p>
       </form>
     </Dialog>
   );
 }
 
-export default function FilterBar({ view, filters, active, labels = {}, formatValue, onRemove, onReset, onApply, total, shown, noun = 'records', emptyHint, children }) {
+export default function FilterBar({ view, filters, active, labels = {}, formatValue, onRemove, onReset, onApply, total, shown, noun, emptyHint, children }) {
+  const t = useT();
   const [saved, setSaved] = useState([]);
   const [dialog, setDialog] = useState(false);
   const [message, setMessage] = useState('');
   const canSave = Boolean(view && onApply);
+  const nounText = noun ?? t('filters.records');
 
   useEffect(() => {
     if (!canSave) return undefined;
@@ -68,50 +72,51 @@ export default function FilterBar({ view, filters, active, labels = {}, formatVa
   async function removeSaved(item) {
     await keystoneApi.deleteSavedView(item.id);
     setSaved((current) => current.filter((entry) => entry.id !== item.id));
-    setMessage(`Removed the saved view "${item.name}".`);
+    setMessage(t('filters.removedView', { name: item.name }));
   }
 
   return (
-    <div className="kfilter-bar" role="region" aria-label="Filters">
+    <div className="kfilter-bar" role="region" aria-label={t('filters.region')}>
       <div className="kfilter-controls">{children}</div>
 
       <div className="kfilter-status">
         {active.length > 0 ? (
-          <ul className="kfilter-chips" aria-label="Active filters">
+          <ul className="kfilter-chips" aria-label={t('filters.active')}>
             {active.map((key) => (
               <li key={key}>
                 <span className="chip">
                   <span className="chip-label">{labels[key] ?? key}:</span> {display(key, filters[key])}
-                  <button type="button" className="chip-remove" onClick={() => onRemove(key)} aria-label={`Remove filter ${labels[key] ?? key}`}><Icon name="close" size={12} /></button>
+                  <button type="button" className="chip-remove" onClick={() => onRemove(key)} aria-label={t('filters.remove', { name: labels[key] ?? key })}><Icon name="close" size={12} /></button>
                 </span>
               </li>
             ))}
-            <li><button type="button" className="btn-link" onClick={onReset}>Reset filters</button></li>
+            <li><button type="button" className="btn-link" onClick={onReset}>{t('filters.reset')}</button></li>
           </ul>
-        ) : <span className="muted small">No filters applied.</span>}
+        ) : <span className="muted small">{t('filters.none')}</span>}
 
         <span className="kfilter-count" aria-live="polite">
-          {typeof shown === 'number' && typeof total === 'number' ? `Showing ${shown} of ${total} ${noun}` : ''}
+          {typeof shown === 'number' && typeof total === 'number' ? t('filters.showing', { shown, total, noun: nounText }) : ''}
         </span>
 
         {canSave && (
           <span className="kfilter-saved">
             {saved.length > 0 && (
-              <label className="field field-inline"><span className="sr-only">Saved views</span>
+              <label className="field field-inline"><span className="sr-only">{t('filters.savedViews')}</span>
                 <select value="" onChange={(event) => { const item = saved.find((entry) => String(entry.id) === event.target.value); if (item) onApply(savedFilters(item)); }}>
-                  <option value="">Saved views…</option>
+                  <option value="">{t('filters.savedViewsPlaceholder')}</option>
                   {saved.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
                 </select>
               </label>
             )}
-            <button type="button" className="btn btn-quiet btn-sm" onClick={() => setDialog(true)} disabled={active.length === 0} title={active.length === 0 ? 'Apply a filter first' : 'Save these filters as a named view'}>
-              <Icon name="flag" size={14} /> Save view
+            <button type="button" className="btn btn-quiet btn-sm" onClick={() => setDialog(true)} disabled={active.length === 0}
+              title={active.length === 0 ? t('filters.saveDisabledTitle') : t('filters.saveTitleHint')}>
+              <Icon name="flag" size={14} /> {t('filters.saveView')}
             </button>
             {saved.length > 0 && (
               <details className="kfilter-manage">
-                <summary className="btn-link">Manage</summary>
+                <summary className="btn-link">{t('filters.manage')}</summary>
                 <ul>{saved.map((item) => (
-                  <li key={item.id}>{item.name} <button type="button" className="btn-link" onClick={() => removeSaved(item)} aria-label={`Delete saved view ${item.name}`}>delete</button></li>
+                  <li key={item.id}>{item.name} <button type="button" className="btn-link" onClick={() => removeSaved(item)} aria-label={t('filters.deleteAria', { name: item.name })}>{t('filters.delete')}</button></li>
                 ))}</ul>
               </details>
             )}
@@ -123,13 +128,13 @@ export default function FilterBar({ view, filters, active, labels = {}, formatVa
 
       {excluded && (
         <p className="kfilter-empty" role="status">
-          <Icon name="info" size={16} /> {total} {noun} exist, but the current filters exclude all of them. {emptyHint ?? 'An empty list means the filters excluded everything, not that nothing needs attention.'}{' '}
-          <button type="button" className="btn-link" onClick={onReset}>Reset filters</button>
+          <Icon name="info" size={16} /> {t('filters.excluded', { total, noun: nounText })} {emptyHint ?? t('filters.excludedHint')}{' '}
+          <button type="button" className="btn-link" onClick={onReset}>{t('filters.reset')}</button>
         </p>
       )}
 
       {dialog && <SaveViewDialog view={view} filters={Object.fromEntries(active.map((key) => [key, String(filters[key])]))}
-        onClose={() => setDialog(false)} onSaved={(item) => { setDialog(false); setSaved((current) => [...current.filter((entry) => entry.id !== item.id), item].sort((a, b) => a.name.localeCompare(b.name))); setMessage(`Saved "${item.name}".`); }} />}
+        onClose={() => setDialog(false)} onSaved={(item) => { setDialog(false); setSaved((current) => [...current.filter((entry) => entry.id !== item.id), item].sort((a, b) => a.name.localeCompare(b.name))); setMessage(t('filters.savedMessage', { name: item.name })); }} />}
     </div>
   );
 }

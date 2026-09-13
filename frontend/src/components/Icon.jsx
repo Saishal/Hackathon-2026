@@ -31,6 +31,20 @@ const PATHS = {
   close: <path d="m6.5 6.5 11 11m0-11-11 11" />,
   chevron: <path d="m9 6 6 6-6 6" />,
   menu: <path d="M4 7h16M4 12h16M4 17h16" />,
+  bell: <><path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 2h-15l1.5-2Z" /><path d="M10 20.5a2 2 0 0 0 4 0" /></>,
+  sun: <><circle cx="12" cy="12" r="3.8" /><path d="M12 2.8V5M12 19v2.2M2.8 12H5M19 12h2.2M5.5 5.5l1.6 1.6M16.9 16.9l1.6 1.6M5.5 18.5l1.6-1.6M16.9 7.1l1.6-1.6" /></>,
+  moon: <path d="M19.5 14.5A7.5 7.5 0 1 1 9.5 4.5a6 6 0 0 0 10 10Z" />,
+  monitor: <><rect x="3.5" y="4.5" width="17" height="11.5" rx="1.5" /><path d="M9 20h6M12 16v4" /></>,
+  globe: <><circle cx="12" cy="12" r="8.5" /><path d="M3.5 12h17M12 3.5c2.3 2.3 3.5 5.2 3.5 8.5s-1.2 6.2-3.5 8.5c-2.3-2.3-3.5-5.2-3.5-8.5s1.2-6.2 3.5-8.5Z" /></>,
+  pie: <><path d="M12 3.5a8.5 8.5 0 1 0 8.5 8.5H12Z" /><path d="M15 3.9A8.5 8.5 0 0 1 20.1 9H15Z" /></>,
+  bars: <><path d="M4.5 20.5h15" /><rect x="5.5" y="11" width="3" height="7" rx="1" /><rect x="10.5" y="6" width="3" height="12" rx="1" /><rect x="15.5" y="13.5" width="3" height="4.5" rx="1" /></>,
+  hbars: <><path d="M3.5 4v16" /><rect x="6" y="5" width="12" height="3" rx="1" /><rect x="6" y="10.5" width="7" height="3" rx="1" /><rect x="6" y="16" width="14" height="3" rx="1" /></>,
+  stacked: <><rect x="3.5" y="5" width="17" height="4" rx="1" /><rect x="3.5" y="15" width="17" height="4" rx="1" /><path d="M10 5v4M15 5v4M8 15v4M13 15v4" /></>,
+  matrix: <><rect x="3.5" y="3.5" width="17" height="17" rx="2" /><path d="M3.5 9.2h17M3.5 14.8h17M9.2 3.5v17M14.8 3.5v17" /></>,
+  sliders: <><path d="M4 7h9M17 7h3M4 17h3M11 17h9" /><circle cx="15" cy="7" r="2" /><circle cx="9" cy="17" r="2" /></>,
+  target: <><circle cx="12" cy="12" r="8.5" /><circle cx="12" cy="12" r="4.5" /><circle cx="12" cy="12" r="0.8" /></>,
+  checkAll: <path d="m2.5 12.5 4 4 8-8.5M11 16l.5.5 8-8.5" />,
+  launch: <><path d="M13.5 4.5h6v6" /><path d="M19.5 4.5 11 13" /><path d="M17.5 14v5a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 19V8A1.5 1.5 0 0 1 5 6.5h5" /></>,
 };
 
 export default function Icon({ name, size = 18, label, className = '' }) {
@@ -48,8 +62,8 @@ export function KeystoneMark({ size = 28 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden="true" className="keystone-mark">
       <rect width="32" height="32" rx="8" fill="currentColor" />
-      <path d="M7.5 25v-5a8.5 8.5 0 0 1 17 0v5" fill="none" stroke="#fff" strokeOpacity=".42" strokeWidth="3" strokeLinecap="round" />
-      <path d="M13.3 7.8h5.4l-1 5.9h-3.4l-1-5.9Z" fill="#fff" />
+      <path className="keystone-mark-arch" d="M7.5 25v-5a8.5 8.5 0 0 1 17 0v5" fill="none" strokeOpacity=".42" strokeWidth="3" strokeLinecap="round" />
+      <path className="keystone-mark-stone" d="M13.3 7.8h5.4l-1 5.9h-3.4l-1-5.9Z" />
     </svg>
   );
 }

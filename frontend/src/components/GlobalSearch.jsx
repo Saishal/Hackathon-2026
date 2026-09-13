@@ -1,5 +1,6 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { keystoneApi } from '../api/keystone';
+import { useT } from '../preferences/context';
 import Icon from './Icon';
 import { GLOSSARY, TASKS, guideHref } from '../help/content';
 
@@ -29,6 +30,7 @@ function helpMatches(query) {
 }
 
 export default function GlobalSearch() {
+  const t = useT();
   const [query, setQuery] = useState('');
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
@@ -63,8 +65,8 @@ export default function GlobalSearch() {
     if (trimmed.length < MIN_LENGTH) return [];
     const server = answered ? result.groups : [];
     const help = helpMatches(trimmed);
-    return help.length > 0 ? [...server, { type: 'help', label: 'Help and glossary', total: help.length, items: help }] : server;
-  }, [result, answered, trimmed]);
+    return help.length > 0 ? [...server, { type: 'help', label: t('search.helpGroup'), total: help.length, items: help }] : server;
+  }, [result, answered, trimmed, t]);
 
   const flat = useMemo(() => groups.flatMap((group) => group.items).map((item, index) => ({ ...item, index })), [groups]);
   const activeIndex = flat.length === 0 ? -1 : Math.min(Math.max(active, 0), flat.length - 1);
@@ -103,28 +105,28 @@ export default function GlobalSearch() {
     <div className="global-search" ref={boxRef}>
       <label className="global-search-field">
         <Icon name="search" size={16} />
-        <span className="sr-only">Search Keystone</span>
-        <input ref={inputRef} type="search" value={query} placeholder="Search people, skills, risks, scenarios…"
+        <span className="sr-only">{t('search.label')}</span>
+        <input ref={inputRef} type="search" value={query} placeholder={t('search.placeholder')}
           role="combobox" aria-expanded={showPanel} aria-controls={listId} aria-autocomplete="list" aria-activedescendant={activeId}
           autoComplete="off" spellCheck={false}
           onChange={(event) => { setQuery(event.target.value); setActive(0); setOpen(true); }}
           onFocus={() => setOpen(true)} onKeyDown={onKeyDown} />
         {loading && <span className="global-search-spinner" aria-hidden="true" />}
-        {query && !loading && <button type="button" className="global-search-clear" aria-label="Clear search" onClick={() => { setQuery(''); inputRef.current?.focus(); }}><Icon name="close" size={14} /></button>}
+        {query && !loading && <button type="button" className="global-search-clear" aria-label={t('search.clear')} onClick={() => { setQuery(''); inputRef.current?.focus(); }}><Icon name="close" size={14} /></button>}
       </label>
 
       {showPanel && (
-        <div className="global-search-panel" id={listId} role="listbox" aria-label="Search results">
-          {failed && <p className="global-search-state" role="alert">Search failed: {error.message}</p>}
-          {!failed && loading && flat.length === 0 && <p className="global-search-state" role="status">Searching…</p>}
+        <div className="global-search-panel" id={listId} role="listbox" aria-label={t('search.results')}>
+          {failed && <p className="global-search-state" role="alert">{t('search.failed', { message: error.message })}</p>}
+          {!failed && loading && flat.length === 0 && <p className="global-search-state" role="status">{t('search.searching')}</p>}
           {!failed && !loading && flat.length === 0 && (
             <p className="global-search-state" role="status">
-              No matches for “{trimmed}” in what you can see.{result?.visibility && result.visibility !== 'organization' ? ' Your view is limited to your team or profile.' : ''}
+              {t('search.noMatches', { query: trimmed })}{result?.visibility && result.visibility !== 'organization' ? ` ${t('search.limitedView')}` : ''}
             </p>
           )}
           {groups.map((group) => (
             <section key={group.type} className="global-search-group" aria-label={group.label}>
-              <p className="global-search-heading">{group.label}{group.total > group.items.length ? ` · ${group.items.length} of ${group.total}` : ''}</p>
+              <p className="global-search-heading">{group.label}{group.total > group.items.length ? ` · ${t('search.partial', { shown: group.items.length, total: group.total })}` : ''}</p>
               {group.items.map((item) => {
                 const index = indexOf.get(`${item.type}-${item.id}`);
                 const id = `${listId}-${item.type}-${item.id}`;
@@ -141,7 +143,7 @@ export default function GlobalSearch() {
               })}
             </section>
           ))}
-          {flat.length > 0 && <p className="global-search-hint">↑↓ to move · Enter to open · Esc to close</p>}
+          {flat.length > 0 && <p className="global-search-hint">{t('search.hint')}</p>}
         </div>
       )}
     </div>

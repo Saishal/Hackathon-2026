@@ -1,3 +1,4 @@
+import { useT } from '../preferences/context';
 import Icon, { KeystoneMark } from './Icon';
 import { CHANGE_STATUS, ISSUE_STATUS, SEVERITY_LABELS, TRUST_LABELS } from './format';
 
@@ -7,18 +8,20 @@ import { CHANGE_STATUS, ISSUE_STATUS, SEVERITY_LABELS, TRUST_LABELS } from './fo
 const scoreTone = (score) => (score >= 70 ? 'danger' : score >= 40 ? 'warn' : 'neutral');
 
 export function ScoreMeter({ score }) {
+  const t = useT();
   const width = Math.max(0, Math.min(100, score));
   return (
-    <span className="score" title={`Dependency score ${score} of 100`}>
+    <span className="score" title={t('ui.scoreTitle', { score })}>
       <span className={`meter meter-${scoreTone(score)}`} aria-hidden="true"><span style={{ width: `${width}%` }} /></span>
       <span className="num">{score}</span>
-      <span className="sr-only"> of 100</span>
+      <span className="sr-only"> {t('ui.of100')}</span>
     </span>
   );
 }
 
 // Filled pips are qualified people on record, empty pips the rest of what the skill needs.
 export function Coverage({ holders, needed }) {
+  const t = useT();
   const slots = Math.max(needed ?? 0, holders);
   return (
     <span className="coverage">
@@ -27,14 +30,15 @@ export function Coverage({ holders, needed }) {
           {Array.from({ length: slots }, (_, index) => <span key={index} className={index < holders ? 'pip on' : 'pip'} />)}
         </span>
       )}
-      <span className={holders === 0 ? 'text-danger' : undefined}>{holders} of {needed ?? '—'}</span>
+      <span className={holders === 0 ? 'text-danger' : undefined}>{t('ui.coverage', { holders, needed: needed ?? '—' })}</span>
     </span>
   );
 }
 
 export function Skeleton({ lines = 3 }) {
+  const t = useT();
   return (
-    <div className="skeleton" role="status" aria-label="Loading">
+    <div className="skeleton" role="status" aria-label={t('ui.loading')}>
       {Array.from({ length: lines }, (_, index) => <span key={index} style={{ width: `${92 - (index % 3) * 14}%` }} />)}
     </div>
   );
@@ -65,15 +69,16 @@ export function EmptyState({ icon = 'info', title, children, action }) {
 }
 
 export function ErrorState({ error, onRetry, title }) {
+  const t = useT();
   const forbidden = error?.status === 403;
-  const heading = title ?? (forbidden ? 'Not available for your role' : error?.status === 0 ? 'Server unreachable' : "This couldn't load");
+  const heading = title ?? (forbidden ? t('ui.forbiddenTitle') : error?.status === 0 ? t('ui.unreachableTitle') : t('ui.loadFailedTitle'));
   return (
     <div className="panel">
       <div className="empty" role="alert">
         <Icon name={forbidden ? 'lock' : 'alert'} size={24} />
         <p><strong>{heading}</strong></p>
-        <p className="muted">{forbidden ? 'Your role does not include this information. Ask an admin if you need access.' : error?.message}</p>
-        {onRetry && !forbidden && <button type="button" className="btn btn-secondary btn-sm" onClick={onRetry}>Try again</button>}
+        <p className="muted">{forbidden ? t('ui.forbiddenBody') : error?.message}</p>
+        {onRetry && !forbidden && <button type="button" className="btn btn-secondary btn-sm" onClick={onRetry}>{t('ui.retry')}</button>}
       </div>
     </div>
   );
@@ -97,26 +102,26 @@ export function FieldError({ id, message }) {
 
 // Shown when an address names a page the signed-in role cannot use.
 export function ForbiddenState({ roleLabel, homeHref }) {
+  const t = useT();
   return (
     <div className="panel">
       <div className="empty" role="alert">
         <Icon name="lock" size={24} />
-        <p><strong>This page isn't available to your role</strong></p>
-        <p className="muted">
-          You're signed in as {roleLabel}. The server checks access on every request, so opening this address directly doesn't grant access.
-        </p>
-        {homeHref && <a className="link-arrow" href={homeHref}>Go to your home page <Icon name="arrow" size={16} /></a>}
+        <p><strong>{t('ui.pageForbiddenTitle')}</strong></p>
+        <p className="muted">{t('ui.pageForbiddenBody', { role: roleLabel })}</p>
+        {homeHref && <a className="link-arrow" href={homeHref}>{t('ui.goHome')} <Icon name="arrow" size={16} /></a>}
       </div>
     </div>
   );
 }
 
-export function LoadingScreen({ message = 'Checking your session…' }) {
+export function LoadingScreen({ message }) {
+  const t = useT();
   return (
     <div className="login-page" role="status" aria-live="polite">
       <div className="loading-screen">
         <KeystoneMark size={40} />
-        <p className="muted">{message}</p>
+        <p className="muted">{message ?? t('ui.checkingSession')}</p>
       </div>
     </div>
   );

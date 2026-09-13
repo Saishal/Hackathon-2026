@@ -19,28 +19,38 @@ export const localToday = () => {
 
 const toDate = (value) => new Date(value.length === 10 ? `${value}T00:00:00` : value);
 
+// Set by the preferences provider; undefined means the browser's own locale.
+let locale;
+export const setFormatLocale = (next) => { locale = next; };
+
+const RELATIVE_WORDS = {
+  en: { never: 'never', now: 'just now', minutes: (n) => `${n} min ago`, hours: (n) => `${n} h ago`, days: (n) => `${n} d ago` },
+  es: { never: 'nunca', now: 'justo ahora', minutes: (n) => `hace ${n} min`, hours: (n) => `hace ${n} h`, days: (n) => `hace ${n} d` },
+};
+
 export function formatDate(value) {
   if (!value) return '—';
   const date = toDate(value);
-  return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
+  return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString(locale, { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
 export function formatDateTime(value) {
   if (!value) return '—';
   const date = toDate(value);
   return Number.isNaN(date.getTime()) ? value
-    : date.toLocaleString(undefined, { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit' });
+    : date.toLocaleString(locale, { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit' });
 }
 
 export function relativeTime(value) {
-  if (!value) return 'never';
+  const words = RELATIVE_WORDS[locale?.slice(0, 2)] ?? RELATIVE_WORDS.en;
+  if (!value) return words.never;
   const minutes = Math.round((Date.now() - toDate(value).getTime()) / 60000);
-  if (minutes < 1) return 'just now';
-  if (minutes < 60) return `${minutes} min ago`;
+  if (minutes < 1) return words.now;
+  if (minutes < 60) return words.minutes(minutes);
   const hours = Math.round(minutes / 60);
-  if (hours < 24) return `${hours} h ago`;
+  if (hours < 24) return words.hours(hours);
   const days = Math.round(hours / 24);
-  return days < 30 ? `${days} d ago` : formatDate(value);
+  return days < 30 ? words.days(days) : formatDate(value);
 }
 
 // Field-level messages from an API validation error, keyed by the last segment of each field path.

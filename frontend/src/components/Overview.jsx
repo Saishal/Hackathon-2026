@@ -1,33 +1,41 @@
 import { useCallback, useEffect, useState } from 'react';
 import { keystoneApi } from '../api/keystone';
+import { useUrlFilters } from '../filters/useUrlFilters';
+import { GLOSSARY } from '../help/content';
+import { useT } from '../preferences/context';
+import { usePersistentState } from '../preferences/usePersistentState';
 import { useSession } from '../session';
-import { can, formatDate, plural, relativeTime } from './format';
-import Icon from './Icon';
+import { isViewAllowed } from '../views';
+import Disclosure from './Disclosure';
+import FilterBar from './FilterBar';
+import { can, formatDate, relativeTime } from './format';
 import HelpTopic from './HelpTopic';
+import Icon from './Icon';
 import RecentActivity from './RecentActivity';
 import RiskAcknowledgeDialog from './RiskAcknowledgeDialog';
 import Suggestions from './Suggestions';
-import FilterBar from './FilterBar';
-import { useUrlFilters } from '../filters/useUrlFilters';
-
-const RISK_FILTERS = { coverage: '', criticality: '', owner: '' };
-const RISK_LABELS = { coverage: 'Coverage', criticality: 'Criticality', owner: 'Owner' };
-const COVERAGE_WORDS = { uncovered: 'nobody qualified', single: 'one person', covered: 'two or more' };
 import { Coverage, FormError, ScoreMeter, Skeleton } from './ui';
 
-const HEALTH_LABELS = { good: 'Good', needs_attention: 'Needs attention', at_risk: 'At risk' };
+const RISK_FILTERS = { coverage: '', criticality: '', owner: '' };
+const HEALTH_TONE = { good: 'ok', needs_attention: 'warn', at_risk: 'danger' };
+const RISK_TERMS = ['coverage-target', 'bus-factor', 'keystone-score', 'risk-acknowledgement'];
+const LAUNCHERS = [
+  ['network', 'network'], ['people', 'people'], ['timemachine', 'timemachine'], ['ai', 'ai'],
+  ['reviews', 'inbox'], ['quality', 'shield'], ['data', 'data'], ['audit', 'audit'],
+];
 
 function RiskTable({ rows, owners, canAcknowledge, onAcknowledge }) {
+  const t = useT();
   return (
     <div className="table-wrap flush">
       <table>
         <thead>
           <tr>
-            <th scope="col">Skill</th>
-            <th scope="col">Qualified people</th>
-            <th scope="col" className="num">Criticality</th>
-            <th scope="col">Dependency score</th>
-            <th scope="col">Owner</th>
+            <th scope="col">{t('overview.table.skill')}</th>
+            <th scope="col">{t('overview.table.qualified')}</th>
+            <th scope="col" className="num">{t('overview.table.criticality')}</th>
+            <th scope="col">{t('overview.table.score')}</th>
+            <th scope="col">{t('overview.table.owner')}</th>
           </tr>
         </thead>
         <tbody>
@@ -37,7 +45,7 @@ function RiskTable({ rows, owners, canAcknowledge, onAcknowledge }) {
               <tr key={skill.id}>
                 <th scope="row">
                   {skill.name}
-                  <small className="cell-sub">Level {skill.targetProficiency}+ needed</small>
+                  <small className="cell-sub">{t('overview.table.levelNeeded', { level: skill.targetProficiency })}</small>
                 </th>
                 <td><Coverage holders={skill.busFactor} needed={skill.requiredHolders} /></td>
                 <td className="num">{skill.criticality}/5</td>
@@ -48,16 +56,16 @@ function RiskTable({ rows, owners, canAcknowledge, onAcknowledge }) {
                       <span>
                         {owned.owner.name}
                         <small className="cell-sub">
-                          Due {formatDate(owned.dueDate)}
-                          {owned.overdue && <> · <span className="tag tag-danger">Overdue</span></>}
-                          {!owned.overdue && owned.reviewDue && ' · review due'}
+                          {t('overview.table.due', { date: formatDate(owned.dueDate) })}
+                          {owned.overdue && <> · <span className="tag tag-danger">{t('overview.table.overdue')}</span></>}
+                          {!owned.overdue && owned.reviewDue && ` · ${t('overview.table.reviewDue')}`}
                         </small>
                       </span>
-                    ) : <span className="muted">No owner</span>}
+                    ) : <span className="muted">{t('overview.table.noOwner')}</span>}
                     {canAcknowledge && (
                       <button type="button" className="btn btn-quiet btn-sm" onClick={() => onAcknowledge(skill, owned)}
-                        aria-label={`${owned ? 'Update the owner of' : 'Assign an owner to'} ${skill.name}`}>
-                        {owned ? 'Update' : 'Assign owner'}
+                        aria-label={t(owned ? 'overview.table.updateAria' : 'overview.table.assignAria', { skill: skill.name })}>
+                        {owned ? t('overview.table.update') : t('overview.table.assign')}
                       </button>
                     )}
                   </div>
@@ -71,9 +79,16 @@ function RiskTable({ rows, owners, canAcknowledge, onAcknowledge }) {
   );
 }
 
-// Overview: headline counts, the skills that rest on one person or nobody, who owns each known risk, the
-// people with the highest dependency scores, and recent high-signal activity.
+const greetingKey = () => {
+  const hour = new Date().getHours();
+  return hour < 12 ? 'overview.greeting.morning' : hour < 18 ? 'overview.greeting.afternoon' : 'overview.greeting.evening';
+};
+
+// Overview: one status line, four headline tiles that open what they count, shortcuts to every page this role
+// can use, and the detail (risk register, owners, suggestions, key people, activity) in sections that open on
+// demand. Which sections are open is remembered per person in this browser.
 export default function Overview({ risks, quality, organization, onChanged }) {
+  const t = useT();
   const session = useSession();
   const [people, setPeople] = useState(null);
   const [acknowledgements, setAcknowledgements] = useState(null);
@@ -83,8 +98,16 @@ export default function Overview({ risks, quality, organization, onChanged }) {
   const [message, setMessage] = useState('');
   const [exportError, setExportError] = useState(null);
   const [exporting, setExporting] = useState(false);
+  const [pendingReviews, setPendingReviews] = useState(null);
+  const [suggestionCount, setSuggestionCount] = useState(null);
   const risk = useUrlFilters(RISK_FILTERS);
+  const [storedOpen, setStoredOpen] = usePersistentState(`keystone.overview.${session.user.id}`, []);
+  // Arriving with risk filters in the address (a saved view or a shared link) opens the table they filter.
+  const [linkedOpen, setLinkedOpen] = useState(() => risk.active.length > 0);
   const canAcknowledge = can(session, 'risk.acknowledge');
+  const canReview = can(session, 'changes.review.people', 'changes.review.planning');
+  const readsQuality = Boolean(quality && !quality.error);
+  const openIds = Array.isArray(storedOpen) ? storedOpen : [];
 
   const loadAcknowledgements = useCallback(async () => {
     try {
@@ -104,6 +127,15 @@ export default function Overview({ risks, quality, organization, onChanged }) {
     return () => { active = false; };
   }, [loadAcknowledgements]);
 
+  useEffect(() => {
+    if (!canReview) return undefined;
+    let active = true;
+    keystoneApi.changeRequests({ status: 'submitted' })
+      .then((result) => { if (active) setPendingReviews(result.awaitingMyReview); })
+      .catch(() => { if (active) setPendingReviews(null); });
+    return () => { active = false; };
+  }, [canReview]);
+
   async function exportRisks() {
     setExporting(true);
     setExportError(null);
@@ -116,12 +148,31 @@ export default function Overview({ risks, quality, organization, onChanged }) {
     }
   }
 
+  const isOpen = (id) => openIds.includes(id) || (id === 'risks' && linkedOpen);
+  const toggle = (id) => {
+    if (!isOpen(id)) {
+      setStoredOpen([...openIds, id]);
+      return;
+    }
+    if (id === 'risks') setLinkedOpen(false);
+    setStoredOpen(openIds.filter((entry) => entry !== id));
+  };
+  const reveal = (id) => {
+    if (!openIds.includes(id)) setStoredOpen([...openIds, id]);
+    requestAnimationFrame(() => document.getElementById(`overview-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+  };
+  const showCoverage = (coverage) => {
+    setShowAll(false);
+    risk.replace({ coverage });
+    reveal('risks');
+  };
+
   const { skills } = risks;
   const atRisk = skills.filter((skill) => skill.busFactor <= 1);
   const rows = showAll || atRisk.length === 0 ? skills : atRisk;
   const top = skills[0];
   const owners = new Map((acknowledgements ?? []).filter((item) => item.riskType === 'skill').map((item) => [item.entityId, item]));
-  // The same filtered list feeds the two tables and the count, so they never disagree.
+  // The same filtered list feeds the two tables and the counts, so they never disagree.
   const filtered = rows.filter((skill) => {
     const { coverage, criticality, owner } = risk.filters;
     if (coverage === 'uncovered' && skill.busFactor !== 0) return false;
@@ -134,141 +185,219 @@ export default function Overview({ risks, quality, organization, onChanged }) {
   });
   const unowned = filtered.filter((skill) => !owners.has(skill.id));
   const owned = filtered.filter((skill) => owners.has(skill.id));
-  const topPeople = people ? people.employees.filter((employee) => employee.keystoneScore > 0).slice(0, 4) : [];
+  const keyPeople = people ? people.employees.filter((employee) => employee.keystoneScore > 0) : [];
   const openDialog = (skill, existing) => setDialog({ risk: { type: 'skill', id: skill.id, name: skill.name }, existing });
+  const firstName = session.user.displayName.split(/\s+/)[0];
+  const coverageWords = { uncovered: t('overview.filters.uncovered'), single: t('overview.filters.single'), covered: t('overview.filters.covered') };
+
+  const statusLine = risks.uncovered + risks.singleHolder === 0
+    ? t('overview.status.clear')
+    : [
+      risks.uncovered > 0 && t('overview.status.uncovered', { count: risks.uncovered }),
+      risks.singleHolder > 0 && t('overview.status.single', { count: risks.singleHolder }),
+    ].filter(Boolean).join(' · ');
+
+  const tiles = [
+    {
+      id: 'uncovered', icon: 'unmet', label: t('overview.kpi.uncovered'), value: risks.uncovered,
+      note: t('overview.kpi.uncoveredNote', { count: risks.uncovered }), tone: risks.uncovered > 0 ? 'danger' : 'ok',
+      action: t('overview.kpi.showSkills'), onClick: () => showCoverage('uncovered'),
+    },
+    {
+      id: 'single', icon: 'user', label: t('overview.kpi.single'), value: risks.singleHolder,
+      note: t('overview.kpi.singleNote', { count: risks.singleHolder }), tone: risks.singleHolder > 0 ? 'warn' : 'ok',
+      action: t('overview.kpi.showSkills'), onClick: () => showCoverage('single'),
+    },
+    {
+      id: 'people', icon: 'people', label: t('overview.kpi.keyPeople'), value: people ? keyPeople.length : '—',
+      note: keyPeople[0] ? t('overview.kpi.topPerson', { name: keyPeople[0].name, score: keyPeople[0].keystoneScore }) : t('overview.kpi.noKeyPeople'),
+      action: t('overview.kpi.openPeople'),
+      ...(isViewAllowed(session, 'people') ? { href: '#/people' } : { onClick: () => reveal('people') }),
+    },
+    readsQuality && isViewAllowed(session, 'quality')
+      ? {
+        id: 'health', icon: 'shield', label: t('overview.kpi.health'), value: quality.summary.score, unit: '/100',
+        note: `${t(`overview.health.${quality.summary.health}`)} · ${t('overview.kpi.openIssues', { count: quality.summary.open })}`,
+        tone: HEALTH_TONE[quality.summary.health], action: t('overview.kpi.openQuality'), href: '#/quality',
+      }
+      : {
+        id: 'highest', icon: 'target', label: t('overview.kpi.highest'), value: top ? top.keystoneScore : '—', unit: top ? '/100' : null,
+        note: top?.name ?? t('overview.kpi.noSkills'), action: t('overview.kpi.showSkills'),
+        onClick: () => { setShowAll(true); risk.reset(); reveal('risks'); },
+      },
+  ];
+
+  const launchers = LAUNCHERS.filter(([id]) => isViewAllowed(session, id)).map(([id, icon]) => {
+    const badge = id === 'reviews' && pendingReviews > 0 ? { value: pendingReviews, tone: 'warn' }
+      : id === 'quality' && readsQuality && quality.summary.open > 0
+        ? { value: quality.summary.open, tone: quality.summary.health === 'at_risk' ? 'danger' : 'warn' } : null;
+    return { id, icon, key: id === 'reviews' && !canReview ? 'submissions' : id, badge };
+  });
 
   return (
     <>
-      <div className="overview-meta">
-        <span className="muted">
-          Official data last changed {organization?.dataUpdatedAt ? relativeTime(organization.dataUpdatedAt) : 'at an unrecorded time'}
-          {risks.visibility === 'team' ? ' · showing your team' : ''}
-        </span>
-        {quality && !quality.error && (
-          <a className={`health-pill health-${quality.summary.health}`} href="#/quality">
-            <Icon name="shield" size={14} /> Data health {quality.summary.score}/100 · {HEALTH_LABELS[quality.summary.health]}
-            <span className="muted">&nbsp;· {plural(quality.summary.open, 'open issue')}</span>
-          </a>
-        )}
+      <div className="overview-hero">
+        <div>
+          <h2>{t(greetingKey(), { name: firstName })}</h2>
+          <p>{statusLine}</p>
+          <p className="muted small">
+            {t('overview.updated', { when: organization?.dataUpdatedAt ? relativeTime(organization.dataUpdatedAt) : t('overview.updatedUnknown') })}
+            {risks.visibility === 'team' ? ` · ${t('overview.teamOnly')}` : ''}
+          </p>
+        </div>
         {can(session, 'export.risks') && (
-          <button type="button" className="btn btn-secondary btn-sm" onClick={exportRisks} disabled={exporting}>
-            <Icon name="download" size={16} /> {exporting ? 'Exporting…' : 'Export CSV'}
-          </button>
+          <div className="overview-hero-actions">
+            <button type="button" className="btn btn-secondary btn-sm" onClick={exportRisks} disabled={exporting}>
+              <Icon name="download" size={16} /> {exporting ? t('overview.exporting') : t('overview.export')}
+            </button>
+          </div>
         )}
       </div>
       <FormError error={exportError} />
       {message && <p className="status-line" role="status"><Icon name="check" size={16} /><span>{message}</span></p>}
-      <Suggestions refreshKey={organization?.dataUpdatedAt ?? risks?.skills?.length} />
 
-      <section className="stat-strip" aria-label="Summary">
-        <div className="stat">
-          <p className="stat-label">No one qualified <HelpTopic id="coverage-target" /></p>
-          <p className={`stat-value ${risks.uncovered > 0 ? 'text-danger' : ''}`}>{risks.uncovered}</p>
-          <p className="stat-note">{risks.uncovered === 1 ? 'skill' : 'skills'} with nobody at the target level</p>
-        </div>
-        <div className="stat">
-          <p className="stat-label">Covered by one person <HelpTopic id="bus-factor" /></p>
-          <p className={`stat-value ${risks.singleHolder > 0 ? 'text-warn' : ''}`}>{risks.singleHolder}</p>
-          <p className="stat-note">{risks.singleHolder === 1 ? 'skill' : 'skills'} with a single qualified person</p>
-        </div>
-        <div className="stat">
-          <p className="stat-label">Skills tracked</p>
-          <p className="stat-value">{skills.length}</p>
-          <p className="stat-note">in the workforce inventory</p>
-        </div>
-        <div className="stat">
-          <p className="stat-label">Highest dependency <HelpTopic id="keystone-score" /></p>
-          <p className="stat-value">{top ? <>{top.keystoneScore}<span className="stat-unit">/100</span></> : '—'}</p>
-          <p className="stat-note">{top?.name ?? 'No skills recorded'}</p>
-        </div>
+      <section className="kpi-grid" aria-label={t('overview.kpi.aria')}>
+        {tiles.map((tile) => {
+          const className = `kpi ${tile.tone ? `tone-${tile.tone}` : ''}`;
+          const content = (
+            <>
+              <span className="kpi-top">{tile.label}<Icon name={tile.icon} size={18} /></span>
+              <span className="kpi-value">{tile.value}{tile.unit && <span className="kpi-unit">{tile.unit}</span>}</span>
+              <span className="kpi-note" title={tile.note}>{tile.note}</span>
+              <span className="kpi-go">{tile.action} <Icon name="arrow" size={14} /></span>
+            </>
+          );
+          return tile.href
+            ? <a key={tile.id} className={className} href={tile.href}>{content}</a>
+            : <button key={tile.id} type="button" className={className} onClick={tile.onClick}>{content}</button>;
+        })}
       </section>
 
-      <div className="overview-grid">
-        <div className="stack">
-          <section className="panel panel-flush">
-            <div className="panel-head">
-              <div>
-                <h2>{showAll ? 'Skills without an owner' : 'Skills at risk without an owner'}</h2>
-                <p>Highest dependency score first. A score is the same whether or not its risk has an owner.</p>
-              </div>
-              {atRisk.length > 0 && atRisk.length < skills.length && (
-                <button type="button" className="btn btn-secondary btn-sm" onClick={() => setShowAll((value) => !value)}>
-                  {showAll ? 'Show at-risk only' : `Show all ${skills.length}`}
-                </button>
-              )}
-            </div>
-            <FilterBar view="overview" filters={risk.filters} active={risk.active} labels={RISK_LABELS}
-              formatValue={(key, value) => (key === 'coverage' ? COVERAGE_WORDS[value] : key === 'criticality' ? `${value}/5 or higher` : value === 'unowned' ? 'no owner' : 'has an owner')}
-              onRemove={(key) => risk.setFilter(key)('')} onReset={risk.reset} onApply={risk.replace}
-              total={rows.length} shown={filtered.length} noun="skills"
-              emptyHint="Widen the filters or switch to all skills; an empty list is not an all-clear.">
-              <label className="field field-inline">Coverage
-                <select value={risk.filters.coverage} onChange={risk.setFilter('coverage')}>
-                  <option value="">Any</option><option value="uncovered">Nobody qualified</option><option value="single">One person</option><option value="covered">Two or more</option>
-                </select>
-              </label>
-              <label className="field field-inline">Criticality
-                <select value={risk.filters.criticality} onChange={risk.setFilter('criticality')}>
-                  <option value="">Any</option><option value="5">5 only</option><option value="4">4 or higher</option><option value="3">3 or higher</option>
-                </select>
-              </label>
-              <label className="field field-inline">Owner
-                <select value={risk.filters.owner} onChange={risk.setFilter('owner')}>
-                  <option value="">Any</option><option value="unowned">No owner</option><option value="owned">Has an owner</option>
-                </select>
-              </label>
-            </FilterBar>
-            {ackError && <div className="pad-x"><FormError error={ackError} /></div>}
-            {acknowledgements === null && !ackError && <div className="pad"><Skeleton lines={4} /></div>}
-            {acknowledgements !== null && unowned.length === 0 && filtered.length > 0 && <p className="empty-line pad">Every skill in this list has an owner.</p>}
-            {acknowledgements !== null && unowned.length > 0 && (
-              <RiskTable rows={unowned} owners={owners} canAcknowledge={canAcknowledge} onAcknowledge={openDialog} />
-            )}
-          </section>
+      {launchers.length > 0 && (
+        <nav aria-labelledby="overview-launch-title">
+          <h2 className="section-title" id="overview-launch-title">{t('overview.launch.title')}</h2>
+          <ul className="launcher">
+            {launchers.map((item) => (
+              <li key={item.id}>
+                <a className="launch-tile" href={`#/${item.id}`}>
+                  <span className="launch-icon" aria-hidden="true"><Icon name={item.icon} size={18} /></span>
+                  <span className="launch-label">
+                    {t(`overview.launch.${item.key}.label`)}
+                    <small>{t(`overview.launch.${item.key}.hint`)}</small>
+                  </span>
+                  {item.badge && <>
+                    <span className={`count-badge tone-${item.badge.tone}`} aria-hidden="true">{item.badge.value}</span>
+                    <span className="sr-only">{t(`overview.launch.badge.${item.id}`, { count: item.badge.value })}</span>
+                  </>}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )}
 
-          {owned.length > 0 && (
-            <section className="panel panel-flush">
-              <div className="panel-head">
-                <div>
-                  <h2>Acknowledged risks <HelpTopic id="risk-acknowledgement" /></h2>
-                  <p>Known risks with an owner and a review date. They still count in every score above.</p>
-                </div>
-              </div>
-              <RiskTable rows={owned} owners={owners} canAcknowledge={canAcknowledge} onAcknowledge={openDialog} />
-            </section>
+      <h2 className="section-title">{t('overview.sections.title')}</h2>
+      <div className="disclosure-stack">
+        <Disclosure id="overview-risks" icon="alert" tone={unowned.length > 0 ? 'danger' : undefined}
+          title={showAll ? t('overview.sections.risks.titleAll') : t('overview.sections.risks.title')}
+          summary={t('overview.sections.risks.summary')}
+          count={acknowledgements === null ? null : unowned.length}
+          open={isOpen('risks')} onToggle={() => toggle('risks')}
+          actions={atRisk.length > 0 && atRisk.length < skills.length && (
+            <button type="button" className="btn btn-secondary btn-sm" onClick={() => setShowAll((value) => !value)}>
+              {showAll ? t('overview.sections.risks.atRiskOnly') : t('overview.sections.risks.showAll', { count: skills.length })}
+            </button>
+          )}>
+          <FilterBar view="overview" filters={risk.filters} active={risk.active}
+            labels={{ coverage: t('overview.filters.coverage'), criticality: t('overview.filters.criticality'), owner: t('overview.filters.owner') }}
+            formatValue={(key, value) => (key === 'coverage' ? coverageWords[value]
+              : key === 'criticality' ? t('overview.filters.criticalityValue', { level: value })
+                : value === 'unowned' ? t('overview.filters.unowned') : t('overview.filters.owned'))}
+            onRemove={(key) => risk.setFilter(key)('')} onReset={risk.reset} onApply={risk.replace}
+            total={rows.length} shown={filtered.length} noun={t('overview.filters.noun')}
+            emptyHint={t('overview.filters.emptyHint')}>
+            <label className="field field-inline">{t('overview.filters.coverage')}
+              <select value={risk.filters.coverage} onChange={risk.setFilter('coverage')}>
+                <option value="">{t('overview.filters.any')}</option>
+                <option value="uncovered">{coverageWords.uncovered}</option>
+                <option value="single">{coverageWords.single}</option>
+                <option value="covered">{coverageWords.covered}</option>
+              </select>
+            </label>
+            <label className="field field-inline">{t('overview.filters.criticality')}
+              <select value={risk.filters.criticality} onChange={risk.setFilter('criticality')}>
+                <option value="">{t('overview.filters.any')}</option>
+                <option value="5">{t('overview.filters.critical5')}</option>
+                <option value="4">{t('overview.filters.criticalityValue', { level: 4 })}</option>
+                <option value="3">{t('overview.filters.criticalityValue', { level: 3 })}</option>
+              </select>
+            </label>
+            <label className="field field-inline">{t('overview.filters.owner')}
+              <select value={risk.filters.owner} onChange={risk.setFilter('owner')}>
+                <option value="">{t('overview.filters.any')}</option>
+                <option value="unowned">{t('overview.filters.unowned')}</option>
+                <option value="owned">{t('overview.filters.owned')}</option>
+              </select>
+            </label>
+          </FilterBar>
+          {ackError && <div className="pad-x"><FormError error={ackError} /></div>}
+          {acknowledgements === null && !ackError && <div className="pad"><Skeleton lines={4} /></div>}
+          {acknowledgements !== null && unowned.length === 0 && filtered.length > 0 && <p className="empty-line pad">{t('overview.sections.risks.allOwned')}</p>}
+          {acknowledgements !== null && unowned.length > 0 && (
+            <RiskTable rows={unowned} owners={owners} canAcknowledge={canAcknowledge} onAcknowledge={openDialog} />
           )}
-        </div>
+          <p className="pad muted small">
+            {t('overview.sections.risks.terms')}{' '}
+            {RISK_TERMS.map((id) => <span key={id} className="nowrap">{GLOSSARY[id]?.term ?? id}<HelpTopic id={id} />{' '}</span>)}
+          </p>
+        </Disclosure>
 
-        <div className="stack">
-          <section className="panel">
-            <div className="panel-head">
-              <div>
-                <h2>Most depended on</h2>
-                <p>The people with the highest dependency scores{risks.visibility === 'team' ? ' in your team' : ''}.</p>
-              </div>
-            </div>
+        {owned.length > 0 && (
+          <Disclosure id="overview-owned" icon="flag" tone="accent" title={t('overview.sections.owned.title')}
+            summary={t('overview.sections.owned.summary')} count={owned.length}
+            open={isOpen('owned')} onToggle={() => toggle('owned')}>
+            <RiskTable rows={owned} owners={owners} canAcknowledge={canAcknowledge} onAcknowledge={openDialog} />
+          </Disclosure>
+        )}
+
+        <Disclosure id="overview-suggestions" icon="target" tone={suggestionCount ? 'warn' : undefined}
+          title={t('overview.sections.suggestions.title')} summary={t('overview.sections.suggestions.summary')}
+          count={suggestionCount} open={isOpen('suggestions')} onToggle={() => toggle('suggestions')}>
+          <Suggestions embedded refreshKey={organization?.dataUpdatedAt ?? risks?.skills?.length} onCount={setSuggestionCount} />
+        </Disclosure>
+
+        <Disclosure id="overview-people" icon="people" title={t('overview.sections.people.title')}
+          summary={risks.visibility === 'team' ? t('overview.sections.people.summaryTeam') : t('overview.sections.people.summary')}
+          count={people ? keyPeople.length : null} open={isOpen('people')} onToggle={() => toggle('people')}>
+          <div className="pad">
             {people === null && <Skeleton lines={4} />}
-            {people === false && <p className="muted">Key people couldn't load. Refresh the page to try again.</p>}
-            {people && topPeople.length === 0 && <p className="muted">No skill depends on a single person on current evidence.</p>}
-            {people && topPeople.length > 0 && (
+            {people === false && <p className="muted">{t('overview.sections.people.loadError')}</p>}
+            {people && keyPeople.length === 0 && <p className="muted">{t('overview.sections.people.none')}</p>}
+            {people && keyPeople.length > 0 && (
               <ul className="people-mini">
-                {topPeople.map((employee) => (
+                {keyPeople.slice(0, 5).map((employee) => (
                   <li key={employee.id}>
                     <div>
                       <strong>{employee.name}</strong>
                       <small>{employee.newlyUncovered?.length
-                        ? `Only qualified person for ${employee.newlyUncovered.join(', ')}`
-                        : `Qualified in ${plural(employee.recordedSkills, 'skill')}`}</small>
+                        ? t('overview.sections.people.onlyPerson', { skills: employee.newlyUncovered.join(', ') })
+                        : t('overview.sections.people.qualifiedIn', { count: employee.recordedSkills })}</small>
                     </div>
                     <ScoreMeter score={employee.keystoneScore} />
                   </li>
                 ))}
               </ul>
             )}
-            <a className="link-arrow" href="#/people">See all key people <Icon name="arrow" size={16} /></a>
-          </section>
-          {can(session, 'audit.read') && <RecentActivity />}
-        </div>
+            {isViewAllowed(session, 'people') && <a className="link-arrow" href="#/people">{t('overview.sections.people.seeAll')} <Icon name="arrow" size={16} /></a>}
+          </div>
+        </Disclosure>
+
+        {can(session, 'audit.read') && (
+          <Disclosure id="overview-activity" icon="activity" title={t('overview.sections.activity.title')}
+            summary={t('overview.sections.activity.summary')} open={isOpen('activity')} onToggle={() => toggle('activity')}>
+            <div className="pad"><RecentActivity embedded /></div>
+          </Disclosure>
+        )}
       </div>
 
       {dialog && (

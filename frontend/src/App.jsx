@@ -5,7 +5,10 @@ import { initials } from './components/format';
 import Icon, { KeystoneMark } from './components/Icon';
 import KeystoneStarter from './components/KeystoneStarter';
 import Login from './components/Login';
+import NotificationBell from './components/NotificationHub';
+import PreferencesMenu from './components/PreferencesMenu';
 import { ForbiddenState, LoadingScreen } from './components/ui';
+import { useT } from './preferences/context';
 import { SessionContext } from './session';
 import { VIEWS, viewLabel } from './views';
 import { HelpProvider } from './help/HelpContext';
@@ -16,9 +19,10 @@ import GlobalSearch from './components/GlobalSearch';
 // Header "?" button. A real button, so it is reachable by keyboard and named for screen readers.
 function HelpButton() {
   const { open } = useHelp();
+  const t = useT();
   return (
-    <button type="button" className="btn btn-secondary btn-help" onClick={() => open()} aria-haspopup="dialog" title="Help for this page (or press ?)">
-      <Icon name="question" size={16} /> Help
+    <button type="button" className="btn btn-secondary btn-help" onClick={() => open()} aria-haspopup="dialog" title={t('help.buttonTitle')}>
+      <Icon name="question" size={16} /> {t('help.button')}
     </button>
   );
 }
@@ -45,8 +49,19 @@ function parseHash() {
   return { id: path, params: Object.fromEntries(new URLSearchParams(search)) };
 }
 
+// Page names and descriptions come from the translations; views.js keeps the English originals as the fallback.
+function viewText(view, session, t) {
+  const key = view.id === 'reviews' && viewLabel(view, session) !== 'Review queue' ? 'submissions' : view.id;
+  return {
+    label: t(`views.${key}.label`, { defaultValue: viewLabel(view, session) }),
+    description: t(`views.${view.id}.description`, { defaultValue: view.description }),
+  };
+}
+
 function App() {
+  const t = useT();
   const [session, setSession] = useState(undefined);
+  // Notices are stored as translation keys, so they follow a language change made on the sign-in page.
   const [notice, setNotice] = useState('');
   const [bootError, setBootError] = useState(null);
   const [route, setRoute] = useState(parseHash);
@@ -70,7 +85,7 @@ function App() {
     };
     const onSignedOut = () => {
       setSession(null);
-      setNotice('Your session ended. Sign in again to continue.');
+      setNotice('session.ended');
     };
     window.addEventListener('hashchange', onHashChange);
     window.addEventListener(SIGNED_OUT_EVENT, onSignedOut);
@@ -90,15 +105,15 @@ function App() {
   }, [session, home, current]);
 
   useEffect(() => {
-    document.title = current && session ? `${viewLabel(current, session)} · Keystone` : 'Keystone';
-  }, [current, session]);
+    document.title = current && session ? `${viewText(current, session, t).label} · Keystone` : 'Keystone';
+  }, [current, session, t]);
 
   async function signOut() {
     try {
       await authApi.logout();
-      setNotice('You signed out.');
+      setNotice('session.signedOut');
     } catch {
-      setNotice('You are signed out on this device, but the server could not be reached, so the session ends when it expires.');
+      setNotice('session.signedOutOffline');
     }
     setSession(null);
   }
@@ -111,17 +126,18 @@ function App() {
 
   if (session === undefined) return <LoadingScreen />;
   if (!session) {
-    return <Login notice={notice} bootError={bootError} onSignedIn={(me) => { setNotice(''); setBootError(null); setSession(me); }} />;
+    return <Login notice={notice ? t(notice) : ''} bootError={bootError} onSignedIn={(me) => { setNotice(''); setBootError(null); setSession(me); }} />;
   }
 
   const viewAllowed = Boolean(current) && current.allowed(session);
   const groups = [...new Set(allowed.map((view) => view.group))];
+  const currentText = current ? viewText(current, session, t) : null;
 
   return (
     <HelpProvider>
     <SessionContext.Provider value={session}>
       <div className="app">
-        <a className="skip-link" href="#main" onClick={skipToContent}>Skip to content</a>
+        <a className="skip-link" href="#main" onClick={skipToContent}>{t('nav.skip')}</a>
         <aside className="sidebar">
           <a className="brand" href={home ? `#/${home.id}` : '#/'}>
             <KeystoneMark />
@@ -130,15 +146,15 @@ function App() {
               <small>{session.organization.name}</small>
             </span>
           </a>
-          <nav aria-label="Pages">
+          <nav aria-label={t('nav.pages')}>
             {groups.map((group) => (
               <div className="nav-section" key={group}>
-                <p className="nav-group" id={`nav-${group}`}>{group}</p>
+                <p className="nav-group" id={`nav-${group}`}>{t(`nav.groups.${group}`, { defaultValue: group })}</p>
                 <ul aria-labelledby={`nav-${group}`}>
                   {allowed.filter((view) => view.group === group).map((view) => (
                     <li key={view.id}>
                       <a className="nav-link" href={`#/${view.id}`} aria-current={route.id === view.id ? 'page' : undefined}>
-                        <Icon name={view.icon} /> {viewLabel(view, session)}
+                        <Icon name={view.icon} /> {viewText(view, session, t).label}
                       </a>
                     </li>
                   ))}
@@ -150,9 +166,9 @@ function App() {
             <span className="avatar" aria-hidden="true">{initials(session.user.displayName)}</span>
             <span className="user-meta">
               <strong>{session.user.displayName}</strong>
-              <small>{session.user.roleLabel}</small>
+              <small>{t(`roles.${session.user.role}`, { defaultValue: session.user.roleLabel })}</small>
             </span>
-            <button type="button" className="btn-icon btn-signout" onClick={signOut} aria-label="Sign out" title="Sign out">
+            <button type="button" className="btn-icon btn-signout" onClick={signOut} aria-label={t('nav.signOut')} title={t('nav.signOut')}>
               <Icon name="logout" size={18} />
             </button>
           </div>
@@ -161,16 +177,20 @@ function App() {
         <main id="main" className="main" tabIndex={-1}>
           <div className="main-topbar">
             <GlobalSearch />
+            <div className="topbar-actions">
+              <NotificationBell session={session} />
+              <PreferencesMenu />
+            </div>
           </div>
           {current && (
             <header className="page-head">
               <div>
-                <h1>{viewLabel(current, session)}</h1>
-                <p>{current.description}</p>
+                <h1>{currentText.label}</h1>
+                <p>{currentText.description}</p>
               </div>
               <div className="page-head-actions">
                 {session.organization.environment === 'demo' && (
-                  <span className="tag tag-warn"><Icon name="info" size={14} /> Demo environment · fictional data</span>
+                  <span className="tag tag-warn"><Icon name="info" size={14} /> {t('common.demo')}</span>
                 )}
                 <HelpButton />
               </div>

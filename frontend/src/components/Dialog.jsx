@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import { useT } from '../preferences/context';
 import Icon from './Icon';
 
 const FOCUSABLE = 'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -7,6 +8,7 @@ const FOCUSABLE = 'button:not([disabled]), [href], input:not([disabled]), select
 // Modal dialog or side drawer. Focus moves inside on open, Tab stays inside, Escape closes, and focus
 // returns to whatever opened it.
 export default function Dialog({ title, description, onClose, children, footer, variant = 'dialog' }) {
+  const t = useT();
   const panel = useRef(null);
   const close = useRef(onClose);
   const titleId = useId();
@@ -60,7 +62,7 @@ export default function Dialog({ title, description, onClose, children, footer, 
             <h2 id={titleId}>{title}</h2>
             {description && <p id={descriptionId}>{description}</p>}
           </div>
-          <button type="button" className="btn-icon dialog-close" aria-label="Close" onClick={() => close.current()}>
+          <button type="button" className="btn-icon dialog-close" aria-label={t('common.close')} onClick={() => close.current()}>
             <Icon name="close" size={18} />
           </button>
         </header>

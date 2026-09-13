@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
 import { keystoneApi } from '../api/keystone';
+import { useT } from '../preferences/context';
 import Icon from './Icon';
 import { actionLabel, formatDateTime, relativeTime } from './format';
 import { Skeleton } from './ui';
 
 // Dashboard panel: only high-signal audit events (approvals, verified evidence, coverage changes).
-export default function RecentActivity() {
+// `embedded` drops the panel frame when a surrounding section already provides the heading.
+export default function RecentActivity({ embedded = false }) {
+  const t = useT();
   const [items, setItems] = useState(null);
   const [error, setError] = useState(null);
 
@@ -17,17 +20,11 @@ export default function RecentActivity() {
     return () => { active = false; };
   }, []);
 
-  return (
-    <section className="panel">
-      <div className="panel-head">
-        <div>
-          <h2>Recent activity</h2>
-          <p>Approvals, verified evidence and coverage changes.</p>
-        </div>
-      </div>
-      {error && <p className="muted" role="alert">Activity couldn't load. {error.message}</p>}
+  const body = (
+    <>
+      {error && <p className="muted" role="alert">{t('activity.loadError')} {error.message}</p>}
       {!items && !error && <Skeleton lines={4} />}
-      {items && items.length === 0 && <p className="muted">No significant changes are recorded yet.</p>}
+      {items && items.length === 0 && <p className="muted">{t('activity.empty')}</p>}
       {items && items.length > 0 && (
         <ol className="activity-list">
           {items.map((entry) => (
@@ -39,7 +36,21 @@ export default function RecentActivity() {
           ))}
         </ol>
       )}
-      <a className="link-arrow" href="#/audit">Open audit history <Icon name="arrow" size={16} /></a>
+      <a className="link-arrow" href="#/audit">{t('activity.open')} <Icon name="arrow" size={16} /></a>
+    </>
+  );
+
+  if (embedded) return <div>{body}</div>;
+
+  return (
+    <section className="panel">
+      <div className="panel-head">
+        <div>
+          <h2>{t('activity.title')}</h2>
+          <p>{t('activity.summary')}</p>
+        </div>
+      </div>
+      {body}
     </section>
   );
 }
