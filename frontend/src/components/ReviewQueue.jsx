@@ -78,8 +78,20 @@ function DecisionDialog({ request, kind, onClose, onDone }) {
   );
 }
 
-function RequestCard({ request, resolve, busy, onDecide, onAction }) {
+const REVIEWERS = { employee_skill: 'HR or an admin', future_requirement: 'an admin', resource: 'an admin' };
+
+function whyNotReviewable(request, session) {
+  if (request.status !== 'submitted' || request.canReview) return null;
+  const own = request.requestedBy.id === session.user.id;
+  const permission = request.type === 'employee_skill' ? 'changes.review.people' : 'changes.review.planning';
+  if (own && can(session, permission)) return `You submitted this change, so you cannot approve it yourself. Another reviewer (${REVIEWERS[request.type]}, not you) will find it under "Awaiting your review".`;
+  if (own) return `Waiting for ${REVIEWERS[request.type]} to review it.`;
+  return `Only ${REVIEWERS[request.type]} can approve this kind of change.`;
+}
+
+function RequestCard({ request, resolve, busy, onDecide, onAction, session }) {
   const pending = request.status === 'submitted';
+  const blocked = whyNotReviewable(request, session);
   return (
     <article className="request-card">
       <header className="request-head">
@@ -99,6 +111,7 @@ function RequestCard({ request, resolve, busy, onDecide, onAction }) {
       {pending && (
         <p className="muted small"><Icon name="info" size={14} /> Not applied yet. Scores keep using the current values until a reviewer approves it.</p>
       )}
+      {blocked && <p className="alert alert-soft"><Icon name="lock" size={14} /> {blocked}</p>}
       {request.reviewedBy && (
         <div className="review-outcome">
           <p><strong>{request.status === 'approved' ? 'Approved' : 'Rejected'} by {request.reviewedBy.name}</strong> · {formatDateTime(request.reviewedAt)}</p>
@@ -220,7 +233,7 @@ export default function ReviewQueue({ workforce, onChanged }) {
             <>
               <p className="muted small pad-x">{plural(shown.length, 'change')}, newest first.</p>
               {shown.map((request) => (
-                <RequestCard key={request.id} request={request} resolve={resolve} busy={busy === request.id}
+                <RequestCard key={request.id} request={request} resolve={resolve} busy={busy === request.id} session={session}
                   onDecide={(target, kind) => setDecision({ request: target, kind })} onAction={act} />
               ))}
             </>
