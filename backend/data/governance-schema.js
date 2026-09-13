@@ -182,6 +182,18 @@ const MIGRATIONS = [
       PRIMARY KEY (user_id, key)
     )`,
   ]],
+  ['governance-008-saved-views', [
+    `CREATE TABLE IF NOT EXISTS saved_views (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER NOT NULL REFERENCES users(id),
+      view TEXT NOT NULL,
+      name TEXT NOT NULL,
+      filters TEXT NOT NULL,
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL,
+      UNIQUE (user_id, view, name)
+    )`,
+  ]],
 ];
 
 async function runGovernanceMigrations() {

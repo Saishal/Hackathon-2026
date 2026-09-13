@@ -53,7 +53,7 @@ The branch name is historical; it carries six phases, each browser-verified, 178
 | 3 Employee directory | `GET/POST /employees`, `PATCH`, `GET /:id/impact`, archive with report reassignment and account disable, restore; archived people leave every score (filtered on the matrix join); before/after preview and risk-impact warnings on edit | `EmployeeDirectory`, migration `governance-006-employment` |
 | 4 Global search | `GET /search` scoped with `scopeFor`, grouped results with deep links, combobox with debounce and arrow/Enter/Escape, help topics merged client-side, not audited | `services/search.js`, `GlobalSearch` |
 | 6 Suggestions | `GET /suggestions` from deterministic rules over scoped data, each labelled by basis (official / pending / unverified / scenario) with safe actions; per-user dismiss and restore, not audited | `services/suggestions.js`, `Suggestions`, migration `governance-007-suggestions` |
-| 5 Filters everywhere | **In progress** — shared URL-backed filter state, removable chips, reset, saved views per user, applied across the decision tables | — |
+| 5 Filters everywhere | `useUrlFilters` keeps filters in the hash query so filtered pages can be bookmarked and shared; shared `FilterBar` with removable chips, reset, "Showing n of m" count and an explicit "filters excluded everything" notice; private saved views per page (`GET/POST/DELETE /saved-views`); applied to risk overview, key people, review queue, data quality, employee directory and accounts, with exports reading the same filter object | `filters/useUrlFilters.js`, `FilterBar`, `data/saved-views.js`, migration `governance-008-saved-views` |
 
 Deferred by decision: CSV import (spec marks it optional).
 

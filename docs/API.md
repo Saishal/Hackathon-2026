@@ -111,6 +111,15 @@ The frontend adds a "Help and glossary" group from static help content; it is no
 Rules are deterministic over data the user can already see: the same scoped workforce, risks, acknowledgements, data-quality issues and succession the pages use, with each source included only if the user holds its permission. A suggestion never changes data and never predicts; it restates a fact and links to where to act on it.
 
 `POST /api/keystone/suggestions/dismiss` and `POST /api/keystone/suggestions/restore` take `{key}`. Dismissals are stored per user in `suggestion_dismissals` (migration `governance-007-suggestions`) and are **not** audited. Keys are stable per rule and record, so a dismissal survives re-evaluation and the suggestion returns on its own if the underlying fact changes.
+## Saved views
+
+Every decision table (risk overview, key people, review queue, data quality, employee directory, accounts) keeps its filters in the URL hash query, for example `#/overview?coverage=single&owner=unowned` or `#/quality?severity=critical`. A filtered page can be bookmarked or pasted to a colleague; the recipient sees the same filters applied, still within their own scope. Charts, tables, counts and exports on a page read the same filter object, so they never disagree, and an empty table says that the filters excluded everything rather than looking like an all-clear.
+
+- `GET /api/keystone/saved-views?view=<name>` — the signed-in user's saved views for one page, `{items: [{id, view, name, filters, createdAt, updatedAt}]}`, sorted by name.
+- `POST /api/keystone/saved-views` — body `{view, name, filters}`; `view` is a lowercase page id, `name` up to 60 characters, `filters` a flat object of up to 20 string values. Saving with a name already used on that page replaces it (upsert on `user_id, view, name`). Returns the stored view.
+- `DELETE /api/keystone/saved-views/:id` — removes one of the caller's own views; 404 for anyone else's.
+
+Saved views are private to the user who saved them, store only filter values (never results), and are **not** audited. Table `saved_views` comes from migration `governance-008-saved-views`.
 ## Employee directory (admin)
 
 All under `/api/keystone`, all requiring `employee.edit`. Archived employees keep their record, evidence and audit history but are excluded from the workforce snapshot, so they hold no coverage, appear in no team or scope, and are not succession candidates.

@@ -1860,3 +1860,29 @@ th .help-topic { margin-left: 2px; }
 .suggestion-more { padding: 0 16px 12px; }
 .suggestion-dismissed { padding: 0 16px 12px; border-top: 1px solid var(--line); }
 .suggestion-dismissed > p { padding: 10px 0 6px; margin: 0; }
+
+/* ============================================================
+   Filter bar: chips, reset, count, saved views
+   ============================================================ */
+.kfilter-bar { padding: 10px 16px; border-bottom: 1px solid var(--line); display: grid; gap: 8px; }
+.kfilter-controls { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; }
+.kfilter-controls .field-inline { gap: 8px; font-size: 13px; color: var(--ink-2); }
+.kfilter-status { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; min-height: 28px; }
+.kfilter-chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 3px 6px 3px 10px;
+  border: 1px solid var(--line-strong); border-radius: 999px;
+  background: var(--surface-2); color: var(--ink); font-size: 12.5px;
+}
+.chip-label { color: var(--ink-3); }
+.chip-remove { display: inline-grid; place-items: center; width: 18px; height: 18px; border: 0; border-radius: 50%; background: transparent; color: var(--ink-2); cursor: pointer; }
+.chip-remove:hover { background: var(--danger-soft); color: var(--danger); }
+.chip-remove:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.kfilter-count { margin-left: auto; font-size: 12.5px; color: var(--ink-3); white-space: nowrap; }
+.kfilter-saved { display: inline-flex; align-items: center; gap: 8px; }
+.kfilter-manage { position: relative; font-size: 12.5px; }
+.kfilter-manage summary { list-style: none; cursor: pointer; }
+.kfilter-manage ul { position: absolute; right: 0; top: calc(100% + 4px); z-index: 20; margin: 0; padding: 8px 12px; list-style: none; min-width: 200px; border: 1px solid var(--line-strong); border-radius: var(--radius-md); background: var(--surface); box-shadow: var(--shadow); display: grid; gap: 4px; }
+.kfilter-manage li { display: flex; justify-content: space-between; gap: 10px; }
+.kfilter-empty { display: flex; align-items: flex-start; gap: 8px; margin: 0; padding: 10px 12px; border: 1px solid var(--warn); border-radius: var(--radius-md); background: var(--warn-soft); font-size: 13px; color: var(--ink); }

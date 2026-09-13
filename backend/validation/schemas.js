@@ -196,11 +196,17 @@ const aiDecision = object({
 }, ['skillId', 'category', 'decision', 'mode']);
 
 const issueAcknowledge = object({ note: text(1000, 'Acknowledgement note') }, ['note']);
+// Filters are short string values keyed by field; the server never interprets them, only stores them.
+const savedViewCreate = object({
+  view: { type: 'string', minLength: 2, maxLength: 40, pattern: '^[a-z]+$', title: 'Page' },
+  name: text(60, 'View name'),
+  filters: { type: 'object', maxProperties: 20, additionalProperties: { type: 'string', maxLength: 200 }, title: 'Filters' },
+}, ['view', 'name', 'filters']);
 const suggestionKey = object({ key: { type: 'string', minLength: 3, maxLength: 200, pattern: '^[a-z_]+:[A-Za-z0-9_:.-]+$', title: 'Suggestion' } }, ['key']);
 
 module.exports = {
   RESOURCE_KINDS, ROLES, login, employeeSkill, evidenceChangePayload, futureRequirementCreate, futureRequirementUpdate,
   futureRequirementChangePayload, resourceFields, resourceChangePayload, changeRequestCreate, changeRequestUpdate,
   approveDecision, rejectDecision, scenario, acknowledgementCreate, acknowledgementUpdate, acknowledgementClose,
-  userCreate, userUpdate, passwordReset, organizationUpdate, employeeUpdate, employeeCreate, employeeArchive, roleRequirement, aiDecision, issueAcknowledge, suggestionKey,
+  userCreate, userUpdate, passwordReset, organizationUpdate, employeeUpdate, employeeCreate, employeeArchive, roleRequirement, aiDecision, issueAcknowledge, suggestionKey, savedViewCreate,
 };

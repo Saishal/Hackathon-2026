@@ -6,6 +6,9 @@ import Icon from './Icon';
 import { fieldMessages, formatDate, relativeTime } from './format';
 import { EmptyState, ErrorState, FieldError, FormError, Skeleton } from './ui';
 import HelpTopic from './HelpTopic';
+import { useUrlFilters } from '../filters/useUrlFilters';
+
+const ACCOUNT_FILTERS = { q: '', role: '', status: '', sort: 'name' };
 
 // What a role lets someone see and do, in plain words, shown before an admin assigns it. The text
 // comes from the server beside the role list, so it cannot drift from the permissions it describes.
@@ -307,10 +310,8 @@ export default function UsersAdmin({ workforce, onOrganizationChanged }) {
   const [error, setError] = useState(null);
   const [dialog, setDialog] = useState(null);
   const [message, setMessage] = useState('');
-  const EMPTY_FILTERS = { q: '', role: '', status: '', sort: 'name' };
-  const [filters, setFilters] = useState(EMPTY_FILTERS);
-  const setFilter = (field) => (event) => setFilters((current) => ({ ...current, [field]: event.target.value }));
-  const activeFilterCount = ['q', 'role', 'status'].filter((key) => filters[key] !== '').length;
+  const { filters, setFilter, reset, active } = useUrlFilters(ACCOUNT_FILTERS);
+  const activeFilterCount = active.filter((key) => key !== 'sort').length;
 
   const load = useCallback(async () => {
     try {
@@ -404,7 +405,7 @@ export default function UsersAdmin({ workforce, onOrganizationChanged }) {
               </label>
               <span className="toolbar-summary" aria-live="polite">
                 Showing {visible.length} of {data.items.length}
-                {activeFilterCount > 0 && <> · <button type="button" className="btn-link" onClick={() => setFilters(EMPTY_FILTERS)}>Reset filters</button></>}
+                {activeFilterCount > 0 && <> · <button type="button" className="btn-link" onClick={reset}>Reset filters</button></>}
               </span>
             </form>
           )}
@@ -412,7 +413,7 @@ export default function UsersAdmin({ workforce, onOrganizationChanged }) {
           {data && data.items.length === 0 && <EmptyState icon="user" title="No accounts yet" />}
           {data && data.items.length > 0 && visible.length === 0 && (
             <EmptyState icon="search" title="No accounts match these filters">
-              {data.items.length} {data.items.length === 1 ? 'account exists' : 'accounts exist'} but none match. <button type="button" className="btn-link" onClick={() => setFilters(EMPTY_FILTERS)}>Reset filters</button> to see them all.
+              {data.items.length} {data.items.length === 1 ? 'account exists' : 'accounts exist'} but none match. <button type="button" className="btn-link" onClick={reset}>Reset filters</button> to see them all.
             </EmptyState>
           )}
           {data && visible.length > 0 && (

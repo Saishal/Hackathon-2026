@@ -25,6 +25,7 @@ const { toCsv } = require('../services/csv');
 const { search } = require('../services/search');
 const { buildSuggestions } = require('../services/suggestions');
 const dismissals = require('../data/suggestion-dismissals');
+const savedViews = require('../data/saved-views');
 const { analyzeSuccession } = require('../services/risk');
 const { today, isCalendarDate, addMonths } = require('../services/clock');
 
@@ -593,6 +594,23 @@ module.exports = function governanceRoutes() {
 
   router.post('/suggestions/restore', validateBody(schemas.suggestionKey), async (req, res) => {
     await dismissals.restore(req.user.id, req.body.key);
+    res.status(204).end();
+  });
+
+  // Saved views: a user's own named filter sets, per page. Personal, private, not audited.
+  router.get('/saved-views', async (req, res) => {
+    const view = typeof req.query.view === 'string' && /^[a-z]+$/.test(req.query.view) ? req.query.view : undefined;
+    res.json({ items: await savedViews.listSavedViews(req.user.id, view) });
+  });
+
+  router.post('/saved-views', validateBody(schemas.savedViewCreate), async (req, res) => {
+    const saved = await savedViews.saveView(req.user.id, { view: req.body.view, name: req.body.name.trim(), filters: req.body.filters }, new Date().toISOString());
+    res.status(201).json(saved);
+  });
+
+  router.delete('/saved-views/:id', async (req, res) => {
+    const removed = await savedViews.deleteView(req.user.id, paramId(req));
+    if (!removed) throw notFound('The saved view');
     res.status(204).end();
   });
 

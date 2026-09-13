@@ -3,6 +3,12 @@ import { keystoneApi } from '../api/keystone';
 import Dialog from './Dialog';
 import Icon from './Icon';
 import HelpTopic from './HelpTopic';
+import FilterBar from './FilterBar';
+import { useUrlFilters } from '../filters/useUrlFilters';
+
+const QUALITY_FILTERS = { status: 'active', severity: '', ruleCode: '', q: '' };
+const QUALITY_LABELS = { status: 'Status', severity: 'Severity', ruleCode: 'Rule', q: 'Search' };
+const STATUS_WORDS = { active: 'open and acknowledged', open: 'open', acknowledged: 'acknowledged', resolved: 'resolved recently', '': 'all' };
 import TrustLegend from './TrustLegend';
 import { can, fieldMessages, formatDateTime, hrefForLink, plural } from './format';
 import { EmptyState, ErrorState, FieldError, FormError, SeverityTag, Skeleton, StatusTag } from './ui';
@@ -46,8 +52,9 @@ function AcknowledgeDialog({ issue, onClose, onDone }) {
 }
 
 export default function DataQuality({ session, canOpen, onChanged }) {
-  const [filters, setFilters] = useState({ status: 'active', severity: '', ruleCode: '' });
-  const [search, setSearch] = useState('');
+  const quality = useUrlFilters(QUALITY_FILTERS);
+  const filters = { status: quality.filters.status, severity: quality.filters.severity, ruleCode: quality.filters.ruleCode };
+  const search = quality.filters.q;
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [acknowledging, setAcknowledging] = useState(null);
@@ -58,7 +65,8 @@ export default function DataQuality({ session, canOpen, onChanged }) {
   const load = useCallback(() => {
     setError(null);
     return keystoneApi.dataQuality(filters).then(setData).catch(setError);
-  }, [filters]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- filters is rebuilt each render; its three fields are the real inputs
+  }, [filters.status, filters.severity, filters.ruleCode]);
 
   useEffect(() => { load(); }, [load]);
 
@@ -95,7 +103,7 @@ export default function DataQuality({ session, canOpen, onChanged }) {
   const [healthLabel, healthTone] = HEALTH[summary.health];
   const needle = search.trim().toLowerCase();
   const visible = data.issues.filter((issue) => !needle || `${issue.title} ${issue.entityLabel} ${issue.explanation}`.toLowerCase().includes(needle));
-  const setFilter = (field) => (event) => setFilters((current) => ({ ...current, [field]: event.target.value }));
+  const setFilter = quality.setFilter;
 
   return <>
     <section className="panel quality-summary" aria-label="Data health summary">
@@ -156,9 +164,14 @@ export default function DataQuality({ session, canOpen, onChanged }) {
           </select>
         </label>
         <label className="field grow">Search
-          <input type="search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Person, skill or issue" />
+          <input type="search" value={search} onChange={quality.setFilter('q')} placeholder="Person, skill or issue" />
         </label>
       </div>
+      <FilterBar view="quality" filters={quality.filters} active={quality.active} labels={QUALITY_LABELS}
+        formatValue={(key, value) => (key === 'status' ? STATUS_WORDS[value] ?? value : value)}
+        onRemove={(key) => quality.setFilter(key)(key === 'status' ? 'active' : '')} onReset={quality.reset} onApply={quality.replace}
+        total={data.issues.length} shown={visible.length} noun="issues"
+        emptyHint="The export uses these same filters, so it would be empty too." />
 
       {visible.length === 0 ? (
         <EmptyState icon="check" title="No issues match these filters">Try another status or severity.</EmptyState>
