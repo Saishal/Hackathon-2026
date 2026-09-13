@@ -1,45 +1,45 @@
-name,role,department,mentoring_hours_per_month
-Rachel Moreno,Engineering Manager,Engineering,4
-Liam Chen,Backend Engineer,Engineering,4
-Mason Green,Backend Engineer,Engineering,
-Priya Raman,Backend Engineer,Engineering,3
-Tomas Herrera,Backend Engineer,Engineering,
-Kwame Mensah,Backend Engineer,Engineering,
-Ava Patel,Frontend Engineer,Engineering,3
-Amelia Diaz,Frontend Engineer,Engineering,
-Jonas Weber,Frontend Engineer,Engineering,
-Mei Lin Tan,Frontend Engineer,Engineering,
-Sophia Nguyen,QA Engineer,Engineering,2
-Benjamin Hall,QA Engineer,Engineering,
-Ella Walker,Technical Writer,Engineering,
-Ethan Brooks,DevOps Engineer,Platform,
-Aisha Bello,DevOps Engineer,Platform,
-Henry Adams,Cloud Engineer,Platform,2
-Rafael Costa,Cloud Engineer,Platform,
-Dmitri Volkov,Site Reliability Engineer,Platform,3
-Keiko Sato,Site Reliability Engineer,Platform,
-Jack Turner,Solutions Architect,Platform,4
-Isabella Ross,Security Analyst,Security,2
-Omar Haddad,Security Analyst,Security,
-Noah Rivera,Data Analyst,Data & AI,
-Chloe Martin,Data Analyst,Data & AI,
-Arjun Mehta,Data Analyst,Data & AI,
-James Carter,Data Scientist,Data & AI,2
-Yuki Tanaka,Data Scientist,Data & AI,
-Grace King,AI Specialist,Data & AI,
-Mia Thompson,Product Manager,Product,
-Daniel Okafor,Product Manager,Product,
-Sara Lindqvist,Product Manager,Product,
-Lucas Kim,UX Designer,Design,2
-Elena Petrova,UX Designer,Design,
-Harper White,Program Manager,Operations,
-Evelyn Scott,Business Analyst,Operations,
-Marcus Reed,Business Analyst,Operations,
-Nadia Rahman,Compliance Analyst,Risk & Compliance,2
-Victor Alvarez,Compliance Analyst,Risk & Compliance,
-Fatima Zahra,Billing Operations Specialist,Finance Operations,
-Oliver Grant,Billing Operations Specialist,Finance Operations,
-Daniel Young,Support Engineer,Customer Success,
-Samuel Osei,Support Engineer,Customer Success,
-Julia Novak,Support Engineer,Customer Success,
-Abigail Lewis,People Partner,People,
+name,role,department,mentoring_hours_per_month,manager
+Rachel Moreno,Engineering Manager,Engineering,4,EXTERNAL
+Liam Chen,Backend Engineer,Engineering,4,Rachel Moreno
+Mason Green,Backend Engineer,Engineering,,Rachel Moreno
+Priya Raman,Backend Engineer,Engineering,3,Rachel Moreno
+Tomas Herrera,Backend Engineer,Engineering,,Rachel Moreno
+Kwame Mensah,Backend Engineer,Engineering,,Rachel Moreno
+Ava Patel,Frontend Engineer,Engineering,3,Rachel Moreno
+Amelia Diaz,Frontend Engineer,Engineering,,Rachel Moreno
+Jonas Weber,Frontend Engineer,Engineering,,Rachel Moreno
+Mei Lin Tan,Frontend Engineer,Engineering,,Rachel Moreno
+Sophia Nguyen,QA Engineer,Engineering,2,Rachel Moreno
+Benjamin Hall,QA Engineer,Engineering,,Rachel Moreno
+Ella Walker,Technical Writer,Engineering,,Rachel Moreno
+Ethan Brooks,DevOps Engineer,Platform,,Jack Turner
+Aisha Bello,DevOps Engineer,Platform,,Jack Turner
+Henry Adams,Cloud Engineer,Platform,2,Jack Turner
+Rafael Costa,Cloud Engineer,Platform,,Jack Turner
+Dmitri Volkov,Site Reliability Engineer,Platform,3,Jack Turner
+Keiko Sato,Site Reliability Engineer,Platform,,Jack Turner
+Jack Turner,Solutions Architect,Platform,4,EXTERNAL
+Isabella Ross,Security Analyst,Security,2,EXTERNAL
+Omar Haddad,Security Analyst,Security,,Isabella Ross
+Noah Rivera,Data Analyst,Data & AI,,James Carter
+Chloe Martin,Data Analyst,Data & AI,,James Carter
+Arjun Mehta,Data Analyst,Data & AI,,James Carter
+James Carter,Data Scientist,Data & AI,2,EXTERNAL
+Yuki Tanaka,Data Scientist,Data & AI,,James Carter
+Grace King,AI Specialist,Data & AI,,James Carter
+Mia Thompson,Product Manager,Product,,EXTERNAL
+Daniel Okafor,Product Manager,Product,,Mia Thompson
+Sara Lindqvist,Product Manager,Product,,Mia Thompson
+Lucas Kim,UX Designer,Design,2,Mia Thompson
+Elena Petrova,UX Designer,Design,,Mia Thompson
+Harper White,Program Manager,Operations,,EXTERNAL
+Evelyn Scott,Business Analyst,Operations,,Harper White
+Marcus Reed,Business Analyst,Operations,,Harper White
+Nadia Rahman,Compliance Analyst,Risk & Compliance,2,EXTERNAL
+Victor Alvarez,Compliance Analyst,Risk & Compliance,,Nadia Rahman
+Fatima Zahra,Billing Operations Specialist,Finance Operations,,Harper White
+Oliver Grant,Billing Operations Specialist,Finance Operations,,
+Daniel Young,Support Engineer,Customer Success,,EXTERNAL
+Samuel Osei,Support Engineer,Customer Success,,Daniel Young
+Julia Novak,Support Engineer,Customer Success,,Daniel Young
+Abigail Lewis,People Partner,People,,EXTERNAL

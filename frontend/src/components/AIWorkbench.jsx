@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { keystoneApi } from '../api/keystone';
-import { plural } from './format';
+import { useSession } from '../session';
+import { can, plural } from './format';
 import Icon from './Icon';
 
 const labels = { training: 'Training', mentoring: 'Mentoring', certification: 'Certification', job_rotation: 'Job rotation', project_experience: 'Project experience' };
@@ -31,18 +32,29 @@ const toIntervention = (action) => ({
   source: labels[action.category],
 });
 
+const addTo = (set, id) => new Set(set).add(id);
+const removeFrom = (set, id) => { const next = new Set(set); next.delete(id); return next; };
+
 export default function AIWorkbench({ workforce, onRequirementsSaved, onSchedule }) {
+  const session = useSession();
+  const canPlan = can(session, 'ai.development');
+  const canStrategy = can(session, 'ai.strategy');
+  const saveDirectly = can(session, 'futureRequirement.configure');
+  const canPropose = can(session, 'planning.propose');
+
   const [skillId, setSkillId] = useState('');
   const [plan, setPlan] = useState(null);
   const [reviewedActions, setReviewedActions] = useState(new Set());
   const [scheduledActions, setScheduledActions] = useState(new Set());
+  const [dismissedActions, setDismissedActions] = useState(new Set());
+  const [recording, setRecording] = useState(new Set());
   const [direction, setDirection] = useState('');
   const [proposal, setProposal] = useState(null);
   const [draft, setDraft] = useState([]);
   const [reviewed, setReviewed] = useState(false);
   const [horizon, setHorizon] = useState(12);
   const [preview, setPreview] = useState(null);
-  const [savedRequirements, setSavedRequirements] = useState([]);
+  const [saved, setSaved] = useState(null);
   // Which request is running: 'plan', 'strategy', 'preview' or 'save'. Every control waits on any of them.
   const [pending, setPending] = useState('');
   const [error, setError] = useState('');
@@ -53,19 +65,47 @@ export default function AIWorkbench({ workforce, onRequirementsSaved, onSchedule
     try { await action(); } catch (err) { setError(err.message); } finally { setPending(''); }
   }
   function clearPlan() {
-    setPlan(null); setReviewedActions(new Set()); setScheduledActions(new Set());
+    setPlan(null); setReviewedActions(new Set()); setScheduledActions(new Set()); setDismissedActions(new Set());
   }
-  function toggleReviewed(id, checked) {
-    setReviewedActions((current) => {
-      const next = new Set(current);
-      if (checked) next.add(id); else next.delete(id);
-      return next;
-    });
+
+  // Every review, schedule and dismissal is recorded in the audit history by the server. The screen
+  // only shows the new state once the server has confirmed it.
+  async function decide(action, decision) {
+    setRecording((current) => addTo(current, action.id));
+    setError('');
+    try {
+      await keystoneApi.recordAiDecision({
+        skillId: action.skillId,
+        category: action.category,
+        decision,
+        employeeId: action.employeeId ?? null,
+        mentorId: action.mentorId ?? null,
+        mode: plan.mode === 'live-ai' ? 'live-ai' : 'demo-fallback',
+      });
+      return true;
+    } catch (err) {
+      setError(`Your decision wasn't recorded, so nothing changed. ${err.message}`);
+      return false;
+    } finally {
+      setRecording((current) => removeFrom(current, action.id));
+    }
   }
-  function schedule(action) {
-    onSchedule(toIntervention(action));
-    setScheduledActions((current) => new Set(current).add(action.id));
+
+  async function toggleReviewed(action, checked) {
+    if (await decide(action, checked ? 'reviewed' : 'unreviewed')) {
+      setReviewedActions((current) => (checked ? addTo(current, action.id) : removeFrom(current, action.id)));
+    }
   }
+  async function schedule(action) {
+    if (await decide(action, 'scheduled')) {
+      onSchedule(toIntervention(action));
+      setScheduledActions((current) => addTo(current, action.id));
+    }
+  }
+  async function dismiss(action) {
+    if (await decide(action, 'dismissed')) setDismissedActions((current) => addTo(current, action.id));
+  }
+
   function update(index, field, value) {
     setDraft((current) => current.map((item, i) => i === index ? { ...item, [field]: Number(value) } : item));
     setReviewed(false); setPreview(null);
@@ -73,23 +113,36 @@ export default function AIWorkbench({ workforce, onRequirementsSaved, onSchedule
   function changeDirection(value) {
     setDirection(value); setProposal(null); setDraft([]); setPreview(null); setReviewed(false);
   }
+
+  const requirementFields = (requirement) => ({
+    skillId: requirement.skillId,
+    skillName: requirement.skillName,
+    requiredHolders: requirement.requiredHolders,
+    targetProficiency: requirement.targetProficiency,
+    criticality: requirement.criticality,
+    effectiveMonth: requirement.effectiveMonth,
+    provenance: `Reviewed strategy: ${direction.trim()}`.slice(0, 300),
+  });
+
+  // Admins save approved requirements directly (audited). HR submits them for an admin's approval, and
+  // they only reach Time Machine once approved.
   async function saveRequirements() {
-    const saved = [];
+    const results = [];
     for (const requirement of draft) {
-      saved.push(await keystoneApi.addFutureRequirement({
-        skillId: requirement.skillId,
-        skillName: requirement.skillName,
-        requiredHolders: requirement.requiredHolders,
-        targetProficiency: requirement.targetProficiency,
-        criticality: requirement.criticality,
-        effectiveMonth: requirement.effectiveMonth,
-        status: 'reviewed',
-        provenance: `Reviewed strategy: ${direction.trim()}`,
-      }));
+      results.push(saveDirectly
+        ? await keystoneApi.addFutureRequirement({ ...requirementFields(requirement), status: 'reviewed' })
+        : await keystoneApi.createChangeRequest({
+          type: 'future_requirement',
+          payload: { operation: 'create', fields: requirementFields(requirement) },
+          justification: `Proposed from the AI advisor after review. Business direction: ${direction.trim()}`.slice(0, 1000),
+          submit: true,
+        }));
     }
-    setSavedRequirements(saved);
-    setDraft((current) => current.map((requirement, index) => ({ ...requirement, skillId: saved[index].skillId,
-      skillName: saved[index].skillName })));
+    setSaved({ mode: saveDirectly ? 'direct' : 'submitted', count: results.length });
+    if (saveDirectly) {
+      setDraft((current) => current.map((requirement, index) => ({ ...requirement, skillId: results[index].skillId,
+        skillName: results[index].skillName })));
+    }
     setPreview(null);
     await onRequirementsSaved?.();
   }
@@ -98,7 +151,7 @@ export default function AIWorkbench({ workforce, onRequirementsSaved, onSchedule
   return <div>
     {error && <p role="alert" className="alert">{error}</p>}
 
-    <section className="panel">
+    {canPlan && <section className="panel">
       <div className="panel-head">
         <div>
           <h2>Develop a skill</h2>
@@ -125,10 +178,13 @@ export default function AIWorkbench({ workforce, onRequirementsSaved, onSchedule
           {plan.actions.map((action) => {
             const applicable = action.status !== 'not_applicable';
             const scheduled = scheduledActions.has(action.id);
+            const dismissed = dismissedActions.has(action.id);
+            const saving = recording.has(action.id);
             return <article className="card" key={action.id}>
               <header className="card-head">
                 <h3>{labels[action.category]}</h3>
-                <span className={applicable ? 'tag tag-accent' : 'tag'}>{sentence(action.status)}</span>
+                {dismissed ? <span className="tag tag-outline">Dismissed</span>
+                  : <span className={applicable ? 'tag tag-accent' : 'tag'}>{sentence(action.status)}</span>}
               </header>
               <p>{action.rationale}</p>
               <p>{action.action}</p>
@@ -142,29 +198,36 @@ export default function AIWorkbench({ workforce, onRequirementsSaved, onSchedule
                 <dt>Verified by</dt><dd>{action.verificationMethod}</dd>
               </dl>
               <details><summary>Assumptions</summary><ul>{action.assumptions.map((assumption, i) => <li key={i}>{assumption}</li>)}</ul></details>
-              {onSchedule && applicable && action.employeeId !== null && <footer className="card-foot">
-                <label className="check"><input type="checkbox" disabled={scheduled} checked={reviewedActions.has(action.id)}
-                  onChange={(event) => toggleReviewed(action.id, event.target.checked)} /> I reviewed this action</label>
-                <button type="button" className="btn btn-secondary btn-sm" disabled={!reviewedActions.has(action.id) || scheduled} onClick={() => schedule(action)}>
-                  {scheduled ? <><Icon name="check" size={16} /> Scheduled</> : 'Schedule in Time Machine'}
-                </button>
+              {dismissed && <p className="muted small">Dismissed and recorded in the audit history.</p>}
+              {onSchedule && applicable && action.employeeId !== null && !dismissed && <footer className="card-foot">
+                <label className="check"><input type="checkbox" disabled={scheduled || saving} checked={reviewedActions.has(action.id)}
+                  onChange={(event) => toggleReviewed(action, event.target.checked)} /> I reviewed this action</label>
+                <span className="row-actions">
+                  {!scheduled && <button type="button" className="btn btn-quiet btn-sm" disabled={saving} onClick={() => dismiss(action)}>Dismiss</button>}
+                  <button type="button" className="btn btn-secondary btn-sm" disabled={!reviewedActions.has(action.id) || scheduled || saving} onClick={() => schedule(action)}>
+                    {scheduled ? <><Icon name="check" size={16} /> Scheduled</> : saving ? 'Recording…' : 'Schedule in Time Machine'}
+                  </button>
+                </span>
               </footer>}
             </article>;
           })}
         </div>
       </div>}
-    </section>
+    </section>}
 
-    <section className="panel">
+    {canStrategy && <section className="panel">
       <div className="panel-head">
         <div>
           <h2>Plan for future skills</h2>
-          <p>Describe where the business is heading. Keystone proposes the skills you will need, and nothing is saved until you review it.</p>
+          <p>
+            Describe where the business is heading. Keystone proposes the skills you will need, and nothing is saved until you review it.
+            {!saveDirectly && canPropose ? ' Reviewed requirements go to an admin for approval.' : ''}
+          </p>
         </div>
       </div>
       <form className="strategy-form" onSubmit={(event) => {
         event.preventDefault();
-        setProposal(null); setPreview(null); setReviewed(false); setDraft([]); setSavedRequirements([]);
+        setProposal(null); setPreview(null); setReviewed(false); setDraft([]); setSaved(null);
         run('strategy', async () => { const response = await keystoneApi.strategy(direction); setProposal(response); setDraft(editableRequirements(response.requirements)); });
       }}>
         <label className="field">Business direction
@@ -187,16 +250,16 @@ export default function AIWorkbench({ workforce, onRequirementsSaved, onSchedule
             <p className="muted">Suggested path: {requirement.sourcing}. {requirement.sourcingRationale}</p>
             <div className="form-grid">
               <label className="field">Target level
-                <input disabled={busy} type="number" min="1" max="5" value={requirement.targetProficiency} onChange={(event) => update(index, 'targetProficiency', event.target.value)} />
+                <input disabled={busy || saved !== null} type="number" min="1" max="5" value={requirement.targetProficiency} onChange={(event) => update(index, 'targetProficiency', event.target.value)} />
               </label>
               <label className="field">People needed
-                <input disabled={busy} type="number" min="1" max="10000" value={requirement.requiredHolders} onChange={(event) => update(index, 'requiredHolders', event.target.value)} />
+                <input disabled={busy || saved !== null} type="number" min="1" max="10000" value={requirement.requiredHolders} onChange={(event) => update(index, 'requiredHolders', event.target.value)} />
               </label>
               <label className="field">Criticality
-                <input disabled={busy} type="number" min="1" max="5" value={requirement.criticality} onChange={(event) => update(index, 'criticality', event.target.value)} />
+                <input disabled={busy || saved !== null} type="number" min="1" max="5" value={requirement.criticality} onChange={(event) => update(index, 'criticality', event.target.value)} />
               </label>
               <label className="field">Starts in month
-                <input disabled={busy} type="number" min="0" max="60" value={requirement.effectiveMonth} onChange={(event) => update(index, 'effectiveMonth', event.target.value)} />
+                <input disabled={busy || saved !== null} type="number" min="0" max="60" value={requirement.effectiveMonth} onChange={(event) => update(index, 'effectiveMonth', event.target.value)} />
               </label>
             </div>
             <details><summary>Assumptions</summary><ul>{requirement.assumptions.map((assumption, i) => <li key={i}>{assumption}</li>)}</ul></details>
@@ -204,7 +267,7 @@ export default function AIWorkbench({ workforce, onRequirementsSaved, onSchedule
         </div>
 
         <div className="review-bar">
-          <label className="check"><input disabled={busy} type="checkbox" checked={reviewed}
+          <label className="check"><input disabled={busy || saved !== null} type="checkbox" checked={reviewed}
             onChange={(event) => { setReviewed(event.target.checked); setPreview(null); }} /> I reviewed these requirements and their assumptions</label>
           <div className="form-row">
             <label className="field">Preview at
@@ -216,15 +279,24 @@ export default function AIWorkbench({ workforce, onRequirementsSaved, onSchedule
               onClick={() => run('preview', async () => setPreview(await keystoneApi.previewStrategy({ reviewed, horizonMonths: horizon, requirements: draft })))}>
               {pending === 'preview' ? 'Previewing…' : 'Preview gaps'}
             </button>
-            <button type="button" className="btn btn-primary" disabled={busy || !reviewed || savedRequirements.length > 0}
-              onClick={() => run('save', saveRequirements)}>
-              {pending === 'save' ? 'Saving…' : savedRequirements.length > 0 ? 'Requirements saved' : 'Save reviewed requirements'}
-            </button>
+            {(saveDirectly || canPropose) && (
+              <button type="button" className="btn btn-primary" disabled={busy || !reviewed || saved !== null}
+                onClick={() => run('save', saveRequirements)}>
+                {pending === 'save' ? 'Saving…'
+                  : saved?.mode === 'direct' ? 'Requirements saved'
+                    : saved?.mode === 'submitted' ? 'Submitted for approval'
+                      : saveDirectly ? 'Save reviewed requirements' : 'Submit for approval'}
+              </button>
+            )}
           </div>
         </div>
-        {savedRequirements.length > 0 && <p className="status-line" role="status">
+        {saved && <p className="status-line" role="status">
           <Icon name="check" size={16} />
-          <span>Saved {plural(savedRequirements.length, 'requirement')}. Time Machine applies each one from its start month.</span>
+          <span>
+            {saved.mode === 'direct'
+              ? `Saved ${plural(saved.count, 'requirement')}. Time Machine applies each one from its start month.`
+              : `Submitted ${plural(saved.count, 'requirement')} for admin approval. They reach Time Machine only after approval; track them in Submissions.`}
+          </span>
         </p>}
       </>}
 
@@ -232,7 +304,7 @@ export default function AIWorkbench({ workforce, onRequirementsSaved, onSchedule
         <h3>Gap preview</h3>
         <p className="muted">
           Uses your reviewed numbers in place of current targets and assumes no departures or new training.
-          {savedRequirements.length > 0 ? ' These requirements are saved.' : ' Nothing has been saved yet.'}
+          {saved?.mode === 'direct' ? ' These requirements are saved.' : saved ? ' These requirements are awaiting approval.' : ' Nothing has been saved yet.'}
         </p>
         <ul className="plain-list">{preview.requirements.map((requirement) => <li key={requirement.requirementId}>
           <strong>{requirement.skillName}:</strong>{' '}
@@ -241,6 +313,6 @@ export default function AIWorkbench({ workforce, onRequirementsSaved, onSchedule
             : `Not in effect yet. Starts in month ${requirement.effectiveMonth}.`}
         </li>)}</ul>
       </div>}
-    </section>
+    </section>}
   </div>;
 }

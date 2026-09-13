@@ -95,9 +95,25 @@ function simulate(workforce, scenario) {
     if (item.mentorId != null && (!employeeExists(item.mentorId) || item.mentorId === item.employeeId)) fail('Invalid mentorId');
     if (item.startMonth !== undefined && (!validMonth(item.startMonth) || item.startMonth > item.completionMonth)) fail('Invalid intervention startMonth');
   }
+  // Pending, not yet approved evidence the caller chose to model. It changes the horizon scenarios only;
+  // the baseline stays today's official picture, and mentor eligibility still uses approved evidence.
+  const provisionalEvidence = scenario.provisionalEvidence ?? [];
+  if (!Array.isArray(provisionalEvidence)) fail('provisionalEvidence must be an array');
+  for (const item of provisionalEvidence) {
+    if (!item || !employeeExists(item.employeeId) || !workforce.skills.some((skill) => skill.id === item.skillId)
+      || !Number.isInteger(item.proficiency) || item.proficiency < 1 || item.proficiency > 5) fail('Invalid provisional evidence');
+  }
+  const withProvisional = (snapshot) => {
+    for (const item of provisionalEvidence) {
+      const edge = snapshot.matrix.find((entry) => entry.employeeId === item.employeeId && entry.skillId === item.skillId);
+      if (edge) edge.proficiency = item.proficiency;
+      else snapshot.matrix.push({ employeeId: item.employeeId, skillId: item.skillId, proficiency: item.proficiency, evidenceSource: 'pending review', lastVerifiedAt: null });
+    }
+    return snapshot;
+  };
   const normalizedRequirements = normalizeFutureRequirements(workforce, requirements);
 
-  const projected = structuredClone(workforce);
+  const projected = withProvisional(structuredClone(workforce));
   const blocked = [];
   const capacityWarnings = [];
   const mentorLoad = new Map();
@@ -137,18 +153,24 @@ function simulate(workforce, scenario) {
   }
   const unavailable = new Set(departures.filter((departure) => departure.month <= horizonMonths).map((departure) => departure.employeeId));
   projected.matrix = projected.matrix.filter((edge) => !unavailable.has(edge.employeeId));
-  const withoutInterventions = structuredClone({ ...workforce, matrix: workforce.matrix.filter((edge) => !unavailable.has(edge.employeeId)) });
+  const withoutInterventions = withProvisional(structuredClone(workforce));
+  withoutInterventions.matrix = withoutInterventions.matrix.filter((edge) => !unavailable.has(edge.employeeId));
   const requirementsApplied = applyRequirements(projected, normalizedRequirements, horizonMonths);
   applyRequirements(withoutInterventions, normalizedRequirements, horizonMonths);
+  const provisionalApplied = provisionalEvidence.map(({ changeRequestId = null, employeeId, skillId, proficiency, label = null }) =>
+    ({ changeRequestId, employeeId, skillId, proficiency, label }));
   return { horizonMonths, baseline: analyze(workforce), noIntervention: analyze(withoutInterventions), projected: analyze(projected),
     requirementsSource: usesPersistedRequirements ? 'persisted-reviewed' : 'scenario',
-    blocked, capacityWarnings, requirementsApplied,
+    blocked, capacityWarnings, requirementsApplied, provisionalApplied,
     assumptions: ['Scenario only; baseline is unchanged.', 'Completed interventions assume successful proficiency verification.',
       `One mentoring engagement is assumed to occupy ${MENTOR_HOURS_PER_ENGAGEMENT} of a mentor's recorded hours per month.`,
       'Approved future requirements apply to the horizon scenarios, never to today\'s baseline.',
       usesPersistedRequirements
         ? 'Only persisted requirements with reviewed status are applied automatically.'
         : 'Caller-supplied requirements are scenario inputs and are not saved.',
-      'Unsaved future skills use provisional scenario-only IDs; saved future skills keep their persistent IDs.'] };
+      'Unsaved future skills use provisional scenario-only IDs; saved future skills keep their persistent IDs.',
+      ...(provisionalApplied.length > 0
+        ? ['Pending evidence changes are modelled as provisional assumptions: they are not approved and never change today\'s baseline.']
+        : [])] };
 }
 module.exports = { simulate, MENTOR_HOURS_PER_ENGAGEMENT, persistedReviewedRequirements };

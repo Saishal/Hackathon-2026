@@ -107,3 +107,34 @@ GET /api/keystone/ai-status reports configuration without credentials. POST /api
 - Non-null future skill IDs must exist. Supplied names must agree with IDs. A name-only requirement matching a catalog skill uses that existing ID. An unmatched name remains a new proposed skill. Unknown IDs, conflicting names, and duplicate normalized skills return HTTP 400 in the simulator. Each scenario accepts one target per skill; send the reviewed target for the selected planning scenario rather than multiple competing targets.
 - Mentoring capacity is counted for each occupied month, including start and completion. Separate earlier bookings that each overlap a longer engagement do not imply they overlap one another. Real peak occupancy must remain within the recorded capacity.
 - If both AI output and the deterministic fallback fail validation, the response stays `demo-fallback` with `fallbackReason: "fallback_invalid"` and an explicit unavailable message. Strategy returns no requirements; development returns five inactive, unassigned categories. No invalid recommendations are returned.
+
+## Enterprise governance API
+
+All endpoints in this section require a valid `keystone_session` HTTP-only cookie unless marked public. The server, rather than the browser, enforces every permission and data scope. Errors use the form `{error, code, details?}`; validation failures use `code: "validation_failed"` and `details: [{field, code, message}]`.
+
+### Authentication
+
+- `GET /api/auth/environment` is public and returns the environment label for the sign-in screen.
+- `POST /api/auth/login` accepts `{email,password}` and returns the signed-in user plus capabilities while setting the session cookie.
+- `POST /api/auth/logout` revokes the current server-side session.
+- `GET /api/auth/session` returns the current user and capabilities, or 401 when signed out.
+
+### Organization, audit, and data quality
+
+- `GET /api/governance/organization`; `PATCH /api/governance/organization` (admin) read or update tenant settings.
+- `GET /api/governance/audit-log` supports `page`, `pageSize`, `from`, `to`, `actorUserId`, `action`, `entityType`, `q`, and `highSignal`; `GET /api/governance/audit-log/:id` returns one immutable entry.
+- `GET /api/governance/data-quality` supports `status`, `severity`, `ruleCode`, and `q`. `POST /api/governance/data-quality/:fingerprint/acknowledge` accepts `{note}`; `POST /api/governance/data-quality/:fingerprint/reopen` restores an acknowledged issue to open.
+
+### Change review and risk ownership
+
+- `GET /api/governance/change-requests` supports `status`, `type`, `mine`, and pagination. `POST /api/governance/change-requests` creates a draft. `PATCH /api/governance/change-requests/:id`, `/submit`, and `/cancel` respectively edit, submit, and cancel a draft.
+- `POST /api/governance/change-requests/:id/approve` accepts an optional `{comment}`. `POST /api/governance/change-requests/:id/reject` requires `{comment}`. Approval writes the official record and its audit events atomically.
+- `GET /api/governance/risk-acknowledgements`, `POST /api/governance/risk-acknowledgements`, `PATCH /api/governance/risk-acknowledgements/:id`, and `POST /api/governance/risk-acknowledgements/:id/close` manage risk ownership without changing the score.
+
+### Planning, reports, and user administration
+
+- `GET|POST /api/governance/scenarios`, `PATCH|DELETE /api/governance/scenarios/:id` save and manage authorized Time Machine scenarios.
+- `POST /api/governance/ai-recommendation-decisions` records a reviewed, dismissed, or scheduled AI action against grounded records only.
+- `GET /api/governance/exports/risks.csv` and `GET /api/governance/exports/data-quality.csv` produce permission-scoped, formula-safe CSV exports and record the export in audit history.
+- `GET|POST /api/governance/users`, `PATCH /api/governance/users/:id`, and `POST /api/governance/users/:id/reset-password` are admin-only user administration endpoints. `GET /api/governance/users/assignable-owners` returns valid risk owners.
+- Admin-only official-data routes include `DELETE /api/governance/employee-skills/:employeeId/:skillId`, `PATCH /api/governance/employees/:id`, `PATCH|DELETE /api/governance/future-requirements/:id`, `PUT /api/governance/resources/:slug`, and `PUT|DELETE /api/governance/roles/:roleId/requirements/:skillId`. Each is validated and audited.

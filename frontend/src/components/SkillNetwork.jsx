@@ -30,11 +30,18 @@ function EvidenceList({ rows }) {
   );
 }
 
-export default function SkillNetwork({ workforce, risks }) {
+// Links from other pages preselect a node: #/network?skill=12 or #/network?employee=4.
+const initialSelection = (params = {}) => {
+  if (Number(params.skill) > 0) return { type: 'skill', id: Number(params.skill) };
+  if (Number(params.employee) > 0) return { type: 'employee', id: Number(params.employee) };
+  return null;
+};
+
+export default function SkillNetwork({ workforce, risks, params }) {
   const [department, setDepartment] = useState('all');
   const [minProficiency, setMinProficiency] = useState(3);
   const [concentratedOnly, setConcentratedOnly] = useState(false);
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState(() => initialSelection(params));
   const busFactor = useMemo(() => new Map((risks?.skills ?? []).map((skill) => [skill.id, skill.busFactor])), [risks]);
 
   if (!workforce) return null;

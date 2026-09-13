@@ -18,7 +18,18 @@ npm start --prefix backend
 
 In a second terminal: `npm run dev --prefix frontend`. Open http://localhost:5173; API health is http://localhost:4000/api/health.
 
-Optional environment: backend `PORT`, `DB_PATH`, `KEYSTONE_SEED_DIR`; frontend `VITE_API_BASE_URL` in `frontend/.env.local`. A fresh database is seeded from the CSV files in [`backend/data/demo/`](backend/data/demo/README.md): 44 fictional employees across 21 roles, 22 skills and a 16-entry learning catalogue, including Legacy Billing Recovery (Liam Chen expert, Mason Green learner). Existing DBs are preserved; after editing a CSV, stop the backend and run `npm run seed:reset --prefix backend`. No API credentials are needed for the starter.
+Copy `backend/.env.example` to `backend/.env` to configure a local environment. A fresh demo database is seeded from the CSV files in [`backend/data/demo/`](backend/data/demo/README.md): 44 fictional employees across 21 roles, 22 skills and a 16-entry learning catalogue, including Legacy Billing Recovery (Liam Chen expert, Mason Green learner). Existing databases are upgraded in place; after editing seed CSV, stop the backend and run `npm run seed:reset --prefix backend`.
+
+Keystone now starts at a sign-in screen. In the default `demo` environment, use one of these development-only accounts with password `Keystone-Demo-2026!` (or the configured `KEYSTONE_DEMO_PASSWORD`):
+
+| Account | Role | Typical use |
+|---|---|---|
+| `admin@keystone.demo` | Admin | Configuration, approvals, audit and user management |
+| `hr@keystone.demo` | HR / People Leader | Organization-wide risk, reviews and data quality |
+| `manager@keystone.demo` | Manager | Team-scoped workforce and risk insights |
+| `employee@keystone.demo` | Employee | Personal profile and evidence submissions |
+
+See [enterprise governance](docs/ENTERPRISE-GOVERNANCE.md) for sessions, permissions, review workflow, data-quality rules, migrations and security assumptions. The API base remains `http://localhost:4000`; use `VITE_API_BASE_URL` in `frontend/.env.local` only when the frontend must call a different backend.
 
 ## Four member assignments
 
@@ -37,11 +48,11 @@ The workforce inventory is persisted rather than derived in memory: skill critic
 
 Succession matching now compares candidates against the persisted role requirements rather than recorded skill evidence alone.
 
-The dashboard has seven views, each at its own hash route: Overview, Key people, Skill map, Time Machine, AI advisor, Data & evidence and Team activity. Reviewed development actions can be scheduled into Time Machine, and reviewed strategy requirements are saved with stable IDs and applied at their effective month.
+The dashboard includes risk and succession analysis, a skill map, Time Machine, AI advisor, data and evidence, audit history, data quality, review queue, personal profile and user/settings views. Reviewed development actions can be scheduled into Time Machine, reviewed strategy requirements are saved with stable IDs and applied at their effective month, and pending proposals stay outside the official baseline until an authorized reviewer approves them.
 
 Remaining: decide whether invented catalogue entries should be marked verified (see [integration checklist](docs/INTEGRATION.md)), then rehearse the [three-minute demo](docs/DEMO.md) and record a backup.
 
-Next steps, decisions and the business-readiness checklist (login, audit trail, visuals, operations): [next session checklist](docs/NEXT-SESSION.md).
+The enterprise trust layer adds password-hashed server-side sessions, backend-enforced role permissions, append-only audit history, deterministic data-quality warnings, approval workflows, risk ownership and role-scoped CSV exports. See [enterprise governance](docs/ENTERPRISE-GOVERNANCE.md) and the [governance API reference](docs/API.md#enterprise-governance-api).
 
 Proficiency stays compatible with existing data: 1–5, independent threshold 3, mentor minimum 4. Missing relationships are unknown, displayed as a dash. Do not mix in the earlier proposed 0–4 scale. Scores measure organizational dependency, not likelihood of departure.
 
@@ -106,14 +117,9 @@ VITE_API_BASE_URL=http://localhost:4000 npm run dev
 
 ## API Endpoints
 
-- `GET /api/heatmap`
-- `GET /api/critical-skills`
-- `GET /api/gap-analysis`
-- `GET /api/recommendations`
-- `GET /api/future-skills`
-- `PUT /api/future-skills` to update target headcount per skill
+The maintained API contract is in [docs/API.md](docs/API.md). It documents workforce scoring, simulation, AI, authentication, governance, approvals, audit history and exports. Legacy endpoints remain available for compatibility.
 
 ## Notes
 
 - SQLite DB file is created automatically at `/backend/skillsight.db` and is gitignored.
-- No test harness existed initially in this repository; validation is done with targeted build/manual endpoint checks.
+- Validate the current app with `npm test --prefix backend`, `npm run lint --prefix frontend`, and `npm run build --prefix frontend`.

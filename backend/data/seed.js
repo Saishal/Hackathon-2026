@@ -35,10 +35,17 @@ async function importDataset(dataset) {
 
     for (const employee of dataset.employees) {
       const { lastID } = await run(
-        'INSERT INTO employees (name, role, department, mentoring_hours_per_month) VALUES (?, ?, ?, ?)',
-        [employee.name, employee.role, employee.department, employee.mentoringHoursPerMonth],
+        'INSERT INTO employees (name, role, department, mentoring_hours_per_month, reports_externally) VALUES (?, ?, ?, ?, ?)',
+        [employee.name, employee.role, employee.department, employee.mentoringHoursPerMonth, employee.reportsExternally ? 1 : 0],
       );
       employeeIds.set(employee.name, lastID);
+    }
+
+    // Managers may appear later in the file than their reports, so links are set once every ID exists.
+    for (const employee of dataset.employees) {
+      if (employee.manager) {
+        await run('UPDATE employees SET manager_id = ? WHERE id = ?', [employeeIds.get(employee.manager), employeeIds.get(employee.name)]);
+      }
     }
 
     for (const requirement of dataset.roleRequirements) {
@@ -58,8 +65,8 @@ async function importDataset(dataset) {
 
     for (const resource of dataset.resources) {
       const { lastID } = await run(
-        'INSERT INTO resources (slug, title, kind, url, verified, provenance) VALUES (?, ?, ?, ?, ?, ?)',
-        [resource.slug, resource.title, resource.kind, resource.url, resource.verified ? 1 : 0, resource.provenance],
+        'INSERT INTO resources (slug, title, kind, url, provider, verified, provenance) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        [resource.slug, resource.title, resource.kind, resource.url, resource.provider, resource.verified ? 1 : 0, resource.provenance],
       );
 
       for (const name of resource.skills) {
@@ -110,4 +117,22 @@ async function seedDemoData() {
   return true;
 }
 
-module.exports = { importDataset, seedDemoData };
+// Databases seeded before reporting lines and catalogue providers existed get them from the same CSV,
+// matched by name and slug. Only empty values are filled, so nothing edited in the app is overwritten.
+async function backfillFromSeed(dataset) {
+  const { count } = await get('SELECT COUNT(*) AS count FROM employees WHERE manager_id IS NOT NULL OR reports_externally = 1');
+  if (count === 0) {
+    for (const employee of dataset.employees) {
+      await run(
+        `UPDATE employees SET reports_externally = ?, manager_id = (SELECT id FROM employees WHERE name = ?)
+         WHERE name = ? AND manager_id IS NULL`,
+        [employee.reportsExternally ? 1 : 0, employee.manager, employee.name],
+      );
+    }
+  }
+  for (const resource of dataset.resources) {
+    if (resource.provider) await run('UPDATE resources SET provider = ? WHERE slug = ? AND provider IS NULL', [resource.provider, resource.slug]);
+  }
+}
+
+module.exports = { importDataset, seedDemoData, backfillFromSeed };

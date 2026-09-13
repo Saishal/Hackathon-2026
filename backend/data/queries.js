@@ -1,4 +1,6 @@
 const { run, all } = require('./db');
+const { withTransaction } = require('./transactions');
+const { isCalendarDate } = require('../services/clock');
 
 const badRequest = (message) => {
   const error = new Error(message);
@@ -42,14 +44,9 @@ async function assertEmployeeIdsExist(ids) {
   }
 }
 
-const isCalendarDate = (value) =>
-  typeof value === 'string'
-  && /^\d{4}-\d{2}-\d{2}$/.test(value)
-  && !Number.isNaN(Date.parse(value));
-
 // Evidence is mandatory because a score has to trace back to something recorded.
 // A missing verification date stays null and is reported as unknown, never guessed.
-async function saveEmployeeSkill(edit = {}) {
+async function validateEmployeeSkillEdit(edit = {}) {
   const { employeeId, skillId, proficiency, evidenceSource, lastVerifiedAt = null } = edit;
 
   if (!Number.isInteger(employeeId) || !Number.isInteger(skillId)) {
@@ -71,8 +68,14 @@ async function saveEmployeeSkill(edit = {}) {
   await assertEmployeeIdsExist([employeeId]);
   await assertSkillIdsExist([skillId]);
 
-  await run('BEGIN TRANSACTION');
-  try {
+  return { employeeId, skillId, proficiency, evidenceSource: evidenceSource.trim(), lastVerifiedAt };
+}
+
+// Writes validated evidence without opening a transaction, for callers that already hold one
+// (approvals write evidence and its audit records atomically).
+async function writeEmployeeSkill(evidence) {
+  const { employeeId, skillId, proficiency, evidenceSource, lastVerifiedAt } = evidence;
+  {
     // The first recorded evidence promotes a forecast-only skill into the current inventory.
     await run('UPDATE skills SET future_only = 0 WHERE id = ?', [skillId]);
     await run(
@@ -93,21 +96,16 @@ async function saveEmployeeSkill(edit = {}) {
          proficiency = excluded.proficiency,
          evidence_source = excluded.evidence_source,
          last_verified_at = excluded.last_verified_at`,
-      [employeeId, skillId, proficiency, evidenceSource.trim(), lastVerifiedAt],
+      [employeeId, skillId, proficiency, evidenceSource, lastVerifiedAt],
     );
-    await run('COMMIT');
-  } catch (error) {
-    await run('ROLLBACK');
-    throw error;
   }
 
-  return {
-    employeeId,
-    skillId,
-    proficiency,
-    evidenceSource: evidenceSource.trim(),
-    lastVerifiedAt,
-  };
+  return { employeeId, skillId, proficiency, evidenceSource, lastVerifiedAt };
+}
+
+async function saveEmployeeSkill(edit = {}) {
+  const evidence = await validateEmployeeSkillEdit(edit);
+  return withTransaction(() => writeEmployeeSkill(evidence));
 }
 
 async function getFutureRequirements() {
@@ -128,7 +126,7 @@ async function getFutureRequirements() {
   `);
 }
 
-async function addFutureRequirement(input = {}) {
+function validateFutureRequirementInput(input = {}) {
   const {
     skillId,
     skillName,
@@ -178,8 +176,16 @@ async function addFutureRequirement(input = {}) {
     throw badRequest('provenance is required so a requirement traces to a stated source');
   }
 
-  await run('BEGIN TRANSACTION');
-  try {
+  return { skillId, skillName, requiredHolders, targetProficiency, criticality, effectiveMonth, status,
+    provenance: provenance.trim(), existingId, provisionalId };
+}
+
+// Inserts a validated requirement without opening a transaction, allocating a stable skill ID for a
+// new name. Callers that also write audit records run it inside their own transaction.
+async function insertFutureRequirement(validated) {
+  const { skillId, skillName, requiredHolders, targetProficiency, criticality, effectiveMonth, status, provenance,
+    existingId, provisionalId } = validated;
+  {
     let resolved;
     let createdSkill = false;
     if (existingId) {
@@ -203,16 +209,17 @@ async function addFutureRequirement(input = {}) {
       `INSERT INTO future_requirements
          (skill_id, required_holders, target_proficiency, criticality, effective_month, status, provenance)
        VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [resolved.id, requiredHolders, targetProficiency, criticality, effectiveMonth, status, provenance.trim()],
+      [resolved.id, requiredHolders, targetProficiency, criticality, effectiveMonth, status, provenance],
     );
-    await run('COMMIT');
     return { id: result.lastID, skillId: resolved.id, skillName: resolved.name,
       provisionalSkillId: provisionalId ? skillId : null, createdSkill,
-      requiredHolders, targetProficiency, criticality, effectiveMonth, status, provenance: provenance.trim() };
-  } catch (error) {
-    await run('ROLLBACK');
-    throw error;
+      requiredHolders, targetProficiency, criticality, effectiveMonth, status, provenance };
   }
+}
+
+async function addFutureRequirement(input = {}) {
+  const validated = validateFutureRequirementInput(input);
+  return withTransaction(() => insertFutureRequirement(validated));
 }
 
 async function getHeatmapData() {
@@ -316,9 +323,7 @@ async function getFutureSkillTargets() {
 async function replaceFutureSkillTargets(targets) {
   await assertSkillIdsExist(targets.map((target) => target.id));
 
-  await run('BEGIN TRANSACTION');
-
-  try {
+  await withTransaction(async () => {
     for (const target of targets) {
       await run(
         `INSERT INTO future_skill_targets (skill_id, target_people)
@@ -327,19 +332,18 @@ async function replaceFutureSkillTargets(targets) {
         [target.id, target.targetPeople],
       );
     }
-
-    await run('COMMIT');
-  } catch (error) {
-    await run('ROLLBACK');
-    throw error;
-  }
+  });
 }
 
 module.exports = {
   assertSkillIdsExist,
   assertEmployeeIdsExist,
+  validateEmployeeSkillEdit,
+  writeEmployeeSkill,
   saveEmployeeSkill,
   getFutureRequirements,
+  validateFutureRequirementInput,
+  insertFutureRequirement,
   addFutureRequirement,
   getHeatmapData,
   getAtRiskSkills,

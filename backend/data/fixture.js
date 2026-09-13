@@ -7,9 +7,9 @@ const WORKFORCE_FIXTURE = {
   // Liam has recorded mentoring capacity; the other two are omitted deliberately,
   // which consumers read as unknown rather than zero.
   employees: [
-    { id: 1, name: 'Liam Chen', role: 'Backend Engineer', department: 'Engineering', mentoringHoursPerMonth: 4 },
-    { id: 2, name: 'Mason Green', role: 'Backend Engineer', department: 'Engineering' },
-    { id: 3, name: 'Ava Patel', role: 'Frontend Engineer', department: 'Engineering' },
+    { id: 1, name: 'Liam Chen', role: 'Backend Engineer', department: 'Engineering', managerId: null, mentoringHoursPerMonth: 4 },
+    { id: 2, name: 'Mason Green', role: 'Backend Engineer', department: 'Engineering', managerId: 1 },
+    { id: 3, name: 'Ava Patel', role: 'Frontend Engineer', department: 'Engineering', managerId: null },
   ],
   skills: [
     {
@@ -55,6 +55,8 @@ const WORKFORCE_FIXTURE = {
       title: 'Internal billing systems walkthrough (fictional)',
       category: 'training',
       verified: true,
+      url: null,
+      provider: 'Fictional internal academy',
       provenance: 'fictional demo entry',
       skillIds: [1],
     },

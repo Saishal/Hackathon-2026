@@ -35,8 +35,9 @@ async function loadWorkforce() {
     evidence.map((row) => [`${row.employee_id}:${row.skill_id}`, row]),
   );
 
-  const mentoring = await all('SELECT id, mentoring_hours_per_month FROM employees');
+  const mentoring = await all('SELECT id, mentoring_hours_per_month, manager_id FROM employees');
   const mentoringById = new Map(mentoring.map((row) => [row.id, row.mentoring_hours_per_month]));
+  const managerById = new Map(mentoring.map((row) => [row.id, row.manager_id]));
 
   // Legacy future demand is reported separately from Keystone coverage: a skill can
   // have zero hiring demand and still need holders to avoid a knowledge dependency.
@@ -52,7 +53,7 @@ async function loadWorkforce() {
     ORDER BY role_id ASC, skill_id ASC
   `);
   const resources = await all(`
-    SELECT id, slug, title, kind, url, verified, provenance
+    SELECT id, slug, title, kind, url, provider, verified, provenance
     FROM resources
     ORDER BY kind ASC, title ASC
   `);
@@ -73,10 +74,12 @@ async function loadWorkforce() {
     ...snapshot,
     // mentoringHoursPerMonth is omitted entirely when capacity was never recorded:
     // consumers treat an absent field as unknown, which is not the same as zero.
+    // managerId is null when no reporting line is recorded inside this dataset.
     employees: snapshot.employees.map((employee) => {
       const hours = mentoringById.get(employee.id);
+      const withManager = { ...employee, managerId: managerById.get(employee.id) ?? null };
 
-      return hours === null || hours === undefined ? { ...employee } : { ...employee, mentoringHoursPerMonth: hours };
+      return hours === null || hours === undefined ? withManager : { ...withManager, mentoringHoursPerMonth: hours };
     }),
     skills: snapshot.skills.map((skill) => {
       const requirement = requirementBySkill.get(skill.id) ?? UNSPECIFIED_REQUIREMENT;
@@ -108,6 +111,8 @@ async function loadWorkforce() {
       title: resource.title,
       category: resource.kind,
       verified: resource.verified === 1,
+      url: resource.url,
+      provider: resource.provider,
       provenance: resource.provenance,
       skillIds: resourceSkills
         .filter((link) => link.resource_id === resource.id)
