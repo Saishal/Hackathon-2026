@@ -20,7 +20,7 @@ In a second terminal: `npm run dev --prefix frontend`. Open http://localhost:517
 
 Copy `backend/.env.example` to `backend/.env` to configure a local environment. A fresh demo database is seeded from the CSV files in [`backend/data/demo/`](backend/data/demo/README.md): 44 fictional employees across 21 roles, 22 skills and a 16-entry learning catalogue, including Legacy Billing Recovery (Liam Chen expert, Mason Green learner). Existing databases are upgraded in place; after editing seed CSV, stop the backend and run `npm run seed:reset --prefix backend`.
 
-Keystone now starts at a sign-in screen. In the default `demo` environment, use one of these development-only accounts with password `Keystone-Demo-2026!` (or the configured `KEYSTONE_DEMO_PASSWORD`):
+Keystone restores valid sessions automatically. New sign-ins open the calm, role-aware **Home** workspace. In the default `demo` environment, use one of these development-only accounts with your configured `KEYSTONE_DEMO_PASSWORD` (local demo fallback is defined in `backend/config.js`):
 
 | Account | Role | Typical use |
 |---|---|---|
@@ -127,3 +127,26 @@ The maintained API contract is in [docs/API.md](docs/API.md). It documents workf
 
 - SQLite DB file is created automatically at `/backend/skillsight.db` and is gitignored.
 - Validate the current app with `npm test --prefix backend`, `npm run lint --prefix frontend`, and `npm run build --prefix frontend`.
+
+## September 13 workspace update
+
+Home welcomes each person with permitted shortcuts and compact coverage signals. The detailed Overview remains available. Skill Map keeps Network, Matrix and Charts and adds a department coverage **Heat map**, shared filters and a backend-generated **Download CSV** action. The Help Center searches the glossary, guides, FAQs and page descriptions. **Keystone Assistant** provides local, curated help and permission-aware shortcuts; it never sends questions to an AI service.
+
+Sign-in offers **Keep me signed in**, selected by default in demo. HTTP-only cookies, idle/absolute expiration, revocation and rate limits still apply. An unselected checkbox uses a browser-session cookie with a shorter maximum lifetime. The Caps Lock warning uses browser keyboard modifier information. Sign out revokes the server session; failed sign-out offers a retry.
+
+Read the [User guide](docs/USER_GUIDE.md), [Admin guide](docs/ADMIN_GUIDE.md), [Architecture](docs/ARCHITECTURE.md) and [Changelog](docs/CHANGELOG.md). Existing theme, language, search, notifications, governance and review controls remain available.
+
+### Judge walkthrough
+
+1. Sign in with a demo admin account using your configured demo password; leave **Keep me signed in** selected.
+2. Start at **Home**. Follow **Open detailed overview** when you want the operational dashboard.
+3. Open **Skill map**.
+4. Choose **Heat map**.
+5. Search for a skill, choose a department and set the minimum proficiency. Check the legend and organization-target explanation.
+6. Choose **Download CSV**. Import the UTF-8 file in Excel or Power BI.
+7. Open **Keystone Assistant** and ask “Where do I manage users?” Follow **Open Users & settings**. Repeat as an employee to see the restricted-page explanation.
+8. Open **How Keystone works** and search “heat map” or “session”.
+
+### Validation
+
+Use Node.js 24 LTS. Run `npm test --prefix backend`, `npm test --prefix frontend`, `npm run lint --prefix frontend`, `npm run build --prefix frontend`, and `git diff --check` from the repository root. See the dated changelog for validation results and limits. Tests use temporary databases and local fixtures; the navigation assistant requires no API key. Frontend UI tests use development-only Testing Library and jsdom dependencies.
