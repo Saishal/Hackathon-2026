@@ -6,6 +6,8 @@ import EvidenceChangeDialog from './EvidenceChangeDialog';
 import { can, fieldMessages, formatDate } from './format';
 import Icon from './Icon';
 import HelpTopic from './HelpTopic';
+import { PagedList } from './Pagination';
+import { clearPageParam } from '../filters/usePagedList';
 import Provenance from './Provenance';
 import TrustLegend from './TrustLegend';
 import { FieldError, FormError } from './ui';
@@ -240,7 +242,7 @@ export default function WorkforceSnapshot({ workforce, quality, params = {}, onC
         <div className="data-toolbar">
           <form className="search" role="search" onSubmit={(event) => event.preventDefault()}>
             <Icon name="search" size={16} />
-            <input type="search" aria-label="Search records" value={query} onChange={(event) => setQuery(event.target.value)}
+            <input type="search" aria-label="Search records" value={query} onChange={(event) => { clearPageParam(); setQuery(event.target.value); }}
               placeholder="Search people, roles, skills or evidence" />
           </form>
           {needle && <p className="muted" role="status">Tab counts show matches for “{query.trim()}”.</p>}
@@ -250,7 +252,7 @@ export default function WorkforceSnapshot({ workforce, quality, params = {}, onC
         <div className="tabs" role="tablist" aria-label="Record types">
           {tabs.map(([id, label]) => (
             <button key={id} id={`tab-${id}`} type="button" role="tab" className="tab" aria-selected={tab === id}
-              aria-controls={`tabpanel-${id}`} tabIndex={tab === id ? 0 : -1} onClick={() => setTab(id)} onKeyDown={moveTab}>
+              aria-controls={`tabpanel-${id}`} tabIndex={tab === id ? 0 : -1} onClick={() => { clearPageParam(); setTab(id); }} onKeyDown={moveTab}>
               {label}
               {counts[id] !== null && <span className="tab-count">{counts[id]}</span>}
             </button>
@@ -260,11 +262,11 @@ export default function WorkforceSnapshot({ workforce, quality, params = {}, onC
         <div className="tab-panel" role="tabpanel" id={`tabpanel-${tab}`} aria-labelledby={`tab-${tab}`}>
           {tab === 'skills' && <>
             <p className="tab-note">People needed is how many people should be qualified. The hiring target is tracked separately, so a skill can need coverage without any hiring.</p>
-            {shownSkills.length === 0 ? noMatch('skills') : <div className="table-wrap flush">
+            {shownSkills.length === 0 ? noMatch('skills') : <PagedList items={shownSkills} resetKey={needle} noun="skills" anchorId="tabpanel-skills">{(pageItems) => <div className="table-wrap flush">
               <table>
                 <thead><tr><th scope="col">Skill</th><th scope="col" className="num">Criticality</th><th scope="col" className="num">Target level</th><th scope="col" className="num">People needed <HelpTopic id="coverage-target" /></th><th scope="col" className="num">Hiring target</th><th scope="col">Source</th></tr></thead>
                 <tbody>
-                  {shownSkills.map((skill) => (
+                  {pageItems.map((skill) => (
                     <tr key={skill.id}>
                       <th scope="row">{skill.name}<QualityNotes issues={notesFor('skill', skill.id)} /></th>
                       <td className="num">{dash(skill.criticality)}</td>
@@ -276,7 +278,7 @@ export default function WorkforceSnapshot({ workforce, quality, params = {}, onC
                   ))}
                 </tbody>
               </table>
-            </div>}
+            </div>}</PagedList>}
           </>}
 
           {tab === 'roles' && <>
@@ -357,11 +359,11 @@ export default function WorkforceSnapshot({ workforce, quality, params = {}, onC
 
           {tab === 'people' && <>
             <p className="tab-note">Mentoring time is recorded, never estimated. A dash means unknown, not zero. {withCapacity} of {employees.length} people have it on record.</p>
-            {shownEmployees.length === 0 ? noMatch('people') : <div className="table-wrap flush">
+            {shownEmployees.length === 0 ? noMatch('people') : <PagedList items={shownEmployees} resetKey={needle} noun="people" anchorId="tabpanel-people">{(pageItems) => <div className="table-wrap flush">
               <table>
                 <thead><tr><th scope="col">Person</th><th scope="col">Role</th><th scope="col">Department</th><th scope="col">Manager</th><th scope="col" className="num">Mentoring h/month</th></tr></thead>
                 <tbody>
-                  {shownEmployees.map((employee) => (
+                  {pageItems.map((employee) => (
                     <tr key={employee.id}>
                       <th scope="row">{employee.name}<QualityNotes issues={notesFor('employee', employee.id)} /></th>
                       <td>{dash(employee.role)}</td>
@@ -373,7 +375,7 @@ export default function WorkforceSnapshot({ workforce, quality, params = {}, onC
                   ))}
                 </tbody>
               </table>
-            </div>}
+            </div>}</PagedList>}
           </>}
 
           {tab === 'evidence' && <>
@@ -386,11 +388,11 @@ export default function WorkforceSnapshot({ workforce, quality, params = {}, onC
                 </button>
               </div>
             )}
-            {shownMatrix.length === 0 ? noMatch('evidence records') : <div className="table-wrap flush">
+            {shownMatrix.length === 0 ? noMatch('evidence records') : <PagedList items={shownMatrix} resetKey={needle} noun="records" anchorId="tabpanel-evidence">{(pageItems) => <div className="table-wrap flush">
               <table>
                 <thead><tr><th scope="col">Person</th><th scope="col">Skill</th><th scope="col" className="num">Level</th><th scope="col">Evidence source</th><th scope="col">Verification</th>{canProposeEvidence && <th scope="col"><span className="sr-only">Actions</span></th>}</tr></thead>
                 <tbody>
-                  {shownMatrix.map((edge) => {
+                  {pageItems.map((edge) => {
                     const label = `${employeeName(edge.employeeId)} · ${skillName(edge.skillId)}`;
                     return (
                       <tr key={`${edge.employeeId}-${edge.skillId}`}>
@@ -413,7 +415,7 @@ export default function WorkforceSnapshot({ workforce, quality, params = {}, onC
                   })}
                 </tbody>
               </table>
-            </div>}
+            </div>}</PagedList>}
           </>}
         </div>
       </section>

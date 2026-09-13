@@ -496,4 +496,13 @@ export default {
   'skillmap.table.level': 'Level',
   'skillmap.table.roleNeeds': 'Role needs',
   'skillmap.table.peopleCount': 'People',
+
+  'pager.label': 'Pagination',
+  'pager.range': 'Showing {from}–{to} of {total} {noun}',
+  'pager.rows': 'Rows per page',
+  'pager.previous': 'Previous page',
+  'pager.previousShort': 'Previous',
+  'pager.next': 'Next page',
+  'pager.nextShort': 'Next',
+  'pager.page': 'Page {page} of {pages}',
 };

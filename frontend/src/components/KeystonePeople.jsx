@@ -5,6 +5,7 @@ import { can, formatDate, plural } from './format';
 import Icon from './Icon';
 import HelpTopic from './HelpTopic';
 import FilterBar from './FilterBar';
+import { PagedList } from './Pagination';
 import { useUrlFilters } from '../filters/useUrlFilters';
 import { ErrorState, ScoreMeter, Skeleton } from './ui';
 
@@ -106,8 +107,9 @@ export default function KeystonePeople({ quality, params = {} }) {
       {ranked.length === 0 ? (
         <div className="empty"><p>No skill depends on a single person on current evidence.</p></div>
       ) : (
-        <ul className="person-list">
-          {ranked.map((employee) => {
+        <PagedList items={ranked} resetKey={JSON.stringify(people.filters)} noun="people" anchorId="person-list">{(pageItems) => (
+        <ul className="person-list" id="person-list">
+          {pageItems.map((employee) => {
             const open = openId === employee.id;
             const soleSkills = employee.newlyUncovered ?? [];
             const notes = notesFor(employee.id);
@@ -212,6 +214,7 @@ export default function KeystonePeople({ quality, params = {} }) {
             );
           })}
         </ul>
+        )}</PagedList>
       )}
     </section>
   );

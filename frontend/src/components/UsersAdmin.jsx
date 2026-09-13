@@ -6,6 +6,7 @@ import Icon from './Icon';
 import { fieldMessages, formatDate, relativeTime } from './format';
 import { EmptyState, ErrorState, FieldError, FormError, Skeleton } from './ui';
 import HelpTopic from './HelpTopic';
+import { PagedList } from './Pagination';
 import { useUrlFilters } from '../filters/useUrlFilters';
 
 const ACCOUNT_FILTERS = { q: '', role: '', status: '', sort: 'name' };
@@ -417,13 +418,14 @@ export default function UsersAdmin({ workforce, onOrganizationChanged }) {
             </EmptyState>
           )}
           {data && visible.length > 0 && (
-            <div className="table-wrap flush">
+            <PagedList items={visible} resetKey={JSON.stringify(filters)} noun="accounts" anchorId="accounts-table">{(pageItems) => (
+            <div className="table-wrap flush" id="accounts-table">
               <table>
                 <thead>
                   <tr><th scope="col">Person</th><th scope="col">Role <HelpTopic id="user-roles" /></th><th scope="col">Linked employee</th><th scope="col">Status</th><th scope="col">Last sign-in</th><th scope="col"><span className="sr-only">Actions</span></th></tr>
                 </thead>
                 <tbody>
-                  {visible.map((user) => (
+                  {pageItems.map((user) => (
                     <tr key={user.id}>
                       <th scope="row">{user.displayName}<small className="cell-sub">{user.email}</small></th>
                       <td>{data.roles.find((role) => role.value === user.role)?.label ?? user.role}</td>
@@ -443,6 +445,7 @@ export default function UsersAdmin({ workforce, onOrganizationChanged }) {
                 </tbody>
               </table>
             </div>
+            )}</PagedList>
           )}
         </section>
       )}

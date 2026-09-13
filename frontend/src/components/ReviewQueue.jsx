@@ -6,6 +6,8 @@ import Diff from './Diff';
 import Icon from './Icon';
 import HelpTopic from './HelpTopic';
 import FilterBar from './FilterBar';
+import { PagedList } from './Pagination';
+import { clearPageParam } from '../filters/usePagedList';
 import { useUrlFilters } from '../filters/useUrlFilters';
 
 const REVIEW_FILTERS = { type: '', status: '' };
@@ -203,7 +205,7 @@ export default function ReviewQueue({ workforce, onChanged }) {
         <p className="tabs-intro muted small">Proposed changes affect official data only after approval <HelpTopic id="pending-vs-approved" /></p>
         <div className="tabs" role="tablist" aria-label="Change requests">
           {tabs.map(([id, label, list]) => (
-            <button key={id} type="button" role="tab" className="tab" aria-selected={tab === id} onClick={() => setTab(id)}>
+            <button key={id} type="button" role="tab" className="tab" aria-selected={tab === id} onClick={() => { clearPageParam(); setTab(id); }}>
               {label}<span className="tab-count">{list.length}</span>
             </button>
           ))}
@@ -231,11 +233,11 @@ export default function ReviewQueue({ workforce, onChanged }) {
             </EmptyState>
           ) : (
             <>
-              <p className="muted small pad-x">{plural(shown.length, 'change')}, newest first.</p>
-              {shown.map((request) => (
+              <p className="muted small pad-x" id="request-list">{plural(shown.length, 'change')}, newest first.</p>
+              <PagedList items={shown} resetKey={`${tab}|${JSON.stringify(review.filters)}`} noun="changes" anchorId="request-list">{(pageItems) => pageItems.map((request) => (
                 <RequestCard key={request.id} request={request} resolve={resolve} busy={busy === request.id} session={session}
                   onDecide={(target, kind) => setDecision({ request: target, kind })} onAction={act} />
-              ))}
+              ))}</PagedList>
             </>
           )}
         </div>

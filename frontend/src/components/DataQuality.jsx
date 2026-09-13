@@ -4,6 +4,7 @@ import Dialog from './Dialog';
 import Icon from './Icon';
 import HelpTopic from './HelpTopic';
 import FilterBar from './FilterBar';
+import { PagedList } from './Pagination';
 import { useUrlFilters } from '../filters/useUrlFilters';
 import TrustLegend from './TrustLegend';
 import { can, fieldMessages, formatDateTime, hrefForLink, plural } from './format';
@@ -179,8 +180,9 @@ export default function DataQuality({ session, canOpen, onChanged }) {
       {visible.length === 0 ? (
         <EmptyState icon="check" title="No issues match these filters">Try another status or severity.</EmptyState>
       ) : (
-        <ul className="issue-list">
-          {visible.map((issue) => {
+        <PagedList items={visible} resetKey={JSON.stringify(quality.filters)} noun="issues" anchorId="issue-list">{(pageItems) => (
+        <ul className="issue-list" id="issue-list">
+          {pageItems.map((issue) => {
             const href = hrefForLink(issue.link);
             return (
               <li key={issue.fingerprint} className="issue">
@@ -214,6 +216,7 @@ export default function DataQuality({ session, canOpen, onChanged }) {
             );
           })}
         </ul>
+        )}</PagedList>
       )}
     </section>
 

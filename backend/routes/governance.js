@@ -173,8 +173,12 @@ async function assertLinkable(role, employeeId, userId) {
     throw validationError([{ field: 'employeeId', code: 'employee_required', message: `${ROLE_LABELS[role]} accounts must be linked to an employee.` }]);
   }
   if (employeeId === null) return;
-  if (!(await writes.getEmployee(employeeId))) {
+  const employee = await writes.getEmployee(employeeId);
+  if (!employee) {
     throw validationError([{ field: 'employeeId', code: 'unknown_reference', message: 'Employee does not exist.' }]);
+  }
+  if (employee.employmentStatus === 'archived') {
+    throw validationError([{ field: 'employeeId', code: 'invalid_reference', message: `${employee.name} is archived. Restore them in the Employee directory before linking an account.` }]);
   }
   const linked = await users.getUserByEmployee(employeeId);
   if (linked && linked.id !== userId) throw conflict(`${linked.displayName} is already linked to that employee.`, 'employee_already_linked');
@@ -708,9 +712,7 @@ module.exports = function governanceRoutes() {
       const next = await writes.getEmployee(reassignTo);
       if (!next || next.employmentStatus !== 'active') throw validationError([{ field: 'reassignReportsTo', code: 'unknown_reference', message: 'The new manager must be an active employee.' }]);
       if (reassignTo === id) throw validationError([{ field: 'reassignReportsTo', code: 'invalid_reference', message: 'Reports cannot be reassigned to the person being archived.' }]);
-      if (impact.directReports.some((report) => report.id === reassignTo)) {
-        // Promoting a direct report is fine; they simply stop reporting to the archived person.
-      }
+      // Promoting one of the direct reports is allowed; the transaction below clears their own link to the archived person.
     }
     const now = new Date().toISOString();
 
@@ -761,14 +763,19 @@ module.exports = function governanceRoutes() {
     if (current.employmentStatus !== 'archived') throw conflict(`${current.name} is not archived.`, 'not_archived');
     const restored = await withTransaction(async () => {
       await writes.setEmploymentStatus(id, 'active', null);
+      // The manager may have been archived since. A restored person cannot report to an archived
+      // manager, so the line is cleared and the response says so; the admin can set a new one.
+      const manager = current.managerId === null ? null : await writes.getEmployee(current.managerId);
+      const managerCleared = manager !== null && manager.employmentStatus !== 'active';
+      if (managerCleared) await writes.updateEmployee(id, { managerId: null, reportsExternally: false });
       const after = await writes.getEmployee(id);
       const account = await users.getUserByEmployee(id);
       await recordAudit({
         ...auditContext(req), action: 'employee.restored', entityType: 'employee', entityId: id, entityLabel: after.name,
-        summary: `${req.user.displayName} restored ${after.name}${account?.disabled ? '; their account stays disabled until re-enabled' : ''}`,
-        before: pickEmployee(current), after: pickEmployee(after), highSignal: true,
+        summary: `${req.user.displayName} restored ${after.name}${managerCleared ? ` (no manager: ${manager.name} is archived)` : ''}${account?.disabled ? '; their account stays disabled until re-enabled' : ''}`,
+        before: pickEmployee(current), after: pickEmployee(after), metadata: { managerCleared, previousManagerId: managerCleared ? manager.id : null }, highSignal: true,
       });
-      return { employee: after, accountStillDisabled: Boolean(account?.disabled) };
+      return { employee: after, accountStillDisabled: Boolean(account?.disabled), managerCleared, previousManagerName: managerCleared ? manager.name : null };
     });
     res.json(restored);
   });

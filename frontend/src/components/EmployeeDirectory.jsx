@@ -4,6 +4,7 @@ import Dialog from './Dialog';
 import Diff from './Diff';
 import Icon from './Icon';
 import HelpTopic, { HelpLink } from './HelpTopic';
+import { PagedList } from './Pagination';
 import { fieldMessages, formatDate, relativeTime } from './format';
 import { EmptyState, ErrorState, FieldError, FormError, Skeleton } from './ui';
 import { useUrlFilters } from '../filters/useUrlFilters';
@@ -455,7 +456,8 @@ export default function EmployeeDirectory({ workforce, onChanged }) {
             </EmptyState>
           )}
           {items && visible.length > 0 && (
-            <div className="table-wrap flush">
+            <PagedList items={visible} resetKey={JSON.stringify(filters)} noun="people" anchorId="directory-table">{(pageItems) => (
+            <div className="table-wrap flush" id="directory-table">
               <table>
                 <thead>
                   <tr>
@@ -465,7 +467,7 @@ export default function EmployeeDirectory({ workforce, onChanged }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {visible.map((employee) => (
+                  {pageItems.map((employee) => (
                     <tr key={employee.id} className={employee.employmentStatus === 'archived' ? 'row-muted' : ''}>
                       <th scope="row">
                         <a href={profileHref(employee)}>{employee.name}</a>
@@ -498,6 +500,7 @@ export default function EmployeeDirectory({ workforce, onChanged }) {
                 </tbody>
               </table>
             </div>
+            )}</PagedList>
           )}
         </section>
       )}

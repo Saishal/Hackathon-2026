@@ -3,6 +3,15 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
+// `--dataset enterprise` seeds from data/enterprise instead of the demo folder (same as KEYSTONE_SEED_DIR).
+const datasetFlag = process.argv.indexOf('--dataset');
+if (datasetFlag !== -1) {
+  const name = process.argv[datasetFlag + 1];
+  if (!name || !/^[a-z0-9-]+$/.test(name)) { console.error('Usage: reset-demo-data.js [--dataset <folder under backend/data>]'); process.exit(1); }
+  process.env.KEYSTONE_SEED_DIR = path.join(__dirname, '..', 'data', name);
+  if (!fs.existsSync(path.join(process.env.KEYSTONE_SEED_DIR, 'employees.csv'))) { console.error(`No dataset at ${process.env.KEYSTONE_SEED_DIR}`); process.exit(1); }
+}
+
 // Same default as data/db.js, resolved here because requiring that module opens the file.
 const dbPath = process.env.DB_PATH || path.join(__dirname, '..', 'skillsight.db');
 

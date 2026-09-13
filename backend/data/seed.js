@@ -35,8 +35,8 @@ async function importDataset(dataset) {
 
     for (const employee of dataset.employees) {
       const { lastID } = await run(
-        'INSERT INTO employees (name, role, department, mentoring_hours_per_month, reports_externally) VALUES (?, ?, ?, ?, ?)',
-        [employee.name, employee.role, employee.department, employee.mentoringHoursPerMonth, employee.reportsExternally ? 1 : 0],
+        'INSERT INTO employees (name, role, department, mentoring_hours_per_month, reports_externally, start_date) VALUES (?, ?, ?, ?, ?, ?)',
+        [employee.name, employee.role, employee.department, employee.mentoringHoursPerMonth, employee.reportsExternally ? 1 : 0, employee.startDate ?? null],
       );
       employeeIds.set(employee.name, lastID);
     }

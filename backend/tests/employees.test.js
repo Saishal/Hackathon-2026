@@ -164,3 +164,34 @@ test('edits keep the reporting line sound and record what changed', async () => 
   assert.equal(archivedManager.status, 400);
   assert.match(archivedManager.body.details[0].message, /archived/);
 });
+
+test('restoring a person whose manager was archived clears the reporting line and says so', async () => {
+  const { base } = await started;
+  const admin = await signedIn(base, 'admin');
+  const list = (await admin.get('/api/keystone/employees')).body.items;
+  const manager = list.find((item) => item.employmentStatus === 'active' && item.directReports === 0 && item.managerId !== null);
+  const report = list.find((item) => item.id !== manager.id && item.employmentStatus === 'active' && item.directReports === 0 && item.managerId !== null);
+  assert.equal((await admin.patch(`/api/keystone/employees/${report.id}`, { managerId: manager.id })).status, 200);
+  assert.equal((await admin.post(`/api/keystone/employees/${report.id}/archive`, {})).status, 200);
+  assert.equal((await admin.post(`/api/keystone/employees/${manager.id}/archive`, {})).status, 200);
+  const restored = await admin.post(`/api/keystone/employees/${report.id}/restore`, {});
+  assert.equal(restored.status, 200);
+  assert.equal(restored.body.managerCleared, true);
+  assert.equal(restored.body.previousManagerName, manager.name);
+  assert.equal(restored.body.employee.managerId, null);
+  // A restored person with an active manager keeps the line.
+  assert.equal((await admin.post(`/api/keystone/employees/${manager.id}/restore`, {})).body.managerCleared, false);
+});
+
+test('an account cannot be created for or linked to an archived employee', async () => {
+  const { base } = await started;
+  const admin = await signedIn(base, 'admin');
+  const list = (await admin.get('/api/keystone/employees')).body.items;
+  const person = list.find((item) => item.employmentStatus === 'active' && item.directReports === 0 && item.account === null);
+  assert.equal((await admin.post(`/api/keystone/employees/${person.id}/archive`, {})).status, 200);
+  const created = await admin.post('/api/keystone/users', { email: 'archived.link@keystone.demo', displayName: person.name, role: 'employee', employeeId: person.id, password: 'Another-Strong-Pass-1!' });
+  assert.equal(created.status, 400);
+  assert.equal(created.body.details[0].field, 'employeeId');
+  assert.match(created.body.details[0].message, /archived/);
+  await admin.post(`/api/keystone/employees/${person.id}/restore`, {});
+});

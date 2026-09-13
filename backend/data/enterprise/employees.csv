@@ -1,0 +1,281 @@
+name,role,department,mentoring_hours_per_month,manager,start_date
+Rachel Moreno,Engineering Manager,Engineering,4,EXTERNAL,
+Liam Chen,Backend Engineer,Engineering,4,Rachel Moreno,
+Mason Green,Backend Engineer,Engineering,,Rachel Moreno,
+Priya Raman,Backend Engineer,Engineering,3,Rachel Moreno,
+Tomas Herrera,Backend Engineer,Engineering,,Rachel Moreno,
+Kwame Mensah,Backend Engineer,Engineering,,Rachel Moreno,
+Ava Patel,Frontend Engineer,Engineering,3,Rachel Moreno,
+Amelia Diaz,Frontend Engineer,Engineering,,Rachel Moreno,
+Jonas Weber,Frontend Engineer,Engineering,,Rachel Moreno,
+Mei Lin Tan,Frontend Engineer,Engineering,,Rachel Moreno,
+Sophia Nguyen,QA Engineer,Engineering,2,Rachel Moreno,
+Benjamin Hall,QA Engineer,Engineering,,Rachel Moreno,
+Ella Walker,Technical Writer,Engineering,,Rachel Moreno,
+Ethan Brooks,DevOps Engineer,Platform,,Jack Turner,
+Aisha Bello,DevOps Engineer,Platform,,Jack Turner,
+Henry Adams,Cloud Engineer,Platform,2,Jack Turner,
+Rafael Costa,Cloud Engineer,Platform,,Jack Turner,
+Dmitri Volkov,Site Reliability Engineer,Platform,3,Jack Turner,
+Keiko Sato,Site Reliability Engineer,Platform,,Jack Turner,
+Jack Turner,Solutions Architect,Platform,4,EXTERNAL,
+Isabella Ross,Security Analyst,Security,2,EXTERNAL,
+Omar Haddad,Security Analyst,Security,,Isabella Ross,
+Noah Rivera,Data Analyst,Data & AI,,James Carter,
+Chloe Martin,Data Analyst,Data & AI,,James Carter,
+Arjun Mehta,Data Analyst,Data & AI,,James Carter,
+James Carter,Data Scientist,Data & AI,2,EXTERNAL,
+Yuki Tanaka,Data Scientist,Data & AI,,James Carter,
+Grace King,AI Specialist,Data & AI,,James Carter,
+Mia Thompson,Product Manager,Product,,EXTERNAL,
+Daniel Okafor,Product Manager,Product,,Mia Thompson,
+Sara Lindqvist,Product Manager,Product,,Mia Thompson,
+Lucas Kim,UX Designer,Design,2,Mia Thompson,
+Elena Petrova,UX Designer,Design,,Mia Thompson,
+Harper White,Program Manager,Operations,,EXTERNAL,
+Evelyn Scott,Business Analyst,Operations,,Harper White,
+Marcus Reed,Business Analyst,Operations,,Harper White,
+Nadia Rahman,Compliance Analyst,Risk & Compliance,2,EXTERNAL,
+Victor Alvarez,Compliance Analyst,Risk & Compliance,,Nadia Rahman,
+Fatima Zahra,Billing Operations Specialist,Finance Operations,,Harper White,
+Oliver Grant,Billing Operations Specialist,Finance Operations,,,
+Daniel Young,Support Engineer,Customer Success,,EXTERNAL,
+Samuel Osei,Support Engineer,Customer Success,,Daniel Young,
+Julia Novak,Support Engineer,Customer Success,,Daniel Young,
+Abigail Lewis,People Partner,People,,EXTERNAL,
+Lucas Mensah,Director of Engineering,Engineering,4,EXTERNAL,2022-12-17
+Paula Tanaka,Engineering Manager,Engineering,3,Lucas Mensah,2023-12-27
+Miriam Mensah,Engineering Manager,Engineering,3,Lucas Mensah,2020-12-06
+Maya Petrov,Engineering Manager,Engineering,3,Lucas Mensah,2022-06-12
+Tariq Bianchi,Engineering Manager,Engineering,2,Lucas Mensah,2023-02-13
+Ingrid Alvarez,Engineering Manager,Engineering,2,Lucas Mensah,2021-07-04
+Bianca Osei,Engineering Manager,Engineering,6,Lucas Mensah,2018-09-25
+Lucas Iyer,Technical Writer,Engineering,6,Paula Tanaka,2022-01-19
+Chiara Torres,Frontend Engineer,Engineering,4,Miriam Mensah,2020-05-02
+Delphine Blackwood,Mobile Engineer,Engineering,,Maya Petrov,2025-04-20
+Isabel Varga,Staff Engineer,Engineering,,Tariq Bianchi,2026-03-29
+Adrian Fischer,Mobile Engineer,Engineering,,Ingrid Alvarez,2019-12-17
+Aisha Fernandes,Technical Writer,Engineering,,Bianca Osei,2021-02-04
+Nadia Ibarra,Mobile Engineer,Engineering,2,Paula Tanaka,2025-08-29
+Wren Fischer,QA Engineer,Engineering,,Miriam Mensah,2019-12-24
+Hugo Silva,Staff Engineer,Engineering,,Maya Petrov,2022-09-13
+Grace Laurent,Technical Writer,Engineering,3,Tariq Bianchi,2019-04-25
+Dmitri Marino,Frontend Engineer,Engineering,,Ingrid Alvarez,2025-11-27
+Zoe Vasquez,Backend Engineer,Engineering,6,Bianca Osei,2019-07-19
+Maya Novak,Backend Engineer,Engineering,,Paula Tanaka,2020-10-25
+Gabriel Kimura,Mobile Engineer,Engineering,3,Miriam Mensah,2025-04-10
+Victor Silva,QA Engineer,Engineering,4,Maya Petrov,2020-12-10
+Marcus Torres,Staff Engineer,Engineering,1,Tariq Bianchi,2022-10-10
+Sebastian Vasquez,Backend Engineer,Engineering,5,Ingrid Alvarez,2023-09-10
+Imani Fischer,Backend Engineer,Engineering,0,Bianca Osei,2023-06-02
+Julia Jansen,Backend Engineer,Engineering,,Paula Tanaka,2021-01-05
+Olivia Park,QA Engineer,Engineering,,Miriam Mensah,2018-09-14
+Lucas Marino,Frontend Engineer,Engineering,,Maya Petrov,2026-06-06
+Tariq Petrov,QA Engineer,Engineering,,Tariq Bianchi,2022-12-18
+Caleb Petrov,Mobile Engineer,Engineering,,Ingrid Alvarez,2019-06-04
+Victor Ekwueme,Frontend Engineer,Engineering,,Bianca Osei,2018-09-30
+Imani Kimura,Staff Engineer,Engineering,0,Paula Tanaka,2019-03-09
+Caleb Guerrero,Frontend Engineer,Engineering,4,Miriam Mensah,2021-04-01
+Jasper Weber,Frontend Engineer,Engineering,0,Maya Petrov,2025-11-23
+Priya Kowalski,Backend Engineer,Engineering,,Tariq Bianchi,2024-10-31
+Tomas Guerrero,Mobile Engineer,Engineering,3,Ingrid Alvarez,2018-12-09
+Wren Iyer,Frontend Engineer,Engineering,5,Bianca Osei,2019-06-01
+Samir Nakamura,Mobile Engineer,Engineering,,Paula Tanaka,2023-04-11
+Yara Park,Backend Engineer,Engineering,,Miriam Mensah,2026-05-25
+Adrian Alvarez,Frontend Engineer,Engineering,3,Maya Petrov,2018-07-19
+Farah Marino,Frontend Engineer,Engineering,2,Tariq Bianchi,2024-04-08
+Tariq Singh,Frontend Engineer,Engineering,5,Ingrid Alvarez,2024-05-30
+Omar Nakamura,Frontend Engineer,Engineering,3,Bianca Osei,2022-11-03
+Hiroshi Torres,Backend Engineer,Engineering,4,Paula Tanaka,2021-04-13
+Jasper Osei,QA Engineer,Engineering,,Miriam Mensah,2025-12-20
+Mei Bergström,Staff Engineer,Engineering,3,Maya Petrov,2026-04-27
+Zara Sørensen,QA Engineer,Engineering,1,Tariq Bianchi,2022-08-03
+Lena Fernandes,Backend Engineer,Engineering,,Ingrid Alvarez,2026-02-13
+Ingrid Petrov,Technical Writer,Engineering,,Bianca Osei,2021-08-13
+Grace Haddad,QA Engineer,Engineering,4,Paula Tanaka,2018-09-02
+Wei Petrov,Frontend Engineer,Engineering,0,Miriam Mensah,2022-05-23
+Andrei Park,QA Engineer,Engineering,,Maya Petrov,2020-02-01
+Julia Ramírez,Head of Platform,Platform,6,EXTERNAL,2016-07-09
+Mateo Baptiste,Engineering Manager,Platform,6,Julia Ramírez,2025-02-20
+Zoe Costa,Engineering Manager,Platform,6,Julia Ramírez,2020-04-09
+Isabel Duarte,Platform Engineer,Platform,0,Mateo Baptiste,2020-09-23
+Samir Sato,Platform Engineer,Platform,4,Zoe Costa,2025-10-31
+Imani Kowalski,Site Reliability Engineer,Platform,6,Mateo Baptiste,2022-07-23
+Camila Becker,Cloud Engineer,Platform,0,Zoe Costa,2021-08-06
+Hannah Vasquez,Site Reliability Engineer,Platform,3,Mateo Baptiste,2020-08-16
+Lena Walsh,DevOps Engineer,Platform,,Zoe Costa,2025-04-05
+Jonas Salazar,Platform Engineer,Platform,,Mateo Baptiste,2019-10-06
+Emeka Abara,Platform Engineer,Platform,,Zoe Costa,2026-04-03
+Marcus Singh,DevOps Engineer,Platform,,Mateo Baptiste,2021-12-19
+Julia Lindqvist,DevOps Engineer,Platform,4,Zoe Costa,2026-01-07
+Iris Carvalho,Platform Engineer,Platform,,Mateo Baptiste,2025-10-17
+Rafael Zhang,Platform Engineer,Platform,,Zoe Costa,2025-04-21
+Yusuf Fernandes,Cloud Engineer,Platform,0,Mateo Baptiste,2018-11-10
+Hiroshi Ahmed,Cloud Engineer,Platform,2,Zoe Costa,2022-06-30
+Hiroshi Olsen,DevOps Engineer,Platform,,Mateo Baptiste,2024-01-29
+Aisha Baptiste,Platform Engineer,Platform,3,Zoe Costa,2025-03-07
+Zara Tanaka,Platform Engineer,Platform,,Mateo Baptiste,2026-01-08
+Andrei Delgado,Head of Data,Data & AI,2,EXTERNAL,2024-01-22
+Lena Sørensen,Engineering Manager,Data & AI,6,Andrei Delgado,2025-07-07
+Hugo Osei,Engineering Manager,Data & AI,6,Andrei Delgado,2023-11-06
+Priya Okafor,Engineering Manager,Data & AI,4,Andrei Delgado,2023-10-26
+Amara Olsen,Data Analyst,Data & AI,1,Lena Sørensen,2019-01-20
+Victor Zimmerman,Data Analyst,Data & AI,3,Hugo Osei,2019-02-18
+Alejandro Petrov,Data Scientist,Data & AI,4,Priya Okafor,2019-10-13
+Mei Quinn,Data Engineer,Data & AI,2,Lena Sørensen,2023-07-02
+Gabriel Sørensen,Data Analyst,Data & AI,,Hugo Osei,2024-09-28
+Sofia Mensah,ML Engineer,Data & AI,3,Priya Okafor,2022-05-31
+Gabriel Dahl,Data Engineer,Data & AI,,Lena Sørensen,2025-05-25
+Iris Dahl,Data Scientist,Data & AI,4,Hugo Osei,2022-02-05
+Alejandro Blackwood,Data Analyst,Data & AI,,Priya Okafor,2025-08-27
+Aisha Anderson,Data Analyst,Data & AI,6,Lena Sørensen,2023-12-11
+Ibrahim Walsh,Data Engineer,Data & AI,3,Hugo Osei,2021-12-04
+Nikolai Gallagher,Analytics Engineer,Data & AI,3,Priya Okafor,2018-11-05
+Daniel Ahmed,Data Engineer,Data & AI,0,Lena Sørensen,2021-06-08
+Mateo Petrov,Data Engineer,Data & AI,,Hugo Osei,2025-04-10
+Tomas Ekwueme,Data Engineer,Data & AI,1,Priya Okafor,2022-09-07
+Fiona Okafor,Data Analyst,Data & AI,,Lena Sørensen,2023-09-01
+Hiroshi Salazar,Data Engineer,Data & AI,,Hugo Osei,2022-04-14
+Emeka Petrov,Analytics Engineer,Data & AI,6,Priya Okafor,2022-01-21
+Caleb Ramírez,ML Engineer,Data & AI,6,Lena Sørensen,2020-11-21
+Priya Zimmerman,Data Engineer,Data & AI,6,Hugo Osei,2023-10-04
+Hannah Ahmed,Head of Product,Product,2,EXTERNAL,2022-11-22
+Ingrid Costa,Program Manager,Product,2,Hannah Ahmed,2022-03-15
+Zoe Chowdhury,Program Manager,Product,4,Hannah Ahmed,2018-11-18
+Omar Hansen,Business Analyst,Product,2,Ingrid Costa,2023-08-20
+Caleb Sato,Product Manager,Product,3,Zoe Chowdhury,2025-11-23
+Ravi Kaur,Product Manager,Product,5,Ingrid Costa,2018-08-28
+Emeka Castillo,Product Manager,Product,3,Zoe Chowdhury,2024-05-01
+Andrei Bergström,Business Analyst,Product,1,Ingrid Costa,2023-04-29
+Julia Olsen,Product Manager,Product,1,Zoe Chowdhury,2024-11-24
+Rafael Haddad,Product Manager,Product,5,Ingrid Costa,2023-05-11
+Ximena Chowdhury,Product Manager,Product,5,Zoe Chowdhury,2019-07-11
+Emeka Fernandes,Product Manager,Product,6,Ingrid Costa,2019-01-21
+Fiona Dahl,Business Analyst,Product,5,Zoe Chowdhury,2020-11-14
+Julia Iyer,Product Manager,Product,,Ingrid Costa,2025-05-26
+Esther Fernandes,Design Lead,Design,4,EXTERNAL,2023-06-22
+Yara Brennan,UX Designer,Design,1,Esther Fernandes,2024-06-16
+Elena Fontaine,Product Designer,Design,2,Esther Fernandes,2020-04-30
+Esther Becker,Product Designer,Design,,Esther Fernandes,2019-01-06
+Noor Silva,UX Designer,Design,1,Esther Fernandes,2025-01-31
+Fiona Hoffmann,Product Designer,Design,1,Esther Fernandes,2023-12-22
+Nadia Dubois,UX Designer,Design,,Esther Fernandes,2022-12-05
+Mei Duarte,Product Designer,Design,5,Esther Fernandes,2025-09-02
+Layla Novak,UX Designer,Design,6,Esther Fernandes,2021-10-15
+Mei Rossi,UX Designer,Design,1,Esther Fernandes,2024-06-28
+Yara Mendes,Product Designer,Design,1,Esther Fernandes,2024-08-10
+Kenji Fernandes,UX Designer,Design,5,Esther Fernandes,2023-04-05
+Yara Tanaka,Head of Security,Security,8,EXTERNAL,2018-09-18
+Valentina Carvalho,Security Analyst,Security,2,Yara Tanaka,2023-02-20
+Elias Okafor,Security Engineer,Security,,Yara Tanaka,2020-03-24
+Ethan García,Security Engineer,Security,,Yara Tanaka,2021-11-20
+Amara Dubois,Security Engineer,Security,2,Yara Tanaka,2025-07-17
+Priya Fontaine,Security Analyst,Security,1,Yara Tanaka,2024-01-19
+Emeka Anderson,Security Engineer,Security,,Yara Tanaka,2020-04-19
+Anika Eriksen,Security Engineer,Security,,Yara Tanaka,2020-08-29
+Zoe Quinn,Security Analyst,Security,4,Yara Tanaka,2020-10-28
+Rosa Weber,Security Engineer,Security,6,Yara Tanaka,2022-08-22
+Dmitri Alvarez,Security Engineer,Security,5,Yara Tanaka,2024-05-21
+Grace Mendes,Security Engineer,Security,1,Yara Tanaka,2026-04-28
+Omar Ekwueme,Head of Finance,Finance Operations,8,EXTERNAL,2021-06-08
+Valentina Laurent,Finance Manager,Finance Operations,6,Omar Ekwueme,2023-10-09
+Mei Mahmoud,Finance Manager,Finance Operations,4,Omar Ekwueme,2024-04-22
+Ethan Kowalski,Payroll Specialist,Finance Operations,6,Valentina Laurent,2022-05-23
+Gianna Fernandes,Finance Analyst,Finance Operations,,Mei Mahmoud,2023-03-30
+Imani Yamamoto,Finance Analyst,Finance Operations,,Valentina Laurent,2023-02-27
+Bianca Fernandes,Finance Analyst,Finance Operations,,Mei Mahmoud,2021-02-23
+Jonas Kimura,Finance Analyst,Finance Operations,6,Valentina Laurent,2024-12-04
+Omar Iyer,Payroll Specialist,Finance Operations,4,Mei Mahmoud,2019-03-16
+Aaliyah Jansen,Accountant,Finance Operations,3,Valentina Laurent,2026-03-10
+Fiona Lindqvist,Billing Operations Specialist,Finance Operations,1,Mei Mahmoud,2021-12-30
+Gianna Petrov,Accountant,Finance Operations,,Valentina Laurent,2024-11-24
+Iris Delgado,Accountant,Finance Operations,,Mei Mahmoud,2018-08-14
+Jasper Marino,Finance Analyst,Finance Operations,,Valentina Laurent,2018-12-15
+Nikolai Mensah,Finance Analyst,Finance Operations,2,Mei Mahmoud,2025-04-14
+Farah Mensah,Payroll Specialist,Finance Operations,5,Valentina Laurent,2019-01-11
+Sebastian Zimmerman,Head of Compliance,Risk & Compliance,5,EXTERNAL,2017-11-15
+Anika Nakamura,Compliance Analyst,Risk & Compliance,1,Sebastian Zimmerman,2021-02-13
+Nina Castillo,Compliance Analyst,Risk & Compliance,5,Sebastian Zimmerman,2021-07-15
+Dario Sørensen,Compliance Analyst,Risk & Compliance,3,Sebastian Zimmerman,2020-06-05
+Dmitri Mensah,Compliance Analyst,Risk & Compliance,,Sebastian Zimmerman,2025-03-29
+Aisha Quinn,Legal Counsel,Risk & Compliance,4,Sebastian Zimmerman,2021-03-07
+Dmitri Brennan,Compliance Analyst,Risk & Compliance,1,Sebastian Zimmerman,2019-09-17
+Imani Costa,Legal Counsel,Risk & Compliance,1,Sebastian Zimmerman,2020-06-18
+Aisha Bianchi,Head of Operations,Operations,5,EXTERNAL,2020-10-26
+Fiona Yamamoto,Operations Manager,Operations,6,Aisha Bianchi,2024-12-27
+Tariq Mahmoud,Operations Manager,Operations,2,Aisha Bianchi,2018-11-21
+Beatriz Marino,IT Support Specialist,Operations,2,Fiona Yamamoto,2019-01-10
+Aaliyah Mahmoud,Program Manager,Operations,,Tariq Mahmoud,2018-11-02
+Nadia Chowdhury,Procurement Specialist,Operations,3,Fiona Yamamoto,2019-04-15
+Miriam Bianchi,IT Support Specialist,Operations,1,Tariq Mahmoud,2020-05-21
+Beatriz Vasquez,Program Manager,Operations,5,Fiona Yamamoto,2020-01-21
+Alejandro Silva,Procurement Specialist,Operations,0,Tariq Mahmoud,2018-09-21
+Aisha Ahmed,Program Manager,Operations,4,Fiona Yamamoto,2022-02-21
+Jonas Costa,Procurement Specialist,Operations,,Tariq Mahmoud,2019-12-18
+Lucas Salazar,IT Support Specialist,Operations,1,Fiona Yamamoto,2023-12-27
+Jasper Hoffmann,IT Support Specialist,Operations,3,Tariq Mahmoud,2025-07-23
+Gianna Mensah,IT Support Specialist,Operations,5,Fiona Yamamoto,2019-05-29
+Emeka Rossi,Head of Customer Success,Customer Success,4,EXTERNAL,2017-11-03
+Yusuf Sørensen,Customer Success Manager,Customer Success,3,Emeka Rossi,2023-05-13
+Wei Haddad,Customer Success Manager,Customer Success,3,Emeka Rossi,2024-02-24
+Arjun Anderson,Solutions Architect,Customer Success,5,Yusuf Sørensen,2024-09-23
+Kai Becker,Support Engineer,Customer Success,0,Wei Haddad,2025-07-31
+Kai Sato,Support Engineer,Customer Success,3,Yusuf Sørensen,2021-01-16
+Isabel Dubois,Support Engineer,Customer Success,2,Wei Haddad,2025-02-11
+Imani Weber,Support Engineer,Customer Success,,Yusuf Sørensen,2025-01-28
+Zara Vasquez,Support Engineer,Customer Success,6,Wei Haddad,2023-09-02
+Talia Quinn,Support Engineer,Customer Success,0,Yusuf Sørensen,2025-09-05
+Maya Abara,Support Engineer,Customer Success,,Wei Haddad,2019-12-11
+Beatriz Osei,Support Engineer,Customer Success,,Yusuf Sørensen,2019-04-19
+Layla Eriksen,Customer Success Specialist,Customer Success,,Wei Haddad,2022-08-01
+Valentina Lindqvist,Customer Success Specialist,Customer Success,,Yusuf Sørensen,2023-05-15
+Alejandro Dahl,Solutions Architect,Customer Success,,Wei Haddad,2022-08-26
+Nikolai Nakamura,Customer Success Specialist,Customer Success,,Yusuf Sørensen,2021-12-22
+Aisha Laurent,Support Engineer,Customer Success,3,Wei Haddad,2023-08-15
+Zara Bergström,Support Engineer,Customer Success,1,Yusuf Sørensen,2018-07-04
+Kenji Becker,Customer Success Specialist,Customer Success,5,Wei Haddad,2019-01-23
+Felix Kowalski,Customer Success Specialist,Customer Success,1,Yusuf Sørensen,2019-01-22
+Noor Kimura,Customer Success Specialist,Customer Success,4,Wei Haddad,2025-02-09
+Chiara Haddad,Support Engineer,Customer Success,3,Yusuf Sørensen,2025-04-07
+Dmitri Kowalski,Head of Sales,Sales,4,EXTERNAL,2020-08-03
+Maya Mendes,Sales Manager,Sales,5,Dmitri Kowalski,2021-10-03
+Paula Fontaine,Sales Manager,Sales,5,Dmitri Kowalski,2022-09-18
+Ravi Gallagher,Account Executive,Sales,,Maya Mendes,2024-03-12
+Olivia Kimura,Sales Engineer,Sales,,Paula Fontaine,2020-10-14
+Benjamin Vasquez,Account Executive,Sales,0,Maya Mendes,2023-05-13
+Delphine Mahmoud,Sales Development Representative,Sales,5,Paula Fontaine,2018-10-09
+Wren Torres,Account Executive,Sales,,Maya Mendes,2023-10-01
+Andrei Chowdhury,Sales Engineer,Sales,,Paula Fontaine,2021-02-28
+Ravi Ekwueme,Account Executive,Sales,6,Maya Mendes,2022-02-01
+Rosa Bergström,Sales Development Representative,Sales,0,Paula Fontaine,2023-02-22
+Rafael Olsen,Account Executive,Sales,,Maya Mendes,2023-06-29
+Ximena Duarte,Sales Engineer,Sales,3,Paula Fontaine,2019-09-10
+Ximena Alvarez,Account Executive,Sales,0,Maya Mendes,2022-03-31
+Felix Mahmoud,Sales Engineer,Sales,6,Paula Fontaine,2019-05-27
+Alejandro Hansen,Sales Development Representative,Sales,4,Maya Mendes,2020-02-15
+Marcus Alvarez,Sales Development Representative,Sales,4,Paula Fontaine,2019-04-23
+Emeka Delgado,Sales Engineer,Sales,1,Maya Mendes,2023-08-07
+Julia Haddad,Account Executive,Sales,,Paula Fontaine,2023-11-29
+Kai Kaur,Account Executive,Sales,,Maya Mendes,2020-09-08
+Victor Eriksen,Head of Marketing,Marketing,2,EXTERNAL,2018-03-05
+Tomas Carvalho,Marketing Manager,Marketing,4,Victor Eriksen,2025-08-04
+Olivia Fernandes,Growth Marketer,Marketing,1,Tomas Carvalho,2018-08-17
+Emeka Torres,Growth Marketer,Marketing,4,Tomas Carvalho,2026-07-30
+Aisha Kowalski,Content Strategist,Marketing,,Tomas Carvalho,2018-11-09
+Priya Dahl,Content Strategist,Marketing,6,Tomas Carvalho,2024-02-11
+Gabriel Costa,Content Strategist,Marketing,0,Tomas Carvalho,2020-06-08
+Valentina Delgado,Content Strategist,Marketing,5,Tomas Carvalho,2021-10-22
+Farah Zimmerman,Marketing Analyst,Marketing,,Tomas Carvalho,2026-04-27
+Aisha Petrov,Content Strategist,Marketing,,Tomas Carvalho,2025-05-11
+Grace Costa,Growth Marketer,Marketing,4,Tomas Carvalho,2024-05-18
+Ingrid Baptiste,Content Strategist,Marketing,,Tomas Carvalho,2022-12-23
+Hannah Blackwood,Head of People,People,5,EXTERNAL,2016-09-17
+Gabriel García,Recruiter,People,1,Hannah Blackwood,2025-12-04
+Zoe Abara,Recruiter,People,,Hannah Blackwood,2026-01-31
+Delphine Delgado,Recruiter,People,5,Hannah Blackwood,2021-08-22
+Callum Fernandes,Recruiter,People,,Hannah Blackwood,2020-05-12
+Ravi Novak,Recruiter,People,4,Hannah Blackwood,2022-01-18
+Maya Sørensen,People Partner,People,0,Hannah Blackwood,2018-12-05
+Oscar Mahmoud,People Partner,People,,Hannah Blackwood,2022-08-10
+Wei Carvalho,People Partner,People,6,Hannah Blackwood,2024-02-06
+Julia Park,Learning & Development Specialist,People,0,Hannah Blackwood,2021-05-12

@@ -1,0 +1,13 @@
+skill,required_holders,target_proficiency,criticality,effective_month,status,provenance
+AI Governance,3,3,4,9,proposed,Fictional demo dataset
+Payments Compliance,3,4,5,12,proposed,Fictional demo dataset
+Data Privacy (GDPR),5,3,5,3,reviewed,Fictional enterprise dataset (generated)
+MLOps,4,3,4,6,reviewed,Fictional enterprise dataset (generated)
+Observability,6,3,4,6,reviewed,Fictional enterprise dataset (generated)
+Terraform,6,3,4,9,reviewed,Fictional enterprise dataset (generated)
+Prompt Engineering,6,3,3,9,proposed,Fictional enterprise dataset (generated)
+Rust,3,3,3,12,proposed,Fictional enterprise dataset (generated)
+Identity & Access Management,4,4,5,6,reviewed,Fictional enterprise dataset (generated)
+Revenue Recognition,3,4,5,12,proposed,Fictional enterprise dataset (generated)
+Salesforce Administration,3,3,4,4,reviewed,Fictional enterprise dataset (generated)
+Kotlin & Android,3,3,3,12,proposed,Fictional enterprise dataset (generated)

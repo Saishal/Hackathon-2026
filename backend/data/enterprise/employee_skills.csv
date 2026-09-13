@@ -1,0 +1,1370 @@
+employee,skill,proficiency,evidence_source,last_verified_at
+Rachel Moreno,Node.js,3,Project delivery review,
+Rachel Moreno,DevOps,3,Project delivery review,2026-02-24
+Rachel Moreno,Cloud Architecture,2,Training completion record,2025-10-31
+Rachel Moreno,Project Management,3,Manager assessment,2026-06-01
+Rachel Moreno,Communication,5,Project delivery review,
+Rachel Moreno,Leadership,5,Certification record,2026-03-04
+Liam Chen,TypeScript,2,Self-assessment,
+Liam Chen,Node.js,5,Project delivery review,2026-06-27
+Liam Chen,API Design,4,Project delivery review,2026-03-29
+Liam Chen,SQL & Data Modeling,4,Technical interview panel,2026-07-31
+Liam Chen,Python,3,Manager assessment,
+Liam Chen,DevOps,2,Self-assessment,2025-11-03
+Liam Chen,Test Automation,3,Project delivery review,2025-10-19
+Liam Chen,Legacy Billing Recovery,5,Project delivery review,2026-07-13
+Mason Green,TypeScript,3,Project delivery review,2026-08-15
+Mason Green,Node.js,3,Project delivery review,2025-11-21
+Mason Green,API Design,2,Training completion record,
+Mason Green,SQL & Data Modeling,2,Training completion record,
+Mason Green,Data Analysis,2,Self-assessment,
+Mason Green,Test Automation,3,Peer code review,2026-05-01
+Mason Green,Legacy Billing Recovery,2,Self-assessment,
+Priya Raman,TypeScript,2,Training completion record,2026-04-02
+Priya Raman,Node.js,5,Technical interview panel,2026-04-01
+Priya Raman,API Design,4,Manager assessment,2026-07-25
+Priya Raman,SQL & Data Modeling,3,Peer code review,2026-02-19
+Priya Raman,Test Automation,4,Certification record,2026-05-19
+Priya Raman,Communication,2,Self-assessment,
+Priya Raman,Leadership,3,Peer code review,2025-09-27
+Tomas Herrera,TypeScript,3,Peer code review,2025-12-02
+Tomas Herrera,Node.js,4,Technical interview panel,2025-11-15
+Tomas Herrera,API Design,3,Manager assessment,
+Tomas Herrera,SQL & Data Modeling,2,Self-assessment,2026-04-02
+Tomas Herrera,Test Automation,4,Technical interview panel,2026-05-02
+Tomas Herrera,Leadership,3,Peer code review,2025-11-02
+Kwame Mensah,TypeScript,4,Manager assessment,2025-10-17
+Kwame Mensah,Node.js,4,Technical interview panel,2026-06-24
+Kwame Mensah,API Design,2,Training completion record,
+Kwame Mensah,SQL & Data Modeling,3,Peer code review,2025-12-25
+Kwame Mensah,Python,2,Training completion record,
+Kwame Mensah,DevOps,2,Self-assessment,
+Kwame Mensah,Test Automation,3,Peer code review,2026-01-15
+Ava Patel,React,5,Technical interview panel,2026-08-15
+Ava Patel,TypeScript,3,Peer code review,2025-11-22
+Ava Patel,DevOps,2,Training completion record,2026-08-08
+Ava Patel,Cloud Architecture,2,Manager assessment,2025-09-20
+Ava Patel,Test Automation,2,Self-assessment,
+Ava Patel,UX Research,1,Self-assessment,
+Ava Patel,Accessibility,4,Technical interview panel,2026-01-17
+Amelia Diaz,React,4,Project delivery review,2026-05-29
+Amelia Diaz,TypeScript,2,Training completion record,2025-09-15
+Amelia Diaz,Data Analysis,3,Manager assessment,
+Amelia Diaz,Test Automation,3,Project delivery review,2025-10-29
+Amelia Diaz,UX Research,2,Manager assessment,2025-09-13
+Amelia Diaz,Accessibility,4,Technical interview panel,
+Jonas Weber,React,5,Project delivery review,2026-07-12
+Jonas Weber,TypeScript,3,Project delivery review,2026-01-06
+Jonas Weber,Cloud Architecture,2,Training completion record,
+Jonas Weber,Test Automation,2,Self-assessment,2026-03-08
+Jonas Weber,UX Research,3,Manager assessment,2026-08-27
+Jonas Weber,Accessibility,3,Manager assessment,2026-05-17
+Jonas Weber,Communication,3,Peer code review,2026-04-18
+Mei Lin Tan,React,5,Project delivery review,
+Mei Lin Tan,TypeScript,3,Manager assessment,2026-08-18
+Mei Lin Tan,Data Analysis,2,Manager assessment,2025-12-14
+Mei Lin Tan,DevOps,2,Manager assessment,2026-06-21
+Mei Lin Tan,Test Automation,1,Training completion record,2026-04-24
+Mei Lin Tan,UX Research,3,Manager assessment,2025-10-11
+Mei Lin Tan,Accessibility,4,Certification record,2025-12-31
+Sophia Nguyen,TypeScript,3,Manager assessment,2025-11-08
+Sophia Nguyen,Data Analysis,2,Training completion record,2026-07-14
+Sophia Nguyen,Cloud Architecture,2,Manager assessment,2026-08-01
+Sophia Nguyen,Test Automation,5,Manager assessment,2025-09-30
+Sophia Nguyen,Communication,3,Manager assessment,2026-01-29
+Benjamin Hall,TypeScript,3,Manager assessment,2026-06-13
+Benjamin Hall,Cloud Architecture,2,Self-assessment,2026-07-24
+Benjamin Hall,Test Automation,4,Manager assessment,2026-07-27
+Benjamin Hall,Communication,3,Manager assessment,2025-09-04
+Benjamin Hall,Leadership,2,Self-assessment,2025-10-19
+Ella Walker,API Design,2,Self-assessment,
+Ella Walker,DevOps,2,Training completion record,2026-04-15
+Ella Walker,Project Management,2,Self-assessment,
+Ella Walker,Communication,4,Certification record,2025-09-02
+Ethan Brooks,DevOps,4,Project delivery review,2026-01-01
+Ethan Brooks,Kubernetes,2,Manager assessment,2026-01-08
+Ethan Brooks,Cloud Architecture,3,Manager assessment,2026-06-05
+Ethan Brooks,Incident Response,3,Peer code review,
+Ethan Brooks,Communication,3,Peer code review,2026-05-10
+Aisha Bello,Node.js,2,Self-assessment,
+Aisha Bello,DevOps,4,Project delivery review,2026-04-08
+Aisha Bello,Kubernetes,3,Project delivery review,2025-10-08
+Aisha Bello,Cloud Architecture,4,Certification record,2026-03-17
+Aisha Bello,Incident Response,3,Peer code review,2026-06-27
+Aisha Bello,Leadership,2,Training completion record,2025-10-14
+Henry Adams,DevOps,3,Manager assessment,2025-11-30
+Henry Adams,Cloud Architecture,4,Certification record,2026-06-11
+Henry Adams,Cybersecurity,2,Manager assessment,2025-11-03
+Henry Adams,Communication,2,Self-assessment,
+Rafael Costa,Node.js,2,Manager assessment,2025-10-11
+Rafael Costa,DevOps,2,Manager assessment,2026-01-20
+Rafael Costa,Cloud Architecture,5,Technical interview panel,2025-09-27
+Rafael Costa,Cybersecurity,2,Self-assessment,
+Dmitri Volkov,DevOps,3,Peer code review,2025-10-22
+Dmitri Volkov,Kubernetes,5,Certification record,2025-10-18
+Dmitri Volkov,Cloud Architecture,2,Manager assessment,2026-03-24
+Dmitri Volkov,Incident Response,5,Project delivery review,2026-03-27
+Dmitri Volkov,Communication,2,Manager assessment,2026-04-26
+Keiko Sato,DevOps,3,Peer code review,2026-01-05
+Keiko Sato,Kubernetes,3,Manager assessment,2025-09-24
+Keiko Sato,Cloud Architecture,3,Manager assessment,
+Keiko Sato,Cybersecurity,2,Training completion record,2026-01-12
+Keiko Sato,Incident Response,4,Technical interview panel,
+Jack Turner,API Design,5,Project delivery review,2026-04-13
+Jack Turner,Cloud Architecture,5,Technical interview panel,2026-02-27
+Jack Turner,Cybersecurity,2,Manager assessment,
+Jack Turner,Communication,4,Certification record,2026-06-25
+Isabella Ross,DevOps,2,Training completion record,2026-02-11
+Isabella Ross,Kubernetes,2,Training completion record,2025-12-17
+Isabella Ross,Cloud Architecture,1,Manager assessment,2026-07-14
+Isabella Ross,Cybersecurity,5,Certification record,2026-08-06
+Isabella Ross,Incident Response,4,Manager assessment,2026-07-16
+Omar Haddad,DevOps,2,Manager assessment,
+Omar Haddad,Kubernetes,3,Manager assessment,2026-02-22
+Omar Haddad,Cloud Architecture,2,Manager assessment,2025-09-15
+Omar Haddad,Cybersecurity,3,Manager assessment,2026-01-22
+Omar Haddad,Incident Response,3,Manager assessment,2025-10-08
+Noah Rivera,SQL & Data Modeling,4,Manager assessment,2026-02-05
+Noah Rivera,Python,2,Self-assessment,
+Noah Rivera,Data Analysis,4,Certification record,2026-04-14
+Noah Rivera,Project Management,2,Manager assessment,2026-04-06
+Noah Rivera,Communication,3,Project delivery review,2025-09-05
+Chloe Martin,SQL & Data Modeling,3,Project delivery review,2026-04-16
+Chloe Martin,Python,1,Manager assessment,2025-09-23
+Chloe Martin,Data Analysis,4,Manager assessment,2026-01-02
+Chloe Martin,Cloud Architecture,2,Manager assessment,2026-02-08
+Chloe Martin,Communication,3,Manager assessment,2025-10-01
+Arjun Mehta,SQL & Data Modeling,4,Certification record,2026-07-26
+Arjun Mehta,Python,2,Self-assessment,2026-08-09
+Arjun Mehta,Data Analysis,5,Project delivery review,2026-05-21
+Arjun Mehta,Project Management,2,Training completion record,2026-08-05
+Arjun Mehta,Communication,2,Self-assessment,2025-09-28
+Arjun Mehta,Leadership,3,Peer code review,2026-02-05
+James Carter,Python,5,Project delivery review,2025-10-15
+James Carter,Data Analysis,4,Project delivery review,2026-07-23
+James Carter,Machine Learning,4,Manager assessment,2026-02-03
+James Carter,Communication,3,Manager assessment,2026-07-02
+Yuki Tanaka,Python,3,Manager assessment,2026-06-30
+Yuki Tanaka,Data Analysis,3,Manager assessment,2026-04-14
+Yuki Tanaka,Machine Learning,5,Technical interview panel,2025-09-09
+Yuki Tanaka,Leadership,3,Project delivery review,2026-05-09
+Grace King,Python,5,Certification record,2025-09-30
+Grace King,Machine Learning,5,Certification record,2025-11-01
+Grace King,AI Governance,2,Self-assessment,2025-09-26
+Grace King,Leadership,2,Training completion record,2026-01-04
+Mia Thompson,SQL & Data Modeling,2,Manager assessment,2026-04-26
+Mia Thompson,UX Research,3,Peer code review,2025-12-21
+Mia Thompson,Accessibility,2,Manager assessment,2026-05-11
+Mia Thompson,Project Management,4,Project delivery review,2026-05-25
+Mia Thompson,Communication,3,Peer code review,2026-03-04
+Mia Thompson,Leadership,3,Manager assessment,2026-07-09
+Daniel Okafor,Data Analysis,3,Manager assessment,2026-04-11
+Daniel Okafor,UX Research,4,Technical interview panel,2026-04-25
+Daniel Okafor,Project Management,4,Project delivery review,2026-06-13
+Daniel Okafor,Communication,4,Manager assessment,2025-11-14
+Daniel Okafor,Leadership,3,Manager assessment,2026-03-25
+Sara Lindqvist,SQL & Data Modeling,3,Project delivery review,2025-09-24
+Sara Lindqvist,UX Research,3,Manager assessment,2025-12-01
+Sara Lindqvist,Project Management,4,Certification record,2026-05-18
+Sara Lindqvist,Communication,4,Certification record,2026-05-21
+Sara Lindqvist,Leadership,2,Self-assessment,
+Lucas Kim,React,2,Manager assessment,2026-01-18
+Lucas Kim,UX Research,5,Project delivery review,2026-06-12
+Lucas Kim,Accessibility,3,Project delivery review,2026-07-03
+Lucas Kim,Project Management,3,Peer code review,
+Lucas Kim,Communication,3,Manager assessment,2025-12-14
+Elena Petrova,UX Research,4,Certification record,2026-01-02
+Elena Petrova,Accessibility,3,Project delivery review,2026-01-28
+Elena Petrova,Project Management,2,Self-assessment,
+Elena Petrova,Communication,3,Manager assessment,2025-10-17
+Harper White,SQL & Data Modeling,2,Manager assessment,2026-04-10
+Harper White,Project Management,3,Manager assessment,2026-06-16
+Harper White,Communication,4,Certification record,2026-06-03
+Harper White,Leadership,4,Project delivery review,2025-11-01
+Evelyn Scott,SQL & Data Modeling,2,Self-assessment,
+Evelyn Scott,Python,3,Manager assessment,2026-01-28
+Evelyn Scott,Data Analysis,2,Training completion record,2026-03-04
+Evelyn Scott,Communication,4,Technical interview panel,2025-11-27
+Marcus Reed,SQL & Data Modeling,2,Self-assessment,
+Marcus Reed,Python,2,Training completion record,2026-03-08
+Marcus Reed,Data Analysis,4,Project delivery review,
+Marcus Reed,Communication,4,Certification record,2026-04-24
+Nadia Rahman,SQL & Data Modeling,2,Training completion record,2026-05-06
+Nadia Rahman,Data Analysis,3,Manager assessment,2026-02-27
+Nadia Rahman,AI Governance,2,Self-assessment,2025-10-29
+Nadia Rahman,Cybersecurity,2,Self-assessment,
+Nadia Rahman,Communication,4,Technical interview panel,2026-03-03
+Nadia Rahman,Payments Compliance,5,Project delivery review,2026-01-20
+Victor Alvarez,SQL & Data Modeling,2,Self-assessment,
+Victor Alvarez,Data Analysis,2,Manager assessment,2025-10-06
+Victor Alvarez,Project Management,2,Training completion record,
+Victor Alvarez,Communication,3,Peer code review,2025-10-24
+Victor Alvarez,Payments Compliance,3,Project delivery review,2025-12-14
+Fatima Zahra,SQL & Data Modeling,2,Self-assessment,2025-12-29
+Fatima Zahra,Data Analysis,2,Self-assessment,2026-04-01
+Fatima Zahra,Project Management,2,Manager assessment,2026-05-29
+Fatima Zahra,Communication,4,Project delivery review,2026-06-27
+Fatima Zahra,Payments Compliance,3,Peer code review,2026-02-21
+Fatima Zahra,Legacy Billing Recovery,2,Training completion record,
+Oliver Grant,Data Analysis,2,Self-assessment,
+Oliver Grant,Project Management,2,Manager assessment,2026-01-27
+Oliver Grant,Communication,3,Manager assessment,2026-01-30
+Oliver Grant,Payments Compliance,2,Self-assessment,2026-04-08
+Daniel Young,SQL & Data Modeling,2,Training completion record,
+Daniel Young,Incident Response,2,Training completion record,2026-04-04
+Daniel Young,Project Management,3,Manager assessment,2026-04-13
+Daniel Young,Communication,4,Certification record,2026-01-08
+Samuel Osei,SQL & Data Modeling,2,Manager assessment,2025-09-25
+Samuel Osei,Python,2,Self-assessment,2026-03-22
+Samuel Osei,Incident Response,2,Training completion record,2026-03-14
+Samuel Osei,Communication,5,Manager assessment,2026-01-16
+Julia Novak,SQL & Data Modeling,2,Training completion record,2026-06-02
+Julia Novak,Incident Response,3,Peer code review,2025-11-22
+Julia Novak,Project Management,3,Manager assessment,2026-01-27
+Julia Novak,Communication,4,Certification record,
+Abigail Lewis,Project Management,2,Manager assessment,2026-07-12
+Abigail Lewis,Communication,4,Certification record,2026-02-28
+Abigail Lewis,Leadership,4,Manager assessment,2026-05-16
+Lucas Mensah,Leadership,5,Peer review,2025-05-31
+Lucas Mensah,Communication,3,Performance review 2025,2026-04-03
+Lucas Mensah,Stakeholder Management,4,Performance review 2025,2026-06-04
+Lucas Mensah,Agile Delivery,3,Code review sample,2025-09-14
+Lucas Mensah,API Design,2,Client feedback,2026-04-09
+Lucas Mensah,Swift & iOS,2,Certification record,2024-04-02
+Lucas Mensah,Go,1,Skills audit Q2 2026,2026-08-17
+Lucas Mensah,Node.js,3,Manager assessment,2025-07-10
+Paula Tanaka,Leadership,5,Code review sample,2025-04-05
+Paula Tanaka,Communication,4,Hiring panel assessment,2025-09-22
+Paula Tanaka,Project Management,4,Client feedback,
+Paula Tanaka,Node.js,3,Client feedback,2024-09-14
+Paula Tanaka,Test Automation,1,Hiring panel assessment,
+Paula Tanaka,Swift & iOS,3,Skills audit Q2 2026,2025-03-02
+Miriam Mensah,Leadership,5,Manager assessment,
+Miriam Mensah,Communication,5,Hiring panel assessment,2026-06-11
+Miriam Mensah,Node.js,2,Performance review 2025,2026-07-26
+Miriam Mensah,Test Automation,1,Skills audit Q2 2026,2026-05-06
+Maya Petrov,Leadership,3,Hiring panel assessment,2025-08-18
+Maya Petrov,Communication,5,Self-assessment,
+Maya Petrov,Node.js,3,Performance review 2025,
+Maya Petrov,Accessibility,1,Skills audit Q2 2026,2026-06-26
+Tariq Bianchi,Leadership,4,Manager assessment,2025-05-24
+Tariq Bianchi,Communication,3,Self-assessment,2025-12-25
+Tariq Bianchi,Project Management,4,Manager assessment,2026-01-31
+Tariq Bianchi,Node.js,3,Client feedback,2026-03-20
+Tariq Bianchi,Go,2,Skills audit Q2 2026,2026-07-23
+Tariq Bianchi,Observability,2,Manager assessment,2024-07-24
+Ingrid Alvarez,Leadership,5,Peer review,2024-12-19
+Ingrid Alvarez,Communication,4,Manager assessment,2025-07-13
+Ingrid Alvarez,Project Management,3,Skills audit Q2 2026,2025-12-16
+Ingrid Alvarez,Node.js,4,Code review sample,2024-02-01
+Ingrid Alvarez,React,3,Code review sample,2026-08-19
+Ingrid Alvarez,Java,4,Skills audit Q2 2026,2024-09-14
+Ingrid Alvarez,Swift & iOS,4,Code review sample,2026-03-06
+Bianca Osei,Communication,4,Skills audit Q2 2026,2025-07-06
+Bianca Osei,Project Management,4,Code review sample,
+Bianca Osei,Node.js,4,Skills audit Q2 2026,2026-02-17
+Bianca Osei,API Design,4,Client feedback,2024-02-10
+Bianca Osei,Kotlin & Android,4,Code review sample,2024-12-09
+Bianca Osei,Test Automation,2,Hiring panel assessment,2026-07-08
+Lucas Iyer,Communication,4,Hiring panel assessment,2024-05-31
+Lucas Iyer,API Design,2,Manager assessment,2025-09-23
+Lucas Iyer,Project Management,1,Peer review,2025-06-15
+Lucas Iyer,Swift & iOS,2,Client feedback,2026-03-02
+Lucas Iyer,Node.js,4,Performance review 2025,2025-07-07
+Chiara Torres,React,4,Skills audit Q2 2026,
+Chiara Torres,TypeScript,4,Peer review,2026-06-29
+Chiara Torres,Accessibility,4,Peer review,2025-10-24
+Chiara Torres,UX Research,3,Self-assessment,2026-02-16
+Chiara Torres,Test Automation,2,Client feedback,
+Chiara Torres,Swift & iOS,4,Code review sample,2026-07-31
+Chiara Torres,Agile Delivery,4,Performance review 2025,2026-06-22
+Chiara Torres,Observability,4,Hiring panel assessment,2024-12-31
+Delphine Blackwood,Swift & iOS,2,Client feedback,
+Delphine Blackwood,Kotlin & Android,3,Project delivery review,2025-11-10
+Delphine Blackwood,API Design,2,Hiring panel assessment,2026-08-05
+Delphine Blackwood,Test Automation,3,Manager assessment,2026-04-06
+Delphine Blackwood,PostgreSQL,2,Skills audit Q2 2026,2026-06-28
+Isabel Varga,API Design,5,Peer review,2025-07-16
+Isabel Varga,TypeScript,3,Self-assessment,2026-05-20
+Isabel Varga,Node.js,4,Skills audit Q2 2026,2026-04-03
+Isabel Varga,PostgreSQL,4,Skills audit Q2 2026,2023-10-02
+Isabel Varga,Observability,2,Project delivery review,2024-02-19
+Isabel Varga,Coaching & Mentoring,4,Self-assessment,2025-06-09
+Isabel Varga,SQL & Data Modeling,3,Hiring panel assessment,2026-06-29
+Isabel Varga,GraphQL,3,Certification record,2023-12-14
+Adrian Fischer,Swift & iOS,3,Peer review,2025-09-24
+Adrian Fischer,Kotlin & Android,3,Manager assessment,2025-10-25
+Adrian Fischer,Test Automation,2,Skills audit Q2 2026,2024-08-13
+Adrian Fischer,React,1,Self-assessment,2025-04-12
+Adrian Fischer,Agile Delivery,4,Performance review 2025,2025-07-19
+Aisha Fernandes,API Design,2,Code review sample,2026-02-26
+Aisha Fernandes,Project Management,3,Project delivery review,2024-08-16
+Aisha Fernandes,Test Automation,2,Manager assessment,2026-02-12
+Nadia Ibarra,Swift & iOS,3,Certification record,2025-06-21
+Nadia Ibarra,Kotlin & Android,3,Performance review 2025,2025-08-20
+Nadia Ibarra,API Design,2,Project delivery review,2026-08-01
+Nadia Ibarra,Test Automation,2,Code review sample,2024-05-25
+Nadia Ibarra,Rust,1,Certification record,2025-11-07
+Wren Fischer,Test Automation,4,Self-assessment,2025-07-06
+Wren Fischer,TypeScript,1,Hiring panel assessment,2025-10-22
+Wren Fischer,Java,2,Peer review,2025-08-06
+Hugo Silva,API Design,3,Code review sample,2026-02-08
+Hugo Silva,TypeScript,5,Client feedback,2026-02-24
+Hugo Silva,Node.js,4,Client feedback,2026-05-10
+Hugo Silva,PostgreSQL,4,Certification record,2025-04-05
+Hugo Silva,Observability,4,Self-assessment,2025-04-11
+Hugo Silva,Coaching & Mentoring,3,Certification record,
+Hugo Silva,Go,3,Performance review 2025,
+Grace Laurent,Communication,4,Certification record,2025-10-05
+Grace Laurent,API Design,2,Client feedback,2026-01-06
+Grace Laurent,Project Management,2,Code review sample,2026-04-03
+Grace Laurent,SQL & Data Modeling,4,Peer review,2025-06-25
+Grace Laurent,Swift & iOS,2,Manager assessment,2026-03-31
+Dmitri Marino,React,5,Skills audit Q2 2026,2026-06-02
+Dmitri Marino,TypeScript,4,Certification record,2025-11-26
+Dmitri Marino,Accessibility,4,Performance review 2025,2025-04-17
+Dmitri Marino,UX Research,2,Hiring panel assessment,2026-08-28
+Dmitri Marino,Test Automation,2,Client feedback,2024-02-19
+Dmitri Marino,Rust,3,Manager assessment,
+Dmitri Marino,PostgreSQL,3,Code review sample,2024-10-16
+Zoe Vasquez,Node.js,4,Project delivery review,
+Zoe Vasquez,API Design,3,Self-assessment,2025-06-15
+Zoe Vasquez,SQL & Data Modeling,4,Performance review 2025,2026-03-21
+Zoe Vasquez,Test Automation,4,Project delivery review,2026-04-04
+Zoe Vasquez,React,2,Project delivery review,2026-09-01
+Maya Novak,Node.js,5,Skills audit Q2 2026,2025-11-11
+Maya Novak,API Design,3,Self-assessment,2026-06-26
+Maya Novak,TypeScript,4,Performance review 2025,
+Maya Novak,Test Automation,2,Manager assessment,2025-10-13
+Maya Novak,Rust,1,Certification record,2026-07-25
+Gabriel Kimura,Swift & iOS,3,Code review sample,2026-06-11
+Gabriel Kimura,API Design,2,Certification record,2025-09-15
+Gabriel Kimura,Test Automation,2,Skills audit Q2 2026,2025-03-27
+Gabriel Kimura,Observability,4,Self-assessment,2025-06-15
+Gabriel Kimura,Rust,2,Skills audit Q2 2026,2026-04-16
+Victor Silva,Test Automation,4,Project delivery review,2024-10-14
+Victor Silva,TypeScript,4,Hiring panel assessment,2026-01-09
+Victor Silva,Communication,4,Performance review 2025,2025-10-07
+Victor Silva,Go,2,Code review sample,2023-11-08
+Marcus Torres,API Design,5,Performance review 2025,2025-06-15
+Marcus Torres,TypeScript,5,Client feedback,2026-06-18
+Marcus Torres,Node.js,4,Peer review,2026-03-11
+Marcus Torres,PostgreSQL,3,Self-assessment,2023-12-23
+Marcus Torres,Observability,3,Manager assessment,2025-07-23
+Marcus Torres,Coaching & Mentoring,2,Performance review 2025,2025-12-25
+Marcus Torres,Swift & iOS,3,Certification record,2026-04-24
+Sebastian Vasquez,Node.js,5,Peer review,2026-06-21
+Sebastian Vasquez,API Design,3,Certification record,2025-04-06
+Sebastian Vasquez,SQL & Data Modeling,3,Performance review 2025,2026-07-26
+Sebastian Vasquez,TypeScript,2,Client feedback,
+Sebastian Vasquez,Test Automation,2,Peer review,2023-12-03
+Sebastian Vasquez,Agile Delivery,4,Hiring panel assessment,2024-12-20
+Imani Fischer,Node.js,3,Peer review,
+Imani Fischer,API Design,3,Certification record,2025-06-12
+Imani Fischer,SQL & Data Modeling,3,Client feedback,2025-04-27
+Imani Fischer,TypeScript,3,Certification record,2026-08-27
+Imani Fischer,Test Automation,3,Self-assessment,2025-12-10
+Imani Fischer,Java,2,Performance review 2025,2023-10-04
+Imani Fischer,GraphQL,1,Code review sample,2025-09-14
+Julia Jansen,Node.js,5,Hiring panel assessment,
+Julia Jansen,API Design,3,Skills audit Q2 2026,2026-05-23
+Julia Jansen,TypeScript,2,Project delivery review,2025-06-01
+Julia Jansen,Test Automation,3,Performance review 2025,2025-04-09
+Julia Jansen,GraphQL,3,Self-assessment,
+Julia Jansen,Observability,3,Manager assessment,2025-02-19
+Olivia Park,Test Automation,4,Skills audit Q2 2026,2026-01-01
+Olivia Park,TypeScript,4,Peer review,2026-01-20
+Olivia Park,Communication,3,Code review sample,2025-09-11
+Olivia Park,Kotlin & Android,2,Project delivery review,2026-01-28
+Olivia Park,Observability,1,Client feedback,2026-09-06
+Lucas Marino,React,5,Self-assessment,
+Lucas Marino,TypeScript,3,Self-assessment,
+Lucas Marino,Accessibility,2,Client feedback,
+Lucas Marino,UX Research,2,Skills audit Q2 2026,2026-04-24
+Lucas Marino,Test Automation,3,Project delivery review,2026-02-12
+Lucas Marino,GraphQL,4,Code review sample,2025-09-13
+Tariq Petrov,Test Automation,5,Code review sample,2026-07-14
+Tariq Petrov,TypeScript,3,Hiring panel assessment,
+Tariq Petrov,Communication,3,Peer review,2025-02-22
+Tariq Petrov,Java,4,Skills audit Q2 2026,2026-01-18
+Caleb Petrov,Swift & iOS,2,Skills audit Q2 2026,2026-03-02
+Caleb Petrov,Kotlin & Android,3,Self-assessment,2025-11-06
+Caleb Petrov,API Design,3,Performance review 2025,2025-11-07
+Caleb Petrov,Test Automation,2,Hiring panel assessment,2024-05-31
+Victor Ekwueme,React,5,Project delivery review,2026-06-02
+Victor Ekwueme,TypeScript,3,Skills audit Q2 2026,2025-09-16
+Victor Ekwueme,Accessibility,4,Code review sample,2026-06-02
+Victor Ekwueme,UX Research,2,Performance review 2025,2025-10-03
+Victor Ekwueme,Test Automation,2,Self-assessment,2025-10-10
+Imani Kimura,API Design,5,Peer review,2024-10-27
+Imani Kimura,TypeScript,4,Peer review,2025-11-08
+Imani Kimura,Node.js,3,Manager assessment,2025-07-25
+Imani Kimura,PostgreSQL,4,Client feedback,2023-11-03
+Imani Kimura,Observability,3,Manager assessment,2025-10-27
+Imani Kimura,Coaching & Mentoring,3,Skills audit Q2 2026,2025-05-29
+Imani Kimura,Accessibility,1,Certification record,2026-07-10
+Imani Kimura,React,4,Performance review 2025,2026-04-01
+Caleb Guerrero,React,4,Hiring panel assessment,2024-05-11
+Caleb Guerrero,TypeScript,2,Manager assessment,2024-02-24
+Caleb Guerrero,Accessibility,3,Code review sample,2025-09-14
+Caleb Guerrero,UX Research,2,Code review sample,2026-07-19
+Caleb Guerrero,Test Automation,1,Code review sample,2025-05-01
+Caleb Guerrero,Observability,3,Manager assessment,2025-11-22
+Caleb Guerrero,PostgreSQL,3,Self-assessment,2026-02-06
+Jasper Weber,React,5,Hiring panel assessment,2025-11-14
+Jasper Weber,TypeScript,4,Self-assessment,2026-01-27
+Jasper Weber,Accessibility,3,Project delivery review,2025-08-05
+Jasper Weber,UX Research,2,Client feedback,2025-04-30
+Jasper Weber,Test Automation,1,Code review sample,2025-08-30
+Priya Kowalski,Node.js,5,Manager assessment,2026-04-16
+Priya Kowalski,API Design,3,Performance review 2025,
+Priya Kowalski,SQL & Data Modeling,3,Project delivery review,2026-06-07
+Priya Kowalski,TypeScript,4,Certification record,2026-07-26
+Priya Kowalski,Test Automation,4,Peer review,
+Priya Kowalski,React,1,Code review sample,2025-11-16
+Priya Kowalski,Swift & iOS,2,Skills audit Q2 2026,
+Tomas Guerrero,Swift & iOS,3,Code review sample,2025-12-19
+Tomas Guerrero,Kotlin & Android,4,Peer review,2025-09-23
+Tomas Guerrero,API Design,2,Certification record,2024-06-23
+Tomas Guerrero,Test Automation,2,Skills audit Q2 2026,
+Tomas Guerrero,GraphQL,4,Self-assessment,2026-08-20
+Tomas Guerrero,Observability,3,Performance review 2025,2024-11-28
+Wren Iyer,React,3,Self-assessment,2024-08-30
+Wren Iyer,TypeScript,2,Client feedback,2023-12-28
+Wren Iyer,Accessibility,2,Manager assessment,2026-02-11
+Wren Iyer,UX Research,2,Code review sample,2026-04-28
+Wren Iyer,Test Automation,1,Skills audit Q2 2026,2025-08-03
+Wren Iyer,Node.js,1,Project delivery review,2025-06-08
+Samir Nakamura,Swift & iOS,3,Self-assessment,2025-10-12
+Samir Nakamura,API Design,3,Performance review 2025,
+Samir Nakamura,Test Automation,2,Peer review,2024-09-07
+Samir Nakamura,Accessibility,3,Peer review,2025-08-18
+Samir Nakamura,Java,2,Hiring panel assessment,2025-09-12
+Yara Park,Node.js,4,Skills audit Q2 2026,2024-11-20
+Yara Park,API Design,2,Self-assessment,2025-05-27
+Yara Park,SQL & Data Modeling,2,Code review sample,2026-02-13
+Yara Park,TypeScript,3,Performance review 2025,2025-06-19
+Yara Park,Test Automation,4,Client feedback,
+Yara Park,GraphQL,2,Skills audit Q2 2026,2025-09-22
+Yara Park,Java,1,Skills audit Q2 2026,2025-06-26
+Adrian Alvarez,React,3,Manager assessment,
+Adrian Alvarez,TypeScript,3,Manager assessment,2026-04-08
+Adrian Alvarez,Accessibility,4,Code review sample,2025-06-28
+Adrian Alvarez,UX Research,3,Client feedback,2025-07-05
+Adrian Alvarez,Test Automation,3,Self-assessment,2026-03-11
+Adrian Alvarez,Rust,2,Performance review 2025,2026-02-25
+Farah Marino,React,4,Code review sample,
+Farah Marino,TypeScript,4,Client feedback,2025-12-15
+Farah Marino,Accessibility,4,Code review sample,2024-04-26
+Farah Marino,UX Research,2,Performance review 2025,2025-08-30
+Farah Marino,Test Automation,1,Self-assessment,
+Farah Marino,Agile Delivery,1,Hiring panel assessment,2024-12-15
+Farah Marino,Rust,2,Performance review 2025,2026-07-18
+Tariq Singh,React,3,Project delivery review,2025-10-06
+Tariq Singh,TypeScript,4,Client feedback,2026-07-18
+Tariq Singh,Accessibility,4,Hiring panel assessment,2025-01-30
+Tariq Singh,UX Research,2,Performance review 2025,2025-12-05
+Tariq Singh,Test Automation,2,Client feedback,2025-10-21
+Tariq Singh,SQL & Data Modeling,4,Peer review,2025-11-27
+Tariq Singh,Agile Delivery,1,Hiring panel assessment,2023-09-25
+Omar Nakamura,TypeScript,3,Performance review 2025,2025-12-05
+Omar Nakamura,UX Research,2,Client feedback,2026-06-22
+Omar Nakamura,Test Automation,2,Peer review,2023-10-07
+Omar Nakamura,Rust,2,Peer review,2026-01-30
+Omar Nakamura,Swift & iOS,2,Peer review,2023-11-10
+Hiroshi Torres,Node.js,4,Performance review 2025,2025-03-27
+Hiroshi Torres,API Design,3,Self-assessment,2026-05-13
+Hiroshi Torres,SQL & Data Modeling,3,Peer review,2025-11-15
+Hiroshi Torres,TypeScript,3,Peer review,
+Hiroshi Torres,Test Automation,3,Client feedback,2025-03-22
+Hiroshi Torres,Java,4,Certification record,2025-12-07
+Jasper Osei,Test Automation,4,Self-assessment,
+Jasper Osei,TypeScript,3,Self-assessment,2026-07-16
+Jasper Osei,React,4,Hiring panel assessment,
+Mei Bergström,API Design,4,Client feedback,2025-10-07
+Mei Bergström,TypeScript,3,Certification record,2025-08-08
+Mei Bergström,Node.js,4,Code review sample,
+Mei Bergström,PostgreSQL,4,Hiring panel assessment,2026-04-10
+Mei Bergström,Observability,4,Project delivery review,2026-04-15
+Mei Bergström,Coaching & Mentoring,3,Hiring panel assessment,2025-08-14
+Mei Bergström,SQL & Data Modeling,4,Code review sample,2025-01-09
+Mei Bergström,Rust,4,Client feedback,2026-03-09
+Zara Sørensen,Test Automation,3,Self-assessment,2026-03-28
+Zara Sørensen,TypeScript,3,Project delivery review,2024-06-18
+Zara Sørensen,Communication,3,Certification record,2026-01-09
+Zara Sørensen,API Design,4,Skills audit Q2 2026,2026-02-26
+Zara Sørensen,PostgreSQL,3,Certification record,
+Zara Sørensen,Node.js,2,Manager assessment,2025-11-20
+Lena Fernandes,Node.js,5,Self-assessment,
+Lena Fernandes,API Design,4,Certification record,2026-07-10
+Lena Fernandes,TypeScript,4,Client feedback,2026-06-04
+Lena Fernandes,Test Automation,3,Hiring panel assessment,2025-01-25
+Lena Fernandes,Java,1,Project delivery review,2026-03-29
+Lena Fernandes,Accessibility,1,Peer review,
+Lena Fernandes,Observability,4,Manager assessment,2026-07-16
+Ingrid Petrov,Communication,4,Hiring panel assessment,
+Ingrid Petrov,API Design,2,Client feedback,2025-10-27
+Ingrid Petrov,Project Management,3,Project delivery review,2025-12-14
+Ingrid Petrov,Agile Delivery,4,Skills audit Q2 2026,2026-02-25
+Ingrid Petrov,Kotlin & Android,2,Project delivery review,2026-08-27
+Grace Haddad,Test Automation,5,Hiring panel assessment,2025-01-29
+Grace Haddad,TypeScript,3,Code review sample,2026-03-13
+Grace Haddad,Communication,2,Code review sample,2023-11-26
+Grace Haddad,PostgreSQL,2,Certification record,2025-05-20
+Wei Petrov,React,5,Self-assessment,2025-06-02
+Wei Petrov,TypeScript,3,Performance review 2025,2025-06-14
+Wei Petrov,Accessibility,3,Peer review,
+Wei Petrov,UX Research,2,Skills audit Q2 2026,2026-03-13
+Wei Petrov,Test Automation,3,Skills audit Q2 2026,2025-12-26
+Wei Petrov,SQL & Data Modeling,4,Manager assessment,2026-01-06
+Andrei Park,Test Automation,3,Certification record,2025-06-19
+Andrei Park,TypeScript,4,Self-assessment,2026-02-16
+Andrei Park,Communication,3,Skills audit Q2 2026,2025-03-26
+Andrei Park,Rust,2,Skills audit Q2 2026,2026-04-30
+Julia Ramírez,Leadership,3,Hiring panel assessment,2025-05-04
+Julia Ramírez,Cloud Architecture,5,Manager assessment,2026-04-28
+Julia Ramírez,Incident Response,3,Certification record,2025-12-30
+Julia Ramírez,Terraform,2,Project delivery review,2026-07-05
+Julia Ramírez,AWS,3,Hiring panel assessment,
+Mateo Baptiste,Leadership,3,Hiring panel assessment,2026-07-29
+Mateo Baptiste,Communication,5,Skills audit Q2 2026,2026-07-08
+Mateo Baptiste,Node.js,4,Code review sample,2024-08-23
+Mateo Baptiste,Incident Response,2,Code review sample,2024-08-16
+Mateo Baptiste,Cloud Architecture,2,Peer review,2026-07-02
+Mateo Baptiste,Observability,4,Skills audit Q2 2026,2025-01-18
+Zoe Costa,Leadership,4,Manager assessment,2026-01-24
+Zoe Costa,Communication,5,Self-assessment,2025-12-31
+Zoe Costa,Project Management,3,Peer review,2025-07-19
+Zoe Costa,Node.js,3,Certification record,
+Zoe Costa,DevOps,1,Code review sample,2025-04-26
+Zoe Costa,Terraform,4,Project delivery review,2026-07-07
+Isabel Duarte,Kubernetes,4,Manager assessment,2026-07-01
+Isabel Duarte,Terraform,4,Hiring panel assessment,2026-06-15
+Isabel Duarte,AWS,3,Self-assessment,2025-05-17
+Isabel Duarte,Observability,2,Performance review 2025,2025-07-22
+Isabel Duarte,Go,2,Performance review 2025,2025-05-11
+Isabel Duarte,DevOps,1,Client feedback,2026-07-09
+Samir Sato,Kubernetes,4,Peer review,2023-12-29
+Samir Sato,Terraform,2,Hiring panel assessment,2025-12-27
+Samir Sato,AWS,3,Skills audit Q2 2026,2024-08-15
+Samir Sato,Observability,3,Peer review,2026-05-11
+Samir Sato,Go,1,Project delivery review,2026-04-07
+Samir Sato,Cloud Architecture,4,Manager assessment,2026-08-17
+Imani Kowalski,Incident Response,4,Manager assessment,2026-05-21
+Imani Kowalski,Kubernetes,4,Code review sample,2025-06-15
+Imani Kowalski,DevOps,2,Code review sample,
+Imani Kowalski,Cloud Architecture,2,Client feedback,2025-09-05
+Imani Kowalski,Terraform,1,Client feedback,
+Camila Becker,Cloud Architecture,5,Manager assessment,2026-05-18
+Camila Becker,DevOps,3,Client feedback,2025-03-24
+Camila Becker,Python,4,Peer review,2025-09-16
+Camila Becker,Terraform,3,Certification record,2025-07-05
+Camila Becker,AWS,4,Skills audit Q2 2026,2026-08-19
+Hannah Vasquez,Incident Response,3,Skills audit Q2 2026,2024-11-11
+Hannah Vasquez,Kubernetes,4,Code review sample,2026-08-20
+Hannah Vasquez,DevOps,3,Hiring panel assessment,2026-02-19
+Hannah Vasquez,Cloud Architecture,2,Client feedback,2026-07-31
+Hannah Vasquez,Python,1,Project delivery review,2026-05-08
+Lena Walsh,DevOps,5,Self-assessment,
+Lena Walsh,Kubernetes,3,Peer review,2026-04-27
+Lena Walsh,Cloud Architecture,3,Certification record,
+Lena Walsh,Incident Response,4,Certification record,
+Jonas Salazar,Kubernetes,3,Client feedback,2025-11-26
+Jonas Salazar,Terraform,3,Self-assessment,2025-03-27
+Jonas Salazar,AWS,3,Code review sample,
+Jonas Salazar,Observability,4,Code review sample,2025-01-26
+Jonas Salazar,Go,2,Peer review,2024-10-28
+Jonas Salazar,Python,2,Manager assessment,2026-08-05
+Jonas Salazar,Incident Response,2,Self-assessment,2025-04-05
+Jonas Salazar,Networking,2,Skills audit Q2 2026,2025-08-22
+Emeka Abara,Kubernetes,2,Performance review 2025,
+Emeka Abara,Terraform,4,Performance review 2025,2026-05-10
+Emeka Abara,AWS,3,Client feedback,
+Emeka Abara,Observability,2,Client feedback,2025-07-30
+Emeka Abara,Go,2,Peer review,2025-12-01
+Emeka Abara,Cloud Architecture,4,Performance review 2025,2025-09-17
+Emeka Abara,DevOps,2,Manager assessment,2026-05-27
+Marcus Singh,DevOps,3,Performance review 2025,
+Marcus Singh,Kubernetes,3,Performance review 2025,2024-12-20
+Marcus Singh,Cloud Architecture,3,Hiring panel assessment,2025-04-16
+Marcus Singh,Incident Response,3,Self-assessment,2026-01-26
+Marcus Singh,AWS,2,Skills audit Q2 2026,2026-03-05
+Julia Lindqvist,DevOps,4,Manager assessment,2026-06-05
+Julia Lindqvist,Kubernetes,4,Manager assessment,2024-10-07
+Julia Lindqvist,Cloud Architecture,3,Client feedback,2026-04-18
+Julia Lindqvist,Incident Response,2,Peer review,2025-05-25
+Julia Lindqvist,Python,2,Hiring panel assessment,2025-11-18
+Iris Carvalho,Kubernetes,3,Self-assessment,2025-05-25
+Iris Carvalho,Terraform,2,Hiring panel assessment,2025-12-27
+Iris Carvalho,AWS,4,Project delivery review,2025-06-06
+Iris Carvalho,Observability,3,Peer review,2026-03-14
+Iris Carvalho,Go,2,Client feedback,2025-05-06
+Rafael Zhang,Kubernetes,4,Code review sample,2026-03-29
+Rafael Zhang,Terraform,2,Project delivery review,
+Rafael Zhang,AWS,4,Self-assessment,2026-03-22
+Rafael Zhang,Observability,4,Project delivery review,2024-06-22
+Rafael Zhang,Incident Response,2,Self-assessment,2025-07-16
+Rafael Zhang,DevOps,1,Skills audit Q2 2026,2025-12-10
+Yusuf Fernandes,Cloud Architecture,3,Project delivery review,2024-02-26
+Yusuf Fernandes,DevOps,3,Peer review,2026-01-19
+Yusuf Fernandes,Go,2,Project delivery review,2026-05-13
+Hiroshi Ahmed,Cloud Architecture,5,Self-assessment,2025-10-07
+Hiroshi Ahmed,DevOps,3,Code review sample,2026-03-14
+Hiroshi Ahmed,Observability,1,Manager assessment,
+Hiroshi Olsen,DevOps,4,Peer review,2024-10-05
+Hiroshi Olsen,Kubernetes,4,Code review sample,2026-06-03
+Hiroshi Olsen,Incident Response,3,Certification record,2025-05-29
+Hiroshi Olsen,Observability,4,Certification record,2025-06-08
+Aisha Baptiste,Kubernetes,3,Code review sample,2024-11-25
+Aisha Baptiste,AWS,3,Client feedback,2025-04-22
+Aisha Baptiste,Observability,4,Code review sample,2025-06-09
+Aisha Baptiste,Go,3,Client feedback,2026-01-30
+Aisha Baptiste,Terraform,1,Hiring panel assessment,2025-01-01
+Aisha Baptiste,Incident Response,1,Self-assessment,
+Aisha Baptiste,Networking,1,Certification record,2025-08-28
+Zara Tanaka,Kubernetes,3,Skills audit Q2 2026,2024-11-15
+Zara Tanaka,Terraform,4,Manager assessment,2023-11-23
+Zara Tanaka,AWS,3,Code review sample,2025-12-09
+Zara Tanaka,Observability,3,Performance review 2025,2025-09-18
+Zara Tanaka,Go,2,Self-assessment,2025-09-22
+Zara Tanaka,Incident Response,1,Project delivery review,2025-06-09
+Zara Tanaka,DevOps,3,Project delivery review,
+Andrei Delgado,Communication,4,Project delivery review,2025-05-10
+Andrei Delgado,Data Engineering,3,Self-assessment,2025-12-19
+Andrei Delgado,Statistics,3,Skills audit Q2 2026,
+Andrei Delgado,MLOps,4,Code review sample,2024-07-31
+Andrei Delgado,Prompt Engineering,1,Self-assessment,2024-09-14
+Andrei Delgado,Python,4,Certification record,2026-08-22
+Lena Sørensen,Leadership,4,Project delivery review,2026-06-22
+Lena Sørensen,Project Management,2,Project delivery review,2025-07-05
+Lena Sørensen,Node.js,4,Manager assessment,2025-07-02
+Lena Sørensen,Data Engineering,2,Client feedback,2026-08-20
+Hugo Osei,Leadership,3,Client feedback,2025-08-05
+Hugo Osei,Communication,4,Manager assessment,2025-03-28
+Hugo Osei,Project Management,2,Self-assessment,2026-05-02
+Hugo Osei,Node.js,4,Client feedback,2023-10-19
+Hugo Osei,Data Engineering,4,Code review sample,
+Priya Okafor,Leadership,3,Self-assessment,2026-06-15
+Priya Okafor,Communication,4,Certification record,
+Priya Okafor,Project Management,2,Certification record,2026-08-31
+Priya Okafor,Node.js,3,Certification record,2025-08-23
+Priya Okafor,Analytics Engineering (dbt),2,Code review sample,2024-07-17
+Priya Okafor,Data Visualization,1,Code review sample,2026-04-11
+Amara Olsen,Data Analysis,3,Hiring panel assessment,
+Amara Olsen,SQL & Data Modeling,2,Certification record,2024-06-07
+Amara Olsen,Python,2,Code review sample,2023-09-17
+Amara Olsen,Communication,3,Skills audit Q2 2026,2024-03-20
+Amara Olsen,Prompt Engineering,4,Self-assessment,2026-08-02
+Amara Olsen,Statistics,4,Manager assessment,2025-08-13
+Victor Zimmerman,Data Analysis,5,Skills audit Q2 2026,
+Victor Zimmerman,Python,3,Performance review 2025,2026-02-10
+Victor Zimmerman,Communication,3,Certification record,2025-08-29
+Victor Zimmerman,MLOps,4,Hiring panel assessment,2025-02-11
+Victor Zimmerman,Data Visualization,3,Peer review,2024-01-22
+Alejandro Petrov,Machine Learning,4,Client feedback,2024-05-10
+Alejandro Petrov,Python,3,Performance review 2025,2023-09-30
+Alejandro Petrov,Data Analysis,2,Hiring panel assessment,2026-08-04
+Alejandro Petrov,Prompt Engineering,2,Peer review,2026-02-06
+Alejandro Petrov,Data Visualization,4,Client feedback,
+Mei Quinn,Data Engineering,3,Skills audit Q2 2026,2025-10-21
+Mei Quinn,Python,3,Peer review,
+Mei Quinn,Apache Spark,2,Skills audit Q2 2026,2026-01-24
+Mei Quinn,AWS,2,Code review sample,
+Mei Quinn,MLOps,4,Hiring panel assessment,2026-08-08
+Mei Quinn,Machine Learning,3,Code review sample,2024-08-19
+Gabriel Sørensen,Data Analysis,4,Manager assessment,2025-08-13
+Gabriel Sørensen,SQL & Data Modeling,3,Certification record,2026-05-14
+Gabriel Sørensen,Python,3,Manager assessment,
+Gabriel Sørensen,Communication,3,Manager assessment,2026-06-12
+Gabriel Sørensen,Machine Learning,3,Peer review,2024-05-14
+Sofia Mensah,Machine Learning,4,Hiring panel assessment,2026-09-05
+Sofia Mensah,MLOps,4,Peer review,2024-10-02
+Sofia Mensah,Python,4,Performance review 2025,2025-01-20
+Sofia Mensah,Statistics,1,Project delivery review,2026-02-02
+Sofia Mensah,SQL & Data Modeling,1,Performance review 2025,2026-05-19
+Sofia Mensah,Apache Spark,4,Performance review 2025,2024-05-12
+Sofia Mensah,Prompt Engineering,1,Certification record,2025-09-20
+Gabriel Dahl,Data Engineering,4,Code review sample,2026-02-28
+Gabriel Dahl,Python,3,Certification record,2025-12-03
+Gabriel Dahl,Apache Spark,1,Manager assessment,2026-05-16
+Gabriel Dahl,Statistics,4,Project delivery review,2025-04-07
+Iris Dahl,Machine Learning,4,Certification record,2026-01-27
+Iris Dahl,Python,5,Performance review 2025,2025-08-08
+Iris Dahl,Data Analysis,4,Code review sample,2026-03-03
+Iris Dahl,Prompt Engineering,3,Hiring panel assessment,2026-06-03
+Iris Dahl,Data Visualization,1,Performance review 2025,
+Alejandro Blackwood,Data Analysis,4,Skills audit Q2 2026,2025-05-29
+Alejandro Blackwood,Python,2,Code review sample,2025-11-24
+Alejandro Blackwood,Communication,2,Project delivery review,2026-02-13
+Alejandro Blackwood,Analytics Engineering (dbt),1,Hiring panel assessment,2025-06-25
+Aisha Anderson,Data Analysis,5,Client feedback,2025-12-12
+Aisha Anderson,SQL & Data Modeling,3,Code review sample,
+Aisha Anderson,Python,1,Skills audit Q2 2026,2025-11-23
+Aisha Anderson,Communication,4,Client feedback,
+Aisha Anderson,MLOps,4,Skills audit Q2 2026,2025-09-13
+Aisha Anderson,Analytics Engineering (dbt),3,Project delivery review,2026-05-21
+Aisha Anderson,Apache Spark,1,Manager assessment,2025-09-23
+Ibrahim Walsh,Data Engineering,2,Peer review,2025-04-01
+Ibrahim Walsh,SQL & Data Modeling,3,Hiring panel assessment,2024-02-13
+Ibrahim Walsh,Python,2,Certification record,2025-05-16
+Ibrahim Walsh,Apache Spark,3,Project delivery review,2026-08-03
+Ibrahim Walsh,AWS,3,Project delivery review,2025-01-16
+Ibrahim Walsh,Machine Learning,1,Performance review 2025,2025-01-25
+Nikolai Gallagher,Analytics Engineering (dbt),2,Client feedback,2024-12-15
+Nikolai Gallagher,SQL & Data Modeling,2,Performance review 2025,2025-06-14
+Nikolai Gallagher,Data Visualization,3,Manager assessment,
+Nikolai Gallagher,Apache Spark,4,Certification record,2024-01-18
+Daniel Ahmed,SQL & Data Modeling,3,Project delivery review,2025-08-08
+Daniel Ahmed,Apache Spark,3,Certification record,2025-10-03
+Daniel Ahmed,AWS,2,Client feedback,2026-05-05
+Daniel Ahmed,Analytics Engineering (dbt),1,Certification record,
+Daniel Ahmed,Data Engineering,1,Project delivery review,2024-05-23
+Daniel Ahmed,Machine Learning,4,Certification record,2024-03-03
+Mateo Petrov,Data Engineering,4,Self-assessment,2025-10-22
+Mateo Petrov,SQL & Data Modeling,2,Performance review 2025,2026-03-25
+Mateo Petrov,Python,2,Code review sample,
+Mateo Petrov,Apache Spark,1,Code review sample,2026-02-01
+Mateo Petrov,AWS,2,Client feedback,2025-04-07
+Mateo Petrov,Data Visualization,2,Project delivery review,2025-09-01
+Tomas Ekwueme,Data Engineering,3,Hiring panel assessment,2026-06-04
+Tomas Ekwueme,SQL & Data Modeling,2,Skills audit Q2 2026,2025-07-18
+Tomas Ekwueme,Python,3,Hiring panel assessment,2026-06-21
+Tomas Ekwueme,Apache Spark,1,Certification record,
+Tomas Ekwueme,AWS,2,Performance review 2025,2025-11-05
+Tomas Ekwueme,Prompt Engineering,4,Peer review,
+Tomas Ekwueme,Data Visualization,1,Project delivery review,
+Fiona Okafor,Data Analysis,4,Self-assessment,2026-05-12
+Fiona Okafor,SQL & Data Modeling,3,Skills audit Q2 2026,2026-07-22
+Fiona Okafor,Python,3,Project delivery review,2025-11-16
+Fiona Okafor,Communication,2,Peer review,2025-07-23
+Fiona Okafor,Experimentation & A/B Testing,3,Performance review 2025,
+Fiona Okafor,Data Visualization,4,Self-assessment,2025-05-31
+Hiroshi Salazar,Data Engineering,3,Skills audit Q2 2026,2025-07-07
+Hiroshi Salazar,SQL & Data Modeling,3,Peer review,2026-04-08
+Hiroshi Salazar,Python,2,Hiring panel assessment,2026-02-16
+Hiroshi Salazar,Apache Spark,2,Client feedback,2025-04-19
+Hiroshi Salazar,Data Analysis,3,Performance review 2025,2026-01-01
+Hiroshi Salazar,Machine Learning,2,Manager assessment,
+Hiroshi Salazar,Experimentation & A/B Testing,3,Client feedback,
+Emeka Petrov,Analytics Engineering (dbt),3,Code review sample,2026-06-30
+Emeka Petrov,SQL & Data Modeling,3,Project delivery review,2026-03-05
+Emeka Petrov,Data Visualization,2,Manager assessment,
+Emeka Petrov,Data Analysis,2,Skills audit Q2 2026,2023-10-31
+Caleb Ramírez,Machine Learning,2,Peer review,2025-07-09
+Caleb Ramírez,MLOps,3,Hiring panel assessment,2025-09-30
+Caleb Ramírez,Python,3,Skills audit Q2 2026,2026-05-16
+Priya Zimmerman,Data Engineering,3,Code review sample,2023-09-16
+Priya Zimmerman,SQL & Data Modeling,3,Manager assessment,2025-05-16
+Priya Zimmerman,Python,2,Self-assessment,
+Priya Zimmerman,AWS,3,Project delivery review,
+Priya Zimmerman,Analytics Engineering (dbt),1,Manager assessment,2025-12-11
+Priya Zimmerman,Data Visualization,4,Performance review 2025,2026-08-01
+Priya Zimmerman,MLOps,1,Manager assessment,2025-10-19
+Hannah Ahmed,Leadership,5,Performance review 2025,2026-01-29
+Hannah Ahmed,Stakeholder Management,3,Performance review 2025,2025-11-19
+Hannah Ahmed,Project Management,4,Performance review 2025,2026-01-11
+Hannah Ahmed,Agile Delivery,3,Project delivery review,2026-07-21
+Ingrid Costa,Project Management,4,Skills audit Q2 2026,2025-05-25
+Ingrid Costa,Leadership,4,Self-assessment,2026-02-10
+Ingrid Costa,Communication,5,Hiring panel assessment,2026-05-28
+Zoe Chowdhury,Project Management,4,Hiring panel assessment,2026-02-14
+Zoe Chowdhury,Communication,3,Performance review 2025,2025-03-28
+Zoe Chowdhury,Stakeholder Management,1,Hiring panel assessment,2026-03-01
+Zoe Chowdhury,Data Analysis,4,Code review sample,2025-11-15
+Omar Hansen,Data Analysis,3,Hiring panel assessment,2025-12-23
+Omar Hansen,SQL & Data Modeling,2,Peer review,2026-09-03
+Omar Hansen,Communication,5,Skills audit Q2 2026,2025-08-25
+Omar Hansen,Experimentation & A/B Testing,3,Peer review,2024-12-19
+Omar Hansen,Stakeholder Management,4,Peer review,2025-05-12
+Caleb Sato,Communication,3,Peer review,2026-03-12
+Caleb Sato,UX Research,3,Self-assessment,2025-04-24
+Caleb Sato,Project Management,3,Skills audit Q2 2026,2025-06-27
+Ravi Kaur,Project Management,4,Code review sample,2026-02-16
+Ravi Kaur,Communication,3,Performance review 2025,2025-07-28
+Ravi Kaur,UX Research,4,Skills audit Q2 2026,2025-05-22
+Ravi Kaur,Leadership,4,Code review sample,2025-06-03
+Ravi Kaur,Experimentation & A/B Testing,1,Client feedback,2025-09-12
+Emeka Castillo,Project Management,5,Self-assessment,2026-06-27
+Emeka Castillo,Communication,4,Hiring panel assessment,2025-12-01
+Emeka Castillo,UX Research,2,Skills audit Q2 2026,2025-08-08
+Emeka Castillo,Leadership,4,Code review sample,2025-12-16
+Emeka Castillo,Public Speaking,3,Performance review 2025,2025-05-02
+Emeka Castillo,Agile Delivery,2,Certification record,2024-04-06
+Andrei Bergström,Data Analysis,3,Peer review,
+Andrei Bergström,SQL & Data Modeling,1,Manager assessment,
+Andrei Bergström,Communication,5,Performance review 2025,2025-10-25
+Andrei Bergström,UX Research,1,Peer review,2025-05-24
+Julia Olsen,Project Management,4,Self-assessment,2025-05-23
+Julia Olsen,Communication,5,Peer review,2025-06-22
+Julia Olsen,Leadership,4,Performance review 2025,2025-04-22
+Julia Olsen,Data Analysis,2,Manager assessment,2026-08-02
+Julia Olsen,UX Research,2,Manager assessment,2025-12-08
+Rafael Haddad,Project Management,4,Manager assessment,2024-10-29
+Rafael Haddad,Communication,4,Code review sample,2025-12-05
+Rafael Haddad,UX Research,3,Manager assessment,2026-07-10
+Rafael Haddad,Leadership,4,Performance review 2025,2026-06-13
+Rafael Haddad,Agile Delivery,1,Self-assessment,
+Rafael Haddad,Stakeholder Management,4,Performance review 2025,2025-08-26
+Ximena Chowdhury,Project Management,3,Certification record,2026-03-29
+Ximena Chowdhury,Communication,4,Code review sample,
+Ximena Chowdhury,UX Research,2,Performance review 2025,
+Ximena Chowdhury,Leadership,3,Self-assessment,
+Ximena Chowdhury,Experimentation & A/B Testing,2,Peer review,2026-06-01
+Emeka Fernandes,Project Management,3,Client feedback,2025-08-18
+Emeka Fernandes,UX Research,3,Project delivery review,2024-04-16
+Emeka Fernandes,Leadership,3,Skills audit Q2 2026,2026-05-15
+Emeka Fernandes,Public Speaking,2,Skills audit Q2 2026,
+Fiona Dahl,Data Analysis,3,Self-assessment,2025-09-06
+Fiona Dahl,SQL & Data Modeling,2,Code review sample,2024-03-19
+Fiona Dahl,Communication,5,Peer review,2025-06-16
+Fiona Dahl,Project Management,2,Self-assessment,2026-06-24
+Julia Iyer,Project Management,4,Client feedback,2025-07-10
+Julia Iyer,Communication,3,Certification record,2025-11-23
+Julia Iyer,UX Research,4,Performance review 2025,2026-01-29
+Julia Iyer,Leadership,2,Hiring panel assessment,2026-06-01
+Julia Iyer,Stakeholder Management,4,Skills audit Q2 2026,2026-07-04
+Julia Iyer,Data Analysis,2,Certification record,
+Esther Fernandes,Leadership,4,Peer review,2026-02-03
+Esther Fernandes,Communication,4,Code review sample,2026-07-25
+Esther Fernandes,Design Systems,3,Manager assessment,2026-07-19
+Esther Fernandes,UX Research,4,Peer review,2026-07-18
+Yara Brennan,UX Research,5,Skills audit Q2 2026,2025-11-24
+Yara Brennan,Accessibility,2,Performance review 2025,2025-02-07
+Yara Brennan,Communication,4,Skills audit Q2 2026,
+Yara Brennan,Design Systems,2,Performance review 2025,
+Elena Fontaine,Figma,3,Manager assessment,2026-02-18
+Elena Fontaine,Design Systems,4,Skills audit Q2 2026,2025-10-05
+Elena Fontaine,UX Research,2,Peer review,2026-03-06
+Elena Fontaine,Accessibility,1,Client feedback,2024-08-24
+Elena Fontaine,Communication,4,Certification record,2026-07-14
+Esther Becker,Figma,3,Manager assessment,2023-12-12
+Esther Becker,Design Systems,2,Certification record,
+Esther Becker,UX Research,1,Manager assessment,2025-07-22
+Esther Becker,Accessibility,1,Project delivery review,
+Esther Becker,Brand Design,3,Skills audit Q2 2026,2025-04-23
+Esther Becker,Communication,1,Skills audit Q2 2026,2023-09-29
+Noor Silva,UX Research,4,Peer review,
+Noor Silva,Accessibility,2,Self-assessment,2026-03-29
+Noor Silva,Communication,4,Performance review 2025,2025-10-21
+Noor Silva,Figma,3,Peer review,
+Fiona Hoffmann,Figma,3,Hiring panel assessment,
+Fiona Hoffmann,Design Systems,2,Skills audit Q2 2026,2026-01-18
+Fiona Hoffmann,UX Research,2,Certification record,2024-08-09
+Fiona Hoffmann,Accessibility,2,Peer review,2026-04-09
+Fiona Hoffmann,Brand Design,1,Client feedback,2026-06-05
+Nadia Dubois,UX Research,5,Client feedback,
+Nadia Dubois,Accessibility,3,Self-assessment,
+Nadia Dubois,Communication,2,Client feedback,2026-02-03
+Nadia Dubois,Figma,2,Skills audit Q2 2026,2025-03-25
+Nadia Dubois,Design Systems,4,Performance review 2025,2026-07-24
+Mei Duarte,Figma,2,Hiring panel assessment,2025-03-24
+Mei Duarte,UX Research,2,Peer review,2024-10-27
+Mei Duarte,Accessibility,2,Self-assessment,2026-06-20
+Layla Novak,UX Research,5,Self-assessment,2025-05-27
+Layla Novak,Accessibility,4,Certification record,2026-05-14
+Layla Novak,Communication,3,Peer review,
+Layla Novak,Brand Design,2,Certification record,2024-01-04
+Mei Rossi,UX Research,3,Peer review,2025-02-18
+Mei Rossi,Accessibility,4,Self-assessment,2025-08-04
+Mei Rossi,Communication,3,Performance review 2025,2026-07-16
+Yara Mendes,Figma,3,Certification record,2024-05-05
+Yara Mendes,Design Systems,3,Manager assessment,
+Yara Mendes,UX Research,2,Project delivery review,2026-03-23
+Yara Mendes,Accessibility,3,Code review sample,2025-10-04
+Kenji Fernandes,UX Research,4,Client feedback,2024-07-26
+Kenji Fernandes,Accessibility,3,Peer review,2026-06-07
+Kenji Fernandes,Communication,3,Code review sample,2025-09-06
+Kenji Fernandes,Design Systems,1,Skills audit Q2 2026,
+Yara Tanaka,Leadership,4,Skills audit Q2 2026,2025-05-03
+Yara Tanaka,Communication,4,Performance review 2025,2026-02-06
+Yara Tanaka,Threat Modelling,5,Code review sample,2023-10-08
+Yara Tanaka,Identity & Access Management,3,Peer review,2025-12-07
+Yara Tanaka,Penetration Testing,1,Hiring panel assessment,2026-07-05
+Valentina Carvalho,Incident Response,4,Peer review,2023-11-12
+Valentina Carvalho,Cloud Architecture,2,Code review sample,2026-08-15
+Valentina Carvalho,Networking,3,Skills audit Q2 2026,2026-08-08
+Valentina Carvalho,Threat Modelling,1,Performance review 2025,
+Elias Okafor,Identity & Access Management,2,Code review sample,
+Elias Okafor,Networking,3,Project delivery review,2025-06-14
+Elias Okafor,Penetration Testing,2,Certification record,2025-09-14
+Elias Okafor,Vendor Risk Management,2,Skills audit Q2 2026,2025-03-26
+Ethan García,Identity & Access Management,3,Performance review 2025,2026-01-02
+Ethan García,Threat Modelling,4,Certification record,
+Ethan García,Networking,3,Skills audit Q2 2026,
+Ethan García,Penetration Testing,1,Code review sample,2025-07-25
+Amara Dubois,Identity & Access Management,4,Code review sample,2026-08-10
+Amara Dubois,Threat Modelling,2,Manager assessment,2026-02-25
+Amara Dubois,Networking,4,Project delivery review,2024-07-30
+Amara Dubois,Penetration Testing,2,Skills audit Q2 2026,2024-03-13
+Amara Dubois,Incident Response,2,Skills audit Q2 2026,2026-07-18
+Priya Fontaine,Incident Response,3,Self-assessment,2026-07-26
+Priya Fontaine,Cloud Architecture,3,Manager assessment,2026-07-13
+Priya Fontaine,Identity & Access Management,3,Skills audit Q2 2026,2025-08-16
+Priya Fontaine,Threat Modelling,3,Hiring panel assessment,2025-07-09
+Priya Fontaine,Data Privacy (GDPR),4,Project delivery review,2025-08-15
+Emeka Anderson,Identity & Access Management,2,Certification record,2026-04-05
+Emeka Anderson,Threat Modelling,4,Manager assessment,2025-06-16
+Emeka Anderson,Networking,3,Client feedback,2025-07-29
+Emeka Anderson,Penetration Testing,3,Hiring panel assessment,2026-06-17
+Emeka Anderson,Vendor Risk Management,2,Self-assessment,2026-01-27
+Emeka Anderson,Data Privacy (GDPR),4,Hiring panel assessment,2024-05-10
+Anika Eriksen,Identity & Access Management,2,Peer review,2024-05-08
+Anika Eriksen,Threat Modelling,3,Certification record,2023-11-18
+Anika Eriksen,Networking,4,Skills audit Q2 2026,2026-06-02
+Anika Eriksen,Penetration Testing,3,Hiring panel assessment,2026-03-12
+Anika Eriksen,Cloud Architecture,1,Client feedback,2025-11-01
+Zoe Quinn,Incident Response,3,Peer review,2026-04-29
+Zoe Quinn,Cloud Architecture,2,Manager assessment,2025-07-24
+Zoe Quinn,Networking,2,Skills audit Q2 2026,2026-04-04
+Rosa Weber,Identity & Access Management,3,Client feedback,2026-03-14
+Rosa Weber,Threat Modelling,3,Skills audit Q2 2026,2026-03-08
+Rosa Weber,Networking,4,Self-assessment,2025-05-15
+Rosa Weber,Penetration Testing,2,Project delivery review,2024-11-08
+Rosa Weber,Incident Response,3,Hiring panel assessment,2024-04-16
+Dmitri Alvarez,Identity & Access Management,2,Code review sample,2026-01-13
+Dmitri Alvarez,Threat Modelling,2,Hiring panel assessment,2025-04-06
+Dmitri Alvarez,Networking,2,Self-assessment,2025-08-15
+Dmitri Alvarez,Penetration Testing,3,Peer review,2026-03-25
+Dmitri Alvarez,Vendor Risk Management,4,Peer review,2026-01-17
+Dmitri Alvarez,Incident Response,2,Performance review 2025,2025-11-08
+Grace Mendes,Identity & Access Management,3,Skills audit Q2 2026,2025-10-19
+Grace Mendes,Threat Modelling,3,Certification record,2025-04-11
+Grace Mendes,Penetration Testing,1,Skills audit Q2 2026,2024-11-22
+Grace Mendes,Vendor Risk Management,3,Performance review 2025,2026-04-12
+Omar Ekwueme,Leadership,3,Self-assessment,2025-04-28
+Omar Ekwueme,Communication,5,Certification record,
+Omar Ekwueme,Financial Modelling,5,Hiring panel assessment,2025-09-13
+Omar Ekwueme,Revenue Recognition,4,Code review sample,2026-04-22
+Omar Ekwueme,Procurement,2,Client feedback,
+Omar Ekwueme,ERP Administration,2,Manager assessment,2024-03-11
+Valentina Laurent,Leadership,4,Manager assessment,2025-12-03
+Valentina Laurent,Communication,3,Certification record,2025-03-26
+Valentina Laurent,Financial Modelling,4,Client feedback,2025-09-12
+Valentina Laurent,ERP Administration,4,Performance review 2025,2026-02-26
+Valentina Laurent,Revenue Recognition,2,Client feedback,2025-05-28
+Valentina Laurent,Procurement,2,Manager assessment,2025-11-11
+Mei Mahmoud,Leadership,2,Project delivery review,2026-05-06
+Mei Mahmoud,Communication,2,Self-assessment,2025-10-29
+Mei Mahmoud,Financial Modelling,2,Manager assessment,2026-05-09
+Mei Mahmoud,ERP Administration,3,Manager assessment,2026-08-15
+Ethan Kowalski,Payroll Administration,3,Hiring panel assessment,2025-03-31
+Ethan Kowalski,ERP Administration,2,Certification record,2025-06-25
+Ethan Kowalski,Data Privacy (GDPR),2,Hiring panel assessment,2024-03-04
+Ethan Kowalski,Data Visualization,2,Project delivery review,2026-08-16
+Ethan Kowalski,SQL & Data Modeling,4,Client feedback,2024-08-19
+Ethan Kowalski,Revenue Recognition,2,Code review sample,2026-07-21
+Gianna Fernandes,Financial Modelling,3,Peer review,2026-06-01
+Gianna Fernandes,SQL & Data Modeling,3,Code review sample,2026-01-05
+Gianna Fernandes,Revenue Recognition,2,Performance review 2025,2023-10-01
+Imani Yamamoto,Financial Modelling,4,Certification record,2025-04-18
+Imani Yamamoto,SQL & Data Modeling,2,Code review sample,2023-10-26
+Imani Yamamoto,Data Visualization,3,Self-assessment,
+Imani Yamamoto,Revenue Recognition,1,Performance review 2025,2025-04-05
+Bianca Fernandes,Financial Modelling,3,Client feedback,2026-02-16
+Bianca Fernandes,SQL & Data Modeling,2,Manager assessment,2025-05-08
+Bianca Fernandes,Data Visualization,3,Hiring panel assessment,2026-03-11
+Jonas Kimura,Financial Modelling,3,Certification record,2025-11-12
+Jonas Kimura,SQL & Data Modeling,3,Certification record,2024-10-01
+Jonas Kimura,Data Visualization,2,Self-assessment,2026-08-15
+Jonas Kimura,ERP Administration,4,Manager assessment,2023-11-07
+Omar Iyer,Payroll Administration,2,Project delivery review,2026-06-04
+Omar Iyer,Data Privacy (GDPR),1,Project delivery review,2025-05-06
+Omar Iyer,Data Visualization,2,Project delivery review,2026-08-14
+Omar Iyer,Revenue Recognition,2,Performance review 2025,2025-03-24
+Aaliyah Jansen,Revenue Recognition,3,Client feedback,2025-05-21
+Aaliyah Jansen,ERP Administration,2,Skills audit Q2 2026,2026-01-26
+Aaliyah Jansen,Financial Modelling,2,Skills audit Q2 2026,2024-06-01
+Aaliyah Jansen,Procurement,4,Certification record,2026-06-05
+Fiona Lindqvist,Data Analysis,3,Code review sample,2026-04-10
+Fiona Lindqvist,Communication,4,Peer review,2026-04-22
+Fiona Lindqvist,SQL & Data Modeling,1,Client feedback,2024-12-22
+Fiona Lindqvist,Financial Modelling,3,Performance review 2025,
+Fiona Lindqvist,Data Visualization,3,Project delivery review,2026-02-16
+Gianna Petrov,Revenue Recognition,4,Hiring panel assessment,2025-09-24
+Gianna Petrov,ERP Administration,3,Self-assessment,
+Gianna Petrov,Financial Modelling,1,Certification record,2025-04-07
+Iris Delgado,ERP Administration,2,Code review sample,2026-06-23
+Iris Delgado,Financial Modelling,3,Performance review 2025,2025-07-07
+Iris Delgado,Data Visualization,1,Manager assessment,2025-10-31
+Jasper Marino,Financial Modelling,2,Certification record,2024-03-20
+Jasper Marino,SQL & Data Modeling,1,Peer review,2026-01-24
+Jasper Marino,Data Visualization,2,Manager assessment,2025-04-04
+Jasper Marino,Payroll Administration,4,Code review sample,2025-01-01
+Nikolai Mensah,Financial Modelling,4,Self-assessment,2025-05-31
+Nikolai Mensah,SQL & Data Modeling,2,Peer review,2025-11-10
+Nikolai Mensah,Data Visualization,2,Self-assessment,2023-10-10
+Nikolai Mensah,Revenue Recognition,1,Certification record,2025-07-18
+Nikolai Mensah,Procurement,4,Hiring panel assessment,2025-05-30
+Farah Mensah,Payroll Administration,3,Code review sample,2025-05-09
+Farah Mensah,ERP Administration,2,Hiring panel assessment,2026-01-05
+Farah Mensah,Data Privacy (GDPR),1,Hiring panel assessment,2025-05-03
+Farah Mensah,Revenue Recognition,2,Code review sample,2025-09-05
+Sebastian Zimmerman,Leadership,3,Certification record,2026-02-27
+Sebastian Zimmerman,Communication,4,Client feedback,2024-05-28
+Sebastian Zimmerman,Data Privacy (GDPR),4,Self-assessment,2025-12-09
+Sebastian Zimmerman,Vendor Risk Management,2,Project delivery review,2026-02-13
+Sebastian Zimmerman,Change Management,2,Certification record,2024-09-03
+Anika Nakamura,Communication,3,Hiring panel assessment,2025-03-30
+Anika Nakamura,Data Analysis,3,Performance review 2025,2026-06-08
+Anika Nakamura,Contract Negotiation,3,Client feedback,
+Nina Castillo,Communication,3,Skills audit Q2 2026,2026-04-25
+Nina Castillo,Data Analysis,3,Performance review 2025,2025-04-05
+Nina Castillo,Data Privacy (GDPR),3,Project delivery review,
+Nina Castillo,Contract Negotiation,1,Certification record,2025-11-09
+Nina Castillo,Change Management,4,Hiring panel assessment,2024-02-22
+Dario Sørensen,Communication,3,Skills audit Q2 2026,
+Dario Sørensen,Data Analysis,2,Peer review,2026-01-14
+Dario Sørensen,Vendor Risk Management,3,Hiring panel assessment,
+Dario Sørensen,Data Privacy (GDPR),1,Performance review 2025,2025-08-02
+Dmitri Mensah,Communication,2,Manager assessment,2023-12-18
+Dmitri Mensah,Data Analysis,2,Hiring panel assessment,2024-12-09
+Dmitri Mensah,Data Privacy (GDPR),2,Code review sample,2025-06-10
+Aisha Quinn,Contract Negotiation,4,Hiring panel assessment,2024-12-18
+Aisha Quinn,Data Privacy (GDPR),3,Certification record,2026-06-25
+Aisha Quinn,Communication,1,Manager assessment,2026-03-16
+Aisha Quinn,Vendor Risk Management,2,Self-assessment,2026-03-18
+Dmitri Brennan,Communication,4,Skills audit Q2 2026,2026-01-13
+Dmitri Brennan,Data Analysis,1,Performance review 2025,
+Dmitri Brennan,Change Management,3,Project delivery review,2025-04-28
+Dmitri Brennan,Contract Negotiation,3,Self-assessment,2026-05-24
+Dmitri Brennan,Vendor Risk Management,4,Peer review,2025-12-01
+Imani Costa,Contract Negotiation,5,Performance review 2025,2026-01-04
+Imani Costa,Data Privacy (GDPR),2,Client feedback,2025-12-27
+Imani Costa,Vendor Risk Management,4,Client feedback,2026-04-20
+Imani Costa,Communication,1,Manager assessment,2025-05-03
+Aisha Bianchi,Leadership,3,Certification record,2026-02-26
+Aisha Bianchi,Communication,4,Performance review 2025,2026-08-30
+Aisha Bianchi,Change Management,3,Skills audit Q2 2026,2025-05-17
+Aisha Bianchi,Procurement,3,Code review sample,2026-04-02
+Aisha Bianchi,Stakeholder Management,1,Performance review 2025,2023-10-12
+Fiona Yamamoto,Leadership,3,Manager assessment,2026-06-27
+Fiona Yamamoto,Communication,3,Performance review 2025,2026-03-23
+Fiona Yamamoto,Project Management,3,Performance review 2025,2025-09-15
+Fiona Yamamoto,Change Management,3,Client feedback,2026-03-28
+Fiona Yamamoto,Networking,1,Certification record,2026-05-31
+Fiona Yamamoto,Stakeholder Management,4,Self-assessment,2026-06-14
+Tariq Mahmoud,Leadership,3,Code review sample,2026-05-27
+Tariq Mahmoud,Project Management,4,Certification record,2025-11-06
+Tariq Mahmoud,Change Management,4,Peer review,2025-10-18
+Tariq Mahmoud,ERP Administration,2,Client feedback,2026-01-18
+Beatriz Marino,Networking,2,Performance review 2025,2025-10-14
+Beatriz Marino,Identity & Access Management,2,Project delivery review,
+Beatriz Marino,Communication,3,Certification record,2026-06-30
+Beatriz Marino,Change Management,2,Client feedback,2026-04-12
+Aaliyah Mahmoud,Project Management,3,Self-assessment,2024-07-30
+Aaliyah Mahmoud,Leadership,5,Performance review 2025,2025-05-24
+Aaliyah Mahmoud,Communication,4,Self-assessment,2025-11-22
+Aaliyah Mahmoud,Stakeholder Management,3,Performance review 2025,2025-04-22
+Nadia Chowdhury,Procurement,3,Skills audit Q2 2026,2025-07-05
+Nadia Chowdhury,Contract Negotiation,2,Manager assessment,
+Nadia Chowdhury,ERP Administration,2,Skills audit Q2 2026,
+Nadia Chowdhury,Networking,3,Certification record,2025-11-05
+Nadia Chowdhury,Change Management,1,Project delivery review,2025-10-27
+Miriam Bianchi,Networking,4,Certification record,2025-10-01
+Miriam Bianchi,Identity & Access Management,1,Peer review,2025-10-29
+Miriam Bianchi,Communication,1,Manager assessment,2025-08-21
+Miriam Bianchi,Change Management,4,Code review sample,2026-08-14
+Miriam Bianchi,Procurement,2,Hiring panel assessment,2024-08-26
+Beatriz Vasquez,Project Management,3,Skills audit Q2 2026,2025-12-16
+Beatriz Vasquez,Leadership,4,Hiring panel assessment,2025-12-18
+Beatriz Vasquez,Communication,4,Client feedback,2026-03-24
+Beatriz Vasquez,ERP Administration,2,Skills audit Q2 2026,2024-11-14
+Beatriz Vasquez,Stakeholder Management,4,Client feedback,2025-09-26
+Alejandro Silva,Procurement,3,Manager assessment,2026-05-30
+Alejandro Silva,Contract Negotiation,3,Client feedback,2025-11-15
+Alejandro Silva,ERP Administration,1,Skills audit Q2 2026,2024-08-23
+Alejandro Silva,Agile Delivery,2,Peer review,
+Aisha Ahmed,Project Management,3,Self-assessment,2026-02-07
+Aisha Ahmed,Leadership,4,Peer review,2025-07-07
+Aisha Ahmed,Procurement,2,Project delivery review,2026-06-07
+Aisha Ahmed,Change Management,4,Client feedback,
+Jonas Costa,Procurement,4,Self-assessment,2025-11-09
+Jonas Costa,Contract Negotiation,4,Manager assessment,2026-02-01
+Jonas Costa,ERP Administration,3,Project delivery review,2025-05-27
+Jonas Costa,Agile Delivery,1,Self-assessment,2025-09-23
+Jonas Costa,Networking,3,Hiring panel assessment,
+Lucas Salazar,Networking,2,Hiring panel assessment,
+Lucas Salazar,Identity & Access Management,3,Client feedback,2026-04-19
+Lucas Salazar,Communication,3,Manager assessment,2026-08-27
+Lucas Salazar,Stakeholder Management,4,Self-assessment,2024-10-22
+Jasper Hoffmann,Networking,3,Self-assessment,2025-10-28
+Jasper Hoffmann,Identity & Access Management,2,Skills audit Q2 2026,2025-07-01
+Jasper Hoffmann,Communication,1,Manager assessment,2026-01-20
+Jasper Hoffmann,Stakeholder Management,2,Hiring panel assessment,2025-05-18
+Gianna Mensah,Networking,2,Skills audit Q2 2026,2026-03-25
+Gianna Mensah,Identity & Access Management,2,Self-assessment,2025-06-17
+Gianna Mensah,Communication,3,Hiring panel assessment,2026-05-12
+Gianna Mensah,Agile Delivery,1,Client feedback,
+Emeka Rossi,Leadership,3,Self-assessment,2024-10-05
+Emeka Rossi,Communication,5,Performance review 2025,2025-03-27
+Emeka Rossi,Account Management,4,Project delivery review,2024-07-10
+Emeka Rossi,Customer Onboarding,3,Peer review,2026-02-12
+Yusuf Sørensen,Leadership,3,Code review sample,2025-04-20
+Yusuf Sørensen,Communication,2,Project delivery review,2024-10-07
+Yusuf Sørensen,Account Management,3,Project delivery review,2025-09-01
+Yusuf Sørensen,Customer Onboarding,4,Client feedback,
+Wei Haddad,Leadership,2,Hiring panel assessment,2024-05-16
+Wei Haddad,Communication,4,Skills audit Q2 2026,2026-04-21
+Wei Haddad,Account Management,2,Peer review,2025-09-22
+Wei Haddad,Customer Onboarding,3,Self-assessment,2026-08-13
+Wei Haddad,API Design,1,Client feedback,
+Arjun Anderson,Cloud Architecture,4,Certification record,2025-09-29
+Arjun Anderson,API Design,4,Certification record,
+Arjun Anderson,Communication,4,Performance review 2025,
+Arjun Anderson,Salesforce Administration,1,Peer review,2025-07-31
+Arjun Anderson,Public Speaking,4,Skills audit Q2 2026,2024-05-12
+Arjun Anderson,Customer Onboarding,3,Client feedback,2026-04-22
+Kai Becker,Communication,3,Client feedback,2026-01-23
+Kai Becker,Incident Response,3,Performance review 2025,2024-01-21
+Kai Becker,SQL & Data Modeling,2,Hiring panel assessment,2025-04-11
+Kai Becker,Customer Onboarding,3,Manager assessment,2025-12-31
+Kai Sato,Communication,4,Hiring panel assessment,2026-01-23
+Kai Sato,Incident Response,1,Self-assessment,2024-11-24
+Kai Sato,SQL & Data Modeling,1,Certification record,
+Kai Sato,Public Speaking,2,Skills audit Q2 2026,2025-11-26
+Kai Sato,Customer Onboarding,2,Performance review 2025,
+Isabel Dubois,Incident Response,3,Self-assessment,2026-02-08
+Isabel Dubois,SQL & Data Modeling,2,Skills audit Q2 2026,2026-02-27
+Isabel Dubois,Account Management,3,Code review sample,2026-08-09
+Imani Weber,Communication,4,Project delivery review,2025-10-10
+Imani Weber,SQL & Data Modeling,2,Client feedback,2025-12-22
+Imani Weber,API Design,1,Peer review,2026-08-25
+Zara Vasquez,Communication,3,Performance review 2025,
+Zara Vasquez,Incident Response,3,Certification record,2025-09-15
+Zara Vasquez,SQL & Data Modeling,2,Manager assessment,
+Zara Vasquez,Public Speaking,3,Manager assessment,2025-09-08
+Talia Quinn,Communication,5,Client feedback,2025-06-29
+Talia Quinn,Incident Response,2,Manager assessment,2026-02-24
+Talia Quinn,SQL & Data Modeling,3,Skills audit Q2 2026,2025-11-30
+Talia Quinn,API Design,1,Project delivery review,2025-04-30
+Talia Quinn,Account Management,2,Code review sample,2025-07-03
+Talia Quinn,Customer Onboarding,3,Certification record,2026-03-17
+Maya Abara,Communication,4,Manager assessment,2026-03-25
+Maya Abara,Incident Response,1,Hiring panel assessment,2025-06-13
+Maya Abara,SQL & Data Modeling,2,Hiring panel assessment,2026-05-31
+Maya Abara,Account Management,4,Performance review 2025,2024-01-07
+Maya Abara,Customer Onboarding,4,Performance review 2025,2026-03-31
+Beatriz Osei,Communication,3,Performance review 2025,2024-06-08
+Beatriz Osei,Incident Response,2,Performance review 2025,2024-11-23
+Beatriz Osei,SQL & Data Modeling,2,Hiring panel assessment,2025-12-06
+Beatriz Osei,Customer Onboarding,2,Performance review 2025,2026-01-01
+Layla Eriksen,Customer Onboarding,3,Skills audit Q2 2026,2025-05-15
+Layla Eriksen,Account Management,3,Project delivery review,2025-08-09
+Layla Eriksen,Communication,2,Project delivery review,
+Layla Eriksen,Salesforce Administration,2,Manager assessment,2024-10-07
+Valentina Lindqvist,Customer Onboarding,3,Hiring panel assessment,2025-10-24
+Valentina Lindqvist,Account Management,2,Certification record,2025-07-05
+Valentina Lindqvist,Communication,3,Client feedback,2025-05-31
+Valentina Lindqvist,Salesforce Administration,3,Skills audit Q2 2026,2026-05-11
+Alejandro Dahl,Cloud Architecture,3,Hiring panel assessment,2025-11-17
+Alejandro Dahl,API Design,4,Certification record,2023-10-09
+Alejandro Dahl,Communication,1,Certification record,
+Nikolai Nakamura,Customer Onboarding,4,Project delivery review,2026-08-16
+Nikolai Nakamura,Account Management,3,Hiring panel assessment,2026-04-13
+Nikolai Nakamura,Communication,3,Hiring panel assessment,2025-05-28
+Nikolai Nakamura,Salesforce Administration,4,Certification record,2024-03-31
+Nikolai Nakamura,Public Speaking,4,Hiring panel assessment,
+Aisha Laurent,Communication,4,Certification record,2023-11-08
+Aisha Laurent,Incident Response,1,Project delivery review,2025-06-15
+Aisha Laurent,SQL & Data Modeling,2,Hiring panel assessment,2023-09-26
+Aisha Laurent,Public Speaking,3,Self-assessment,2025-07-21
+Aisha Laurent,API Design,1,Skills audit Q2 2026,2024-09-30
+Aisha Laurent,Customer Onboarding,3,Performance review 2025,2025-04-14
+Zara Bergström,Communication,4,Code review sample,2026-02-22
+Zara Bergström,Incident Response,3,Hiring panel assessment,2025-08-14
+Zara Bergström,SQL & Data Modeling,2,Peer review,
+Zara Bergström,Customer Onboarding,3,Performance review 2025,
+Zara Bergström,API Design,4,Code review sample,2025-12-30
+Kenji Becker,Customer Onboarding,3,Hiring panel assessment,
+Kenji Becker,Account Management,3,Project delivery review,2025-09-16
+Kenji Becker,Communication,2,Manager assessment,2026-04-23
+Kenji Becker,API Design,2,Project delivery review,2025-08-22
+Kenji Becker,Salesforce Administration,2,Performance review 2025,2025-10-27
+Kenji Becker,Public Speaking,3,Hiring panel assessment,2025-06-14
+Felix Kowalski,Customer Onboarding,4,Self-assessment,
+Felix Kowalski,Account Management,4,Self-assessment,2026-03-27
+Felix Kowalski,Communication,4,Project delivery review,2025-10-13
+Felix Kowalski,Salesforce Administration,3,Manager assessment,2026-05-23
+Noor Kimura,Customer Onboarding,3,Certification record,2025-08-20
+Noor Kimura,Account Management,3,Project delivery review,2024-03-23
+Noor Kimura,Communication,4,Performance review 2025,
+Noor Kimura,Salesforce Administration,2,Certification record,2024-08-02
+Chiara Haddad,Communication,4,Code review sample,
+Chiara Haddad,Incident Response,2,Self-assessment,2025-12-19
+Chiara Haddad,SQL & Data Modeling,3,Performance review 2025,2026-04-23
+Chiara Haddad,Account Management,3,Project delivery review,
+Chiara Haddad,Public Speaking,2,Certification record,2025-11-18
+Dmitri Kowalski,Leadership,3,Skills audit Q2 2026,2025-10-01
+Dmitri Kowalski,Communication,4,Manager assessment,2026-01-07
+Dmitri Kowalski,Solution Selling,5,Peer review,2024-11-12
+Dmitri Kowalski,Contract Negotiation,4,Client feedback,
+Maya Mendes,Leadership,3,Project delivery review,2024-05-26
+Maya Mendes,Solution Selling,4,Peer review,2025-03-24
+Maya Mendes,Salesforce Administration,2,Manager assessment,2025-08-20
+Maya Mendes,Account Management,1,Code review sample,
+Paula Fontaine,Leadership,2,Code review sample,2025-01-20
+Paula Fontaine,Communication,3,Project delivery review,2024-02-06
+Paula Fontaine,Solution Selling,3,Project delivery review,2026-07-24
+Paula Fontaine,Salesforce Administration,2,Peer review,
+Paula Fontaine,Public Speaking,2,Manager assessment,2026-02-20
+Paula Fontaine,Account Management,3,Client feedback,
+Ravi Gallagher,Solution Selling,3,Manager assessment,2025-03-30
+Ravi Gallagher,Contract Negotiation,2,Self-assessment,2026-06-26
+Ravi Gallagher,Salesforce Administration,2,Self-assessment,2025-09-05
+Ravi Gallagher,Communication,4,Client feedback,2026-07-11
+Olivia Kimura,Solution Selling,2,Hiring panel assessment,2026-07-13
+Olivia Kimura,API Design,2,Peer review,2025-08-20
+Olivia Kimura,Public Speaking,2,Certification record,2025-06-08
+Olivia Kimura,Communication,4,Self-assessment,2025-06-15
+Benjamin Vasquez,Solution Selling,3,Project delivery review,2025-04-12
+Benjamin Vasquez,Salesforce Administration,2,Code review sample,2026-01-28
+Benjamin Vasquez,Communication,4,Peer review,2025-06-05
+Benjamin Vasquez,Public Speaking,2,Hiring panel assessment,2025-09-17
+Delphine Mahmoud,Solution Selling,2,Project delivery review,2025-11-12
+Delphine Mahmoud,Salesforce Administration,2,Skills audit Q2 2026,2026-07-02
+Wren Torres,Solution Selling,2,Self-assessment,2025-07-06
+Wren Torres,Salesforce Administration,2,Peer review,2025-06-06
+Wren Torres,Communication,4,Skills audit Q2 2026,2025-05-13
+Wren Torres,Account Management,1,Manager assessment,2026-07-09
+Andrei Chowdhury,Solution Selling,3,Code review sample,
+Andrei Chowdhury,API Design,3,Certification record,2025-10-16
+Andrei Chowdhury,Public Speaking,3,Client feedback,2026-05-18
+Andrei Chowdhury,Account Management,4,Project delivery review,2024-10-26
+Andrei Chowdhury,Contract Negotiation,2,Client feedback,2025-06-12
+Ravi Ekwueme,Solution Selling,4,Project delivery review,2026-02-26
+Ravi Ekwueme,Contract Negotiation,2,Code review sample,2024-09-09
+Ravi Ekwueme,Salesforce Administration,2,Hiring panel assessment,2025-04-29
+Ravi Ekwueme,Communication,2,Code review sample,2026-05-23
+Ravi Ekwueme,Account Management,1,Performance review 2025,
+Rosa Bergström,Solution Selling,3,Self-assessment,2025-12-05
+Rosa Bergström,Salesforce Administration,3,Peer review,2025-10-20
+Rosa Bergström,Communication,4,Skills audit Q2 2026,2026-02-13
+Rosa Bergström,Public Speaking,2,Manager assessment,2025-09-11
+Rafael Olsen,Solution Selling,3,Client feedback,2024-12-27
+Rafael Olsen,Contract Negotiation,3,Skills audit Q2 2026,2026-02-23
+Rafael Olsen,Salesforce Administration,3,Code review sample,2026-09-05
+Rafael Olsen,Communication,4,Performance review 2025,2026-05-28
+Ximena Duarte,Solution Selling,3,Code review sample,2025-06-13
+Ximena Duarte,API Design,3,Skills audit Q2 2026,2025-08-02
+Ximena Duarte,Public Speaking,3,Skills audit Q2 2026,2024-08-16
+Ximena Alvarez,Solution Selling,4,Manager assessment,2025-05-18
+Ximena Alvarez,Contract Negotiation,2,Certification record,2026-01-01
+Ximena Alvarez,Salesforce Administration,3,Performance review 2025,2023-09-22
+Ximena Alvarez,Communication,3,Code review sample,2025-09-21
+Ximena Alvarez,Public Speaking,2,Code review sample,2024-06-29
+Felix Mahmoud,Solution Selling,4,Client feedback,2026-08-17
+Felix Mahmoud,API Design,3,Self-assessment,2026-03-12
+Felix Mahmoud,Public Speaking,3,Project delivery review,2025-04-21
+Alejandro Hansen,Solution Selling,1,Certification record,2025-09-04
+Alejandro Hansen,Salesforce Administration,1,Performance review 2025,2025-08-07
+Alejandro Hansen,Communication,2,Self-assessment,2025-11-17
+Marcus Alvarez,Solution Selling,1,Code review sample,2026-07-28
+Marcus Alvarez,Salesforce Administration,2,Skills audit Q2 2026,2025-09-16
+Marcus Alvarez,Communication,4,Manager assessment,
+Marcus Alvarez,Public Speaking,4,Self-assessment,2024-11-07
+Emeka Delgado,Solution Selling,4,Hiring panel assessment,2025-01-17
+Emeka Delgado,API Design,3,Hiring panel assessment,2026-04-07
+Emeka Delgado,Public Speaking,4,Code review sample,2026-02-20
+Emeka Delgado,Contract Negotiation,2,Peer review,2023-10-18
+Emeka Delgado,Salesforce Administration,1,Certification record,2026-07-11
+Emeka Delgado,Account Management,1,Client feedback,2025-09-14
+Julia Haddad,Solution Selling,2,Manager assessment,2025-05-24
+Julia Haddad,Contract Negotiation,1,Client feedback,2026-02-14
+Julia Haddad,Salesforce Administration,1,Certification record,2025-09-05
+Julia Haddad,Communication,3,Hiring panel assessment,2024-09-05
+Julia Haddad,Account Management,4,Skills audit Q2 2026,2026-02-22
+Kai Kaur,Solution Selling,3,Code review sample,2025-12-15
+Kai Kaur,Contract Negotiation,2,Certification record,2026-09-01
+Kai Kaur,Salesforce Administration,3,Manager assessment,2026-04-06
+Kai Kaur,Communication,3,Code review sample,
+Victor Eriksen,Leadership,4,Client feedback,2024-06-03
+Victor Eriksen,Content Marketing,4,Hiring panel assessment,2025-07-20
+Victor Eriksen,SEO & Web Analytics,3,Performance review 2025,
+Victor Eriksen,Experimentation & A/B Testing,2,Manager assessment,2026-02-22
+Victor Eriksen,Data Visualization,3,Code review sample,2025-04-06
+Victor Eriksen,Public Speaking,2,Performance review 2025,2026-04-16
+Tomas Carvalho,Leadership,4,Peer review,2026-08-23
+Tomas Carvalho,Communication,4,Skills audit Q2 2026,
+Tomas Carvalho,Content Marketing,3,Peer review,2024-07-30
+Tomas Carvalho,SEO & Web Analytics,2,Certification record,2025-12-20
+Tomas Carvalho,Brand Design,2,Skills audit Q2 2026,2026-04-25
+Tomas Carvalho,Data Visualization,1,Performance review 2025,2025-11-18
+Olivia Fernandes,Experimentation & A/B Testing,3,Code review sample,2025-09-22
+Olivia Fernandes,Data Visualization,2,Skills audit Q2 2026,2026-06-10
+Olivia Fernandes,Content Marketing,2,Project delivery review,2026-01-26
+Olivia Fernandes,SEO & Web Analytics,2,Hiring panel assessment,2026-01-14
+Emeka Torres,Experimentation & A/B Testing,2,Peer review,2024-05-11
+Emeka Torres,SEO & Web Analytics,3,Peer review,2026-08-23
+Emeka Torres,Data Visualization,1,Client feedback,2025-07-10
+Aisha Kowalski,Content Marketing,3,Certification record,2026-06-03
+Aisha Kowalski,SEO & Web Analytics,2,Peer review,2026-03-16
+Aisha Kowalski,Communication,3,Certification record,2026-07-18
+Aisha Kowalski,Experimentation & A/B Testing,1,Hiring panel assessment,
+Aisha Kowalski,Data Visualization,2,Hiring panel assessment,2025-12-21
+Priya Dahl,Content Marketing,4,Certification record,2026-08-30
+Priya Dahl,SEO & Web Analytics,2,Certification record,2026-05-09
+Priya Dahl,Communication,3,Skills audit Q2 2026,2026-03-29
+Priya Dahl,Public Speaking,3,Manager assessment,
+Priya Dahl,Brand Design,3,Skills audit Q2 2026,2026-07-24
+Gabriel Costa,SEO & Web Analytics,2,Manager assessment,2025-09-26
+Gabriel Costa,Communication,2,Client feedback,2026-01-09
+Gabriel Costa,Content Marketing,1,Peer review,2026-03-02
+Valentina Delgado,SEO & Web Analytics,3,Code review sample,2025-05-08
+Valentina Delgado,Experimentation & A/B Testing,1,Hiring panel assessment,2025-12-25
+Valentina Delgado,Content Marketing,3,Manager assessment,2026-07-14
+Farah Zimmerman,Data Analysis,3,Manager assessment,2025-09-05
+Farah Zimmerman,SEO & Web Analytics,3,Skills audit Q2 2026,2025-10-25
+Farah Zimmerman,Data Visualization,2,Code review sample,
+Farah Zimmerman,Public Speaking,4,Skills audit Q2 2026,2025-07-08
+Farah Zimmerman,Experimentation & A/B Testing,3,Certification record,
+Farah Zimmerman,Brand Design,2,Manager assessment,2025-04-20
+Aisha Petrov,Content Marketing,3,Certification record,
+Aisha Petrov,SEO & Web Analytics,2,Client feedback,2026-03-13
+Aisha Petrov,Data Visualization,1,Project delivery review,2025-11-19
+Grace Costa,Experimentation & A/B Testing,3,Client feedback,2026-06-14
+Grace Costa,Data Visualization,1,Project delivery review,2025-07-19
+Grace Costa,Public Speaking,3,Project delivery review,
+Grace Costa,Brand Design,2,Peer review,2026-05-20
+Grace Costa,SEO & Web Analytics,3,Code review sample,2026-01-19
+Ingrid Baptiste,Content Marketing,4,Self-assessment,
+Ingrid Baptiste,SEO & Web Analytics,1,Certification record,2023-11-20
+Ingrid Baptiste,Communication,3,Hiring panel assessment,2025-09-26
+Ingrid Baptiste,Experimentation & A/B Testing,4,Code review sample,2026-02-03
+Hannah Blackwood,Leadership,4,Self-assessment,
+Hannah Blackwood,Communication,4,Skills audit Q2 2026,2024-12-23
+Hannah Blackwood,Coaching & Mentoring,5,Certification record,2025-12-15
+Hannah Blackwood,Change Management,3,Code review sample,2026-03-09
+Hannah Blackwood,Data Privacy (GDPR),3,Performance review 2025,2025-12-05
+Gabriel García,Technical Recruiting,2,Peer review,2025-05-08
+Gabriel García,Communication,3,Code review sample,
+Gabriel García,Stakeholder Management,2,Certification record,2025-08-02
+Gabriel García,Change Management,1,Project delivery review,2024-01-21
+Zoe Abara,Technical Recruiting,3,Performance review 2025,2026-04-18
+Zoe Abara,Communication,2,Code review sample,2025-02-21
+Zoe Abara,Stakeholder Management,2,Skills audit Q2 2026,2024-12-20
+Zoe Abara,Coaching & Mentoring,2,Code review sample,2025-10-17
+Zoe Abara,Payroll Administration,2,Self-assessment,2025-06-08
+Delphine Delgado,Technical Recruiting,4,Self-assessment,
+Delphine Delgado,Communication,4,Project delivery review,2024-01-28
+Delphine Delgado,Stakeholder Management,1,Self-assessment,2025-05-25
+Delphine Delgado,Payroll Administration,2,Peer review,2025-04-11
+Delphine Delgado,Coaching & Mentoring,4,Manager assessment,2025-05-30
+Callum Fernandes,Technical Recruiting,4,Peer review,
+Callum Fernandes,Communication,4,Hiring panel assessment,2024-04-27
+Callum Fernandes,Stakeholder Management,1,Certification record,2023-09-30
+Ravi Novak,Technical Recruiting,2,Peer review,2024-07-10
+Ravi Novak,Communication,4,Certification record,
+Ravi Novak,Stakeholder Management,3,Certification record,2026-02-27
+Maya Sørensen,Leadership,2,Peer review,2024-11-30
+Maya Sørensen,Communication,4,Hiring panel assessment,2025-04-02
+Maya Sørensen,Payroll Administration,3,Skills audit Q2 2026,
+Maya Sørensen,Change Management,1,Skills audit Q2 2026,
+Oscar Mahmoud,Leadership,2,Skills audit Q2 2026,2025-11-15
+Oscar Mahmoud,Communication,3,Code review sample,2026-04-22
+Oscar Mahmoud,Data Privacy (GDPR),1,Certification record,2025-09-11
+Wei Carvalho,Leadership,4,Manager assessment,2025-11-16
+Wei Carvalho,Communication,4,Certification record,2025-10-13
+Wei Carvalho,Technical Recruiting,2,Self-assessment,2025-09-01
+Julia Park,Coaching & Mentoring,3,Performance review 2025,2026-06-09
+Julia Park,Change Management,4,Manager assessment,
+Julia Park,Public Speaking,4,Code review sample,2025-10-12
