@@ -6,6 +6,7 @@ import Icon from './Icon';
 import HelpTopic from './HelpTopic';
 import RecentActivity from './RecentActivity';
 import RiskAcknowledgeDialog from './RiskAcknowledgeDialog';
+import Suggestions from './Suggestions';
 import { Coverage, FormError, ScoreMeter, Skeleton } from './ui';
 
 const HEALTH_LABELS = { good: 'Good', needs_attention: 'Needs attention', at_risk: 'At risk' };
@@ -139,6 +140,7 @@ export default function Overview({ risks, quality, organization, onChanged }) {
       </div>
       <FormError error={exportError} />
       {message && <p className="status-line" role="status"><Icon name="check" size={16} /><span>{message}</span></p>}
+      <Suggestions refreshKey={organization?.dataUpdatedAt ?? risks?.skills?.length} />
 
       <section className="stat-strip" aria-label="Summary">
         <div className="stat">

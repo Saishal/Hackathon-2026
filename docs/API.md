@@ -104,6 +104,13 @@ Global search for any signed-in user. Returns `{query, groups, total, visibility
 **Scope is applied before matching.** Each source is included only if the user holds the permission to read it, and people-bearing sources are narrowed with the same `scopeFor` the pages use: a manager only finds their own team, an employee only themselves, and a name outside scope never appears anywhere in the response. Queries under two characters return nothing. Searching is **not** written to the audit log.
 
 The frontend adds a "Help and glossary" group from static help content; it is not part of this endpoint.
+## Suggestions
+
+`GET /api/keystone/suggestions` returns `{items, dismissed, visibility}`. Each item is `{key, kind, severity, basis, basisLabel, title, detail, entity, actions}` where `basis` is one of `official`, `approved-plan`, `pending`, `unverified`, `scenario` and every action is `{label, href}` pointing inside the app. Kinds: coverage, ownership, evidence, reporting, catalogue, planning, scenario, succession. Sorted critical → warning → info; the noisier kinds are capped so the list stays readable.
+
+Rules are deterministic over data the user can already see: the same scoped workforce, risks, acknowledgements, data-quality issues and succession the pages use, with each source included only if the user holds its permission. A suggestion never changes data and never predicts; it restates a fact and links to where to act on it.
+
+`POST /api/keystone/suggestions/dismiss` and `POST /api/keystone/suggestions/restore` take `{key}`. Dismissals are stored per user in `suggestion_dismissals` (migration `governance-007-suggestions`) and are **not** audited. Keys are stable per rule and record, so a dismissal survives re-evaluation and the suggestion returns on its own if the underlying fact changes.
 ## Employee directory (admin)
 
 All under `/api/keystone`, all requiring `employee.edit`. Archived employees keep their record, evidence and audit history but are excluded from the workforce snapshot, so they hold no coverage, appear in no team or scope, and are not succession candidates.

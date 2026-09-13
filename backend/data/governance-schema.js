@@ -173,6 +173,15 @@ const MIGRATIONS = [
     () => addColumnIfMissing('employees', 'start_date', 'TEXT'),
     'CREATE INDEX IF NOT EXISTS employees_status ON employees(employment_status)',
   ]],
+  ['governance-007-suggestions', [
+    // A dismissed suggestion is a personal preference, kept per user and never audited.
+    `CREATE TABLE IF NOT EXISTS suggestion_dismissals (
+      user_id INTEGER NOT NULL REFERENCES users(id),
+      key TEXT NOT NULL,
+      dismissed_at TEXT NOT NULL,
+      PRIMARY KEY (user_id, key)
+    )`,
+  ]],
 ];
 
 async function runGovernanceMigrations() {

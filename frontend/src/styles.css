@@ -1829,3 +1829,34 @@ th .help-topic { margin-left: 2px; }
 .global-search-desc { grid-area: desc; font-size: 12.5px; color: var(--ink-2); }
 .global-search-item .tag { grid-area: tag; align-self: center; }
 .global-search-hint { margin: 0; padding: 8px 14px 4px; border-top: 1px solid var(--line); font-size: 11.5px; color: var(--ink-3); }
+
+/* ============================================================
+   Suggested next steps
+   ============================================================ */
+.suggestions { margin-bottom: 18px; }
+.suggestion-list { list-style: none; margin: 0; padding: 0 16px 12px; display: grid; gap: 8px; }
+.suggestion {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-left-width: 3px;
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+}
+.suggestion-critical { border-left-color: var(--danger); }
+.suggestion-warning { border-left-color: var(--warn); }
+.suggestion-info { border-left-color: var(--line-strong); }
+.suggestion-muted { opacity: 0.75; }
+.suggestion-icon { display: grid; place-items: center; height: 24px; color: var(--ink-2); }
+.suggestion-critical .suggestion-icon { color: var(--danger); }
+.suggestion-warning .suggestion-icon { color: var(--warn); }
+.suggestion-body { min-width: 0; }
+.suggestion-title { margin: 0 0 2px; font-weight: 600; font-size: 14px; color: var(--ink); }
+.suggestion-detail { margin: 0 0 8px; font-size: 13px; color: var(--ink-2); line-height: 1.5; }
+.suggestion-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.suggestion-dismiss { margin-left: auto; }
+.suggestion-more { padding: 0 16px 12px; }
+.suggestion-dismissed { padding: 0 16px 12px; border-top: 1px solid var(--line); }
+.suggestion-dismissed > p { padding: 10px 0 6px; margin: 0; }

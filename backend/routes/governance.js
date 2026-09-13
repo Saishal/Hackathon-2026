@@ -3,7 +3,7 @@ const { requirePermission } = require('../middleware/auth');
 const { validateBody, humanize } = require('../validation/ajv');
 const schemas = require('../validation/schemas');
 const { can, ROLES, ROLE_LABELS, describeRole } = require('../security/permissions');
-const { scopeFor, scopeIssues, scopeRisks, scopeWorkforce, inScope } = require('../security/scope');
+const { scopeFor, scopeIssues, scopeRisks, scopeWorkforce, scopeSuccession, inScope } = require('../security/scope');
 const { destroyUserSessions } = require('../security/sessions');
 const { conflict, notFound, validationError } = require('../errors');
 const { withTransaction } = require('../data/transactions');
@@ -23,6 +23,9 @@ const { summarizeDataQuality, evaluateScenario } = require('../services/data-qua
 const { buildProfile } = require('../services/profile');
 const { toCsv } = require('../services/csv');
 const { search } = require('../services/search');
+const { buildSuggestions } = require('../services/suggestions');
+const dismissals = require('../data/suggestion-dismissals');
+const { analyzeSuccession } = require('../services/risk');
 const { today, isCalendarDate, addMonths } = require('../services/clock');
 
 // Governance API: organization settings, audit history, data quality, change review, risk ownership,
@@ -556,6 +559,41 @@ module.exports = function governanceRoutes() {
     const changes = can(req.user, 'changes.submit') ? await changeRequests.listChangeRequests({}, req.user, scope) : [];
     const permissions = new Set(['workforce.read', 'risk.read', 'dataQuality.read'].filter((permission) => can(req.user, permission)));
     res.json({ ...search({ query, workforce: visible, risks, issues, scenarios: scenarioList, changes, permissions }), visibility: scope.kind });
+  });
+
+  // Suggestions: deterministic next steps from the same scoped data the pages show. Each says
+  // what it is based on; dismissing one is a personal preference and is not audited.
+  router.get('/suggestions', async (req, res) => {
+    const workforce = await loadWorkforce();
+    const scope = scopeFor(req.user, workforce);
+    const permissions = new Set(['risk.read', 'risk.acknowledge', 'scenario.run', 'ai.development', 'employee.edit', 'changes.review.planning', 'dataQuality.read']
+      .filter((permission) => can(req.user, permission)));
+    const visible = can(req.user, 'workforce.read') ? scopeWorkforce(scope, workforce) : { ...workforce, employees: [], matrix: [], roles: [] };
+    const risks = permissions.has('risk.read') ? scopeRisks(scope, analyze(workforce)) : null;
+    let acknowledgementList = [];
+    if (permissions.has('risk.read')) {
+      acknowledgementList = await acknowledgements.listAcknowledgements({ status: 'active' });
+      if (!can(req.user, 'risk.read.org')) acknowledgementList = acknowledgementList.filter((item) => item.riskType === 'skill' || inScope(scope, item.entityId));
+    }
+    const issues = permissions.has('dataQuality.read') ? (await scopedQuality(req)).issues : [];
+    const successionData = can(req.user, 'succession.read') ? scopeSuccession(scope, analyzeSuccession(workforce)) : null;
+    const items = buildSuggestions({ workforce: visible, risks, acknowledgements: acknowledgementList, issues, succession: successionData, permissions });
+    const dismissed = new Map((await dismissals.listDismissed(req.user.id)).map((row) => [row.key, row.dismissedAt]));
+    res.json({
+      items: items.filter((item) => !dismissed.has(item.key)),
+      dismissed: items.filter((item) => dismissed.has(item.key)).map((item) => ({ ...item, dismissedAt: dismissed.get(item.key) })),
+      visibility: scope.kind,
+    });
+  });
+
+  router.post('/suggestions/dismiss', validateBody(schemas.suggestionKey), async (req, res) => {
+    await dismissals.dismiss(req.user.id, req.body.key, new Date().toISOString());
+    res.status(204).end();
+  });
+
+  router.post('/suggestions/restore', validateBody(schemas.suggestionKey), async (req, res) => {
+    await dismissals.restore(req.user.id, req.body.key);
+    res.status(204).end();
   });
 
   router.get('/employees', requirePermission('employee.edit'), async (_req, res) => {

@@ -196,10 +196,11 @@ const aiDecision = object({
 }, ['skillId', 'category', 'decision', 'mode']);
 
 const issueAcknowledge = object({ note: text(1000, 'Acknowledgement note') }, ['note']);
+const suggestionKey = object({ key: { type: 'string', minLength: 3, maxLength: 200, pattern: '^[a-z_]+:[A-Za-z0-9_:.-]+$', title: 'Suggestion' } }, ['key']);
 
 module.exports = {
   RESOURCE_KINDS, ROLES, login, employeeSkill, evidenceChangePayload, futureRequirementCreate, futureRequirementUpdate,
   futureRequirementChangePayload, resourceFields, resourceChangePayload, changeRequestCreate, changeRequestUpdate,
   approveDecision, rejectDecision, scenario, acknowledgementCreate, acknowledgementUpdate, acknowledgementClose,
-  userCreate, userUpdate, passwordReset, organizationUpdate, employeeUpdate, employeeCreate, employeeArchive, roleRequirement, aiDecision, issueAcknowledge,
+  userCreate, userUpdate, passwordReset, organizationUpdate, employeeUpdate, employeeCreate, employeeArchive, roleRequirement, aiDecision, issueAcknowledge, suggestionKey,
 };

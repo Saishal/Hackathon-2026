@@ -96,6 +96,9 @@ export const keystoneApi = {
 
   organization: () => request('/keystone/organization'),
   search: (q) => request(`/keystone/search?q=${encodeURIComponent(q)}`),
+  suggestions: () => request('/keystone/suggestions'),
+  dismissSuggestion: (key) => post('/keystone/suggestions/dismiss', { key }),
+  restoreSuggestion: (key) => post('/keystone/suggestions/restore', { key }),
   employees: () => request('/keystone/employees'),
   createEmployee: (body) => post('/keystone/employees', body),
   updateEmployee: (id, fields) => request(`/keystone/employees/${id}`, { method: 'PATCH', body: fields }),
