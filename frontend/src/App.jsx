@@ -14,6 +14,20 @@ import HelpDrawer from './components/HelpDrawer';
 import GlobalSearch from './components/GlobalSearch';
 
 // Header "?" button. A real button, so it is reachable by keyboard and named for screen readers.
+// Local demo identity used only when the backend has no auth service (404 on /api/auth/me).
+// organization.environment === 'demo' makes the header show the standard "Demo environment" tag.
+const DEMO_SESSION = {
+  user: { id: 0, name: 'Demo Viewer', role: 'administrator', employeeId: null },
+  capabilities: [
+    'risk.read.org', 'workforce.read.all', 'scenario.run',
+    'ai.development', 'ai.strategy', 'dataQuality.read.org',
+    'changes.review.people', 'changes.review.planning', 'changes.submit',
+    'audit.read', 'employee.edit', 'users.manage', 'repository.log',
+  ],
+  organization: { id: 0, name: 'Keystone Demo', environment: 'demo' },
+  demo: true,
+};
+
 function HelpButton() {
   const { open } = useHelp();
   return (
@@ -57,6 +71,15 @@ function App() {
       .then((me) => { if (active) setSession(me); })
       .catch((error) => {
         if (!active) return;
+        // The Keystone backend has no auth service (the unified frontend was
+        // adopted from a project that did). When /api/auth/* is missing (404),
+        // fall back to a clearly-labeled LOCAL demo session so the app stays
+        // explorable — the header shows the standard "Demo environment" tag.
+        if (error.status === 404) {
+          setSession(DEMO_SESSION);
+          setNotice('Demo session — the backend has no auth service, so you are signed in locally with read-only demo identity.');
+          return;
+        }
         if (error.status !== 401) setBootError(error);
         setSession(null);
       });

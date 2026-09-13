@@ -24,7 +24,11 @@ async function request(path, { method = 'GET', body, raw = false } = {}) {
   try {
     response = await fetch(`${BASE}/api${path}`, {
       method,
-      credentials: 'include',
+      // No cookie credentials: the Keystone backend has no cookie-based auth
+      // (the auth service this client was built for isn't part of the API), and
+      // `credentials: 'include'` makes browsers reject the backend's
+      // `Access-Control-Allow-Origin: *` — every request would fail with a
+      // network error before reaching the server.
       headers: { 'X-Keystone-Client': 'web', ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}) },
       body: body === undefined ? undefined : JSON.stringify(body),
     });
