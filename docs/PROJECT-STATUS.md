@@ -97,7 +97,7 @@ only Member 3 can confirm:
 
 | Checklist item | Evidence in code | Assessment |
 |---|---|---|
-| Employee-skill **network** with selection, filters, legend, evidence panel | 3 references | **thin or absent** — likely the biggest remaining UI item |
+| Employee-skill **network** with selection, filters, legend, evidence panel | seen running: department filter, level filter, single-holder toggle, legend, evidence panel | **built** — verified in the browser 2026-09-12 |
 | Searchable inventory table, unknown = dash | 9 search/filter refs, 47 dash/unknown refs | built |
 | Dependency cards and succession details | 14 refs; tolerates both `successors`/`skillBackups` shapes | built |
 | Event dates, horizons, intervention editor, reset, blocked feedback | 45 refs in `TimeMachine.jsx` (188 lines) | built |
