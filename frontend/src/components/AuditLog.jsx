@@ -18,9 +18,11 @@ function contextValue(value) {
 
 // Activity & audit history: search and filter the append-only log, then open an entry to see exactly
 // who changed what, with a field-by-field before and after.
-export default function AuditLog({ workforce }) {
-  const [draft, setDraft] = useState(EMPTY_FILTERS);
-  const [filters, setFilters] = useState(EMPTY_FILTERS);
+export default function AuditLog({ workforce, params }) {
+  // A link such as #/audit?entityType=user&q=someone@example.com opens the log already filtered.
+  const initial = { ...EMPTY_FILTERS, entityType: params?.entityType ?? '', q: params?.q ?? '', actionType: params?.actionType ?? '' };
+  const [draft, setDraft] = useState(initial);
+  const [filters, setFilters] = useState(initial);
   const [page, setPage] = useState(1);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);

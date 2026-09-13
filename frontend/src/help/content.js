@@ -101,6 +101,16 @@ export const GLOSSARY = {
     ],
     related: ['keystone-score', 'data-quality-health'],
   },
+  'user-roles': {
+    term: 'User roles',
+    short: 'Admin, HR / People Leader, Manager and Employee. Each sees and can do a fixed set of things, enforced by the server.',
+    long: [
+      'A role is not a label — it is the list of permissions the server checks on every request. Hiding a button in the interface is never what stops someone; the server refuses the request.',
+      'Admin sees everything and manages accounts. HR sees everything and reviews evidence but cannot manage accounts. A manager sees only the people who report to them. An employee sees only their own profile.',
+      'Changing a role or disabling an account signs the person out everywhere at once; the new permissions apply on their next sign-in. The last active admin can never be removed, and an admin cannot lock themselves out.',
+    ],
+    related: ['pending-vs-approved', 'risk-acknowledgement'],
+  },
   'succession-readiness': {
     term: 'Succession readiness',
     short: 'Whether someone could step into a role, judged against every skill that role requires.',
@@ -179,6 +189,19 @@ export const TASKS = {
     related: ['succession-readiness', 'unknown-vs-unmet'],
     view: 'people',
   },
+  'manage-user': {
+    title: 'Change a role, disable an account, or unlink a profile',
+    intro: 'Adjust what a person can access, with a confirmation of exactly what will change.',
+    steps: [
+      'Open Users & settings and find the account. Use the search box or filter by role and status.',
+      'Choose Edit. When you pick a role, a summary appears of what that role sees, can do, and cannot do — read it before saving.',
+      'If the change affects access — a different role, disabling the account, or unlinking the employee — the dialog lists the consequences and asks you to confirm.',
+      'Tick "I understand" and choose Confirm and save. The person is signed out everywhere at once.',
+      'Every change is recorded. Choose History on the row to see the account\'s audit trail.',
+    ],
+    related: ['user-roles'],
+    view: 'users',
+  },
   'export-report': {
     title: 'Export a report',
     intro: 'Download the risk register or the data-quality issues as a CSV file.',
@@ -241,8 +264,8 @@ export const VIEW_HELP = {
   },
   users: {
     purpose: 'Accounts, roles and organisation settings. Every permission shown here is also enforced by the server.',
-    topics: [],
-    tasks: [],
+    topics: ['user-roles'],
+    tasks: ['manage-user'],
   },
   activity: {
     purpose: 'Commits from every team branch, newest first. A build log, not part of the product.',

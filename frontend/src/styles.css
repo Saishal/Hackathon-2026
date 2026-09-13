@@ -1680,3 +1680,59 @@ th .help-topic { margin-left: 2px; }
   .help-guide { grid-template-columns: 1fr; }
   .help-guide-nav { position: static; }
 }
+
+/* ============================================================
+   Users & settings: role summary, confirmation, account filters
+   ============================================================ */
+
+.role-summary {
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.role-summary > p { margin: 0 0 8px; }
+.role-summary-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.role-summary-head { display: flex; align-items: center; gap: 6px; margin: 0 0 4px; font-weight: 600; color: var(--ink); }
+.role-summary ul { margin: 0; padding-left: 18px; display: grid; gap: 3px; }
+@media (max-width: 640px) { .role-summary-cols { grid-template-columns: 1fr; } }
+
+.confirm-block {
+  padding: 12px 14px;
+  border: 1px solid var(--warn);
+  border-radius: var(--radius-md);
+  background: var(--warn-soft);
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+.confirm-head { display: flex; align-items: center; gap: 8px; margin: 0 0 6px; font-weight: 600; color: var(--ink); }
+.confirm-block ul { margin: 0 0 10px; padding-left: 20px; display: grid; gap: 4px; color: var(--ink-2); }
+.confirm-block .check { font-weight: 600; color: var(--ink); }
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+}
+.toolbar-search { flex: 1 1 240px; position: relative; }
+.toolbar-search input { width: 100%; padding-left: 32px; }
+.toolbar-search svg { position: absolute; left: 10px; color: var(--ink-3); pointer-events: none; }
+.toolbar .field-inline { gap: 8px; font-size: 13px; color: var(--ink-2); }
+.toolbar-summary { margin-left: auto; font-size: 12.5px; color: var(--ink-3); white-space: nowrap; }
+.btn-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+.btn-link:focus-visible { outline: none; box-shadow: var(--focus-ring); border-radius: 2px; }

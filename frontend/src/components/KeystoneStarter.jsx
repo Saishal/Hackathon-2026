@@ -76,7 +76,7 @@ export default function KeystoneStarter({ view, params }) {
   else if (view === 'help') content = <HelpGuide params={params} />;
   else if (view === 'quality') content = <DataQuality session={session} canOpen={canOpen} onChanged={refreshAll} />;
   else if (view === 'reviews') content = <ReviewQueue workforce={workforce} onChanged={refreshAll} />;
-  else if (view === 'audit') content = <AuditLog workforce={workforce} />;
+  else if (view === 'audit') content = <AuditLog workforce={workforce} params={params} />;
   else if (view === 'profile') content = <MyProfile onChanged={refreshAll} />;
   else if (view === 'users') content = <UsersAdmin workforce={workforce} onOrganizationChanged={loadWorkforce} />;
   else if (error) content = <ErrorState error={error} onRetry={loadWorkforce} />;
@@ -89,7 +89,7 @@ export default function KeystoneStarter({ view, params }) {
 
   // Following a link to another record on the same page (#/data?tab=people&q=…) remounts the view so it
   // opens on that record.
-  const linkKey = ['data', 'people', 'network'].includes(view) ? `${view}?${new URLSearchParams(params)}` : view;
+  const linkKey = ['data', 'people', 'network', 'audit'].includes(view) ? `${view}?${new URLSearchParams(params)}` : view;
 
   // Time Machine and the AI advisor hold the most user-entered state (a half-built scenario, a plan
   // under review). They live outside the keyed wrapper and are hidden rather than unmounted, so

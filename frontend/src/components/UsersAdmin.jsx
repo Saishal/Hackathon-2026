@@ -1,10 +1,59 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { keystoneApi } from '../api/keystone';
 import { useSession } from '../session';
 import Dialog from './Dialog';
 import Icon from './Icon';
 import { fieldMessages, formatDate, relativeTime } from './format';
 import { EmptyState, ErrorState, FieldError, FormError, Skeleton } from './ui';
+import HelpTopic from './HelpTopic';
+
+// What a role lets someone see and do, in plain words, shown before an admin assigns it. The text
+// comes from the server beside the role list, so it cannot drift from the permissions it describes.
+function RoleSummary({ role }) {
+  if (!role?.summary) return null;
+  const { sees, can: allowed, cannot } = role.summary;
+  return (
+    <div className="role-summary" role="region" aria-label={`What the ${role.label} role can do`}>
+      <p><strong>Sees:</strong> {sees}</p>
+      <div className="role-summary-cols">
+        <div>
+          <p className="role-summary-head"><Icon name="check" size={14} /> Can</p>
+          <ul>{allowed.map((line) => <li key={line}>{line}</li>)}</ul>
+        </div>
+        <div>
+          <p className="role-summary-head"><Icon name="close" size={14} /> Cannot</p>
+          <ul>{cannot.map((line) => <li key={line}>{line}</li>)}</ul>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// The consequences of an edit that changes what a person can access. Listed before saving so the
+// admin confirms them deliberately; the server applies them (and signs the person out) either way.
+function consequencesOf(user, form, roles, employees) {
+  if (!user) return [];
+  const label = (value) => roles.find((role) => role.value === value)?.label ?? value;
+  const employeeId = form.employeeId === '' ? null : Number(form.employeeId);
+  const out = [];
+  if (form.role !== user.role) {
+    out.push(`Role changes from ${label(user.role)} to ${label(form.role)}. Their pages, data scope and actions change to match.`);
+    out.push('They are signed out everywhere and get the new permissions on their next sign-in.');
+  }
+  if (form.disabled && !user.disabled) {
+    out.push('The account is disabled: they are signed out everywhere and cannot sign in until it is re-enabled.');
+  }
+  if (!form.disabled && user.disabled) {
+    out.push('The account is re-enabled and they can sign in again immediately.');
+  }
+  if (user.employeeId !== null && employeeId === null) {
+    out.push(`The link to ${user.employeeName ?? 'their employee record'} is removed. Their profile page and, for a manager, their team scope stop working until an employee is linked again.`);
+  } else if (user.employeeId !== null && employeeId !== null && employeeId !== user.employeeId) {
+    const next = employees.find((employee) => employee.id === employeeId)?.name ?? 'another employee';
+    out.push(`The account is re-linked from ${user.employeeName ?? 'its current employee'} to ${next}. Profile and team scope follow the new link.`);
+  }
+  return out;
+}
 
 function OrganizationSettings({ onSaved }) {
   const [saved, setSaved] = useState(null);
@@ -101,10 +150,15 @@ function UserDialog({ user, roles, employees, onClose, onDone }) {
   });
   const [error, setError] = useState(null);
   const [busy, setBusy] = useState(false);
+  const [confirmed, setConfirmed] = useState(false);
   const errors = fieldMessages(error);
-  const set = (field) => (event) => setForm((current) => ({
-    ...current, [field]: event.target.type === 'checkbox' ? event.target.checked : event.target.value,
-  }));
+  const set = (field) => (event) => {
+    setConfirmed(false);
+    setForm((current) => ({ ...current, [field]: event.target.type === 'checkbox' ? event.target.checked : event.target.value }));
+  };
+  const selectedRole = roles.find((role) => role.value === form.role);
+  const consequences = consequencesOf(user, form, roles, employees);
+  const needsConfirmation = consequences.length > 0;
 
   async function submit(event) {
     event.preventDefault();
@@ -133,7 +187,9 @@ function UserDialog({ user, roles, employees, onClose, onDone }) {
       onClose={onClose}
       footer={<>
         <button type="button" className="btn btn-quiet" onClick={onClose}>Cancel</button>
-        <button type="submit" form="user-form" className="btn btn-primary" disabled={busy}>{busy ? 'Saving…' : creating ? 'Create account' : 'Save changes'}</button>
+        <button type="submit" form="user-form" className="btn btn-primary" disabled={busy || (needsConfirmation && !confirmed)}>
+          {busy ? 'Saving…' : creating ? 'Create account' : needsConfirmation ? 'Confirm and save' : 'Save changes'}
+        </button>
       </>}
     >
       <form id="user-form" className="form-grid form-grid-2" onSubmit={submit}>
@@ -156,6 +212,9 @@ function UserDialog({ user, roles, employees, onClose, onDone }) {
           </select>
           <FieldError id="user-role-error" message={errors.role} />
         </label>
+        <div className="span-all">
+          <RoleSummary role={selectedRole} />
+        </div>
         <label className="field span-all">Linked employee
           <select value={form.employeeId} onChange={set('employeeId')} aria-invalid={Boolean(errors.employeeId)} aria-describedby="user-employee-hint user-employee-error">
             <option value="">Not linked</option>
@@ -176,6 +235,16 @@ function UserDialog({ user, roles, employees, onClose, onDone }) {
             <input type="checkbox" checked={form.disabled} onChange={set('disabled')} />
             Disable this account (signs the person out everywhere)
           </label>
+        )}
+        {needsConfirmation && (
+          <div className="confirm-block span-all" role="group" aria-labelledby="user-confirm-head">
+            <p id="user-confirm-head" className="confirm-head"><Icon name="alert" size={16} /> Before you save, this change will:</p>
+            <ul>{consequences.map((line) => <li key={line}>{line}</li>)}</ul>
+            <label className="check">
+              <input type="checkbox" checked={confirmed} onChange={(event) => setConfirmed(event.target.checked)} data-autofocus />
+              I understand and want to apply this change
+            </label>
+          </div>
         )}
       </form>
     </Dialog>
@@ -238,6 +307,10 @@ export default function UsersAdmin({ workforce, onOrganizationChanged }) {
   const [error, setError] = useState(null);
   const [dialog, setDialog] = useState(null);
   const [message, setMessage] = useState('');
+  const EMPTY_FILTERS = { q: '', role: '', status: '', sort: 'name' };
+  const [filters, setFilters] = useState(EMPTY_FILTERS);
+  const setFilter = (field) => (event) => setFilters((current) => ({ ...current, [field]: event.target.value }));
+  const activeFilterCount = ['q', 'role', 'status'].filter((key) => filters[key] !== '').length;
 
   const load = useCallback(async () => {
     try {
@@ -251,6 +324,31 @@ export default function UsersAdmin({ workforce, onOrganizationChanged }) {
   useEffect(() => { load(); }, [load]);
 
   const employees = [...(workforce?.employees ?? [])].sort((a, b) => a.name.localeCompare(b.name));
+
+  // Filtering and sorting stay in the browser: this list is admin-only and small, and the server has
+  // already limited it to what an admin may see.
+  const visible = useMemo(() => {
+    if (!data) return [];
+    const needle = filters.q.trim().toLowerCase();
+    const rows = data.items.filter((user) => {
+      if (filters.role && user.role !== filters.role) return false;
+      if (filters.status === 'active' && user.disabled) return false;
+      if (filters.status === 'disabled' && !user.disabled) return false;
+      if (filters.status === 'unlinked' && user.employeeId !== null) return false;
+      if (filters.status === 'never' && user.lastLoginAt) return false;
+      if (!needle) return true;
+      return [user.displayName, user.email, user.employeeName].some((value) => value && value.toLowerCase().includes(needle));
+    });
+    const roleOrder = new Map(data.roles.map((role, index) => [role.value, index]));
+    const by = {
+      name: (a, b) => a.displayName.localeCompare(b.displayName),
+      role: (a, b) => (roleOrder.get(a.role) - roleOrder.get(b.role)) || a.displayName.localeCompare(b.displayName),
+      employee: (a, b) => (a.employeeName ?? '\uffff').localeCompare(b.employeeName ?? '\uffff'),
+      signin: (a, b) => (b.lastLoginAt ?? '').localeCompare(a.lastLoginAt ?? '') || a.displayName.localeCompare(b.displayName),
+    };
+    return rows.sort(by[filters.sort] ?? by.name);
+  }, [data, filters]);
+
   const done = async (_result, text) => {
     setDialog(null);
     setMessage(text);
@@ -274,16 +372,57 @@ export default function UsersAdmin({ workforce, onOrganizationChanged }) {
               <Icon name="plus" size={16} /> Create account
             </button>
           </div>
+          {data && data.items.length > 0 && (
+            <form className="toolbar" role="search" aria-label="Find accounts" onSubmit={(event) => event.preventDefault()}>
+              <label className="field field-inline toolbar-search">
+                <span className="sr-only">Search accounts</span>
+                <Icon name="search" size={16} />
+                <input type="search" value={filters.q} onChange={setFilter('q')} placeholder="Name, email or linked employee" />
+              </label>
+              <label className="field field-inline">Role
+                <select value={filters.role} onChange={setFilter('role')}>
+                  <option value="">Any</option>
+                  {data.roles.map((role) => <option key={role.value} value={role.value}>{role.label}</option>)}
+                </select>
+              </label>
+              <label className="field field-inline">Status
+                <select value={filters.status} onChange={setFilter('status')}>
+                  <option value="">Any</option>
+                  <option value="active">Active</option>
+                  <option value="disabled">Disabled</option>
+                  <option value="unlinked">Not linked to an employee</option>
+                  <option value="never">Never signed in</option>
+                </select>
+              </label>
+              <label className="field field-inline">Sort by
+                <select value={filters.sort} onChange={setFilter('sort')}>
+                  <option value="name">Name</option>
+                  <option value="role">Role</option>
+                  <option value="employee">Linked employee</option>
+                  <option value="signin">Last sign-in, newest first</option>
+                </select>
+              </label>
+              <span className="toolbar-summary" aria-live="polite">
+                Showing {visible.length} of {data.items.length}
+                {activeFilterCount > 0 && <> · <button type="button" className="btn-link" onClick={() => setFilters(EMPTY_FILTERS)}>Reset filters</button></>}
+              </span>
+            </form>
+          )}
           {!data && <div className="pad"><Skeleton lines={5} /></div>}
           {data && data.items.length === 0 && <EmptyState icon="user" title="No accounts yet" />}
-          {data && data.items.length > 0 && (
+          {data && data.items.length > 0 && visible.length === 0 && (
+            <EmptyState icon="search" title="No accounts match these filters">
+              {data.items.length} {data.items.length === 1 ? 'account exists' : 'accounts exist'} but none match. <button type="button" className="btn-link" onClick={() => setFilters(EMPTY_FILTERS)}>Reset filters</button> to see them all.
+            </EmptyState>
+          )}
+          {data && visible.length > 0 && (
             <div className="table-wrap flush">
               <table>
                 <thead>
-                  <tr><th scope="col">Person</th><th scope="col">Role</th><th scope="col">Linked employee</th><th scope="col">Status</th><th scope="col">Last sign-in</th><th scope="col"><span className="sr-only">Actions</span></th></tr>
+                  <tr><th scope="col">Person</th><th scope="col">Role <HelpTopic id="user-roles" /></th><th scope="col">Linked employee</th><th scope="col">Status</th><th scope="col">Last sign-in</th><th scope="col"><span className="sr-only">Actions</span></th></tr>
                 </thead>
                 <tbody>
-                  {data.items.map((user) => (
+                  {visible.map((user) => (
                     <tr key={user.id}>
                       <th scope="row">{user.displayName}<small className="cell-sub">{user.email}</small></th>
                       <td>{data.roles.find((role) => role.value === user.role)?.label ?? user.role}</td>
@@ -294,6 +433,7 @@ export default function UsersAdmin({ workforce, onOrganizationChanged }) {
                         <div className="row-actions">
                           <button type="button" className="btn btn-quiet btn-sm" onClick={() => setDialog({ kind: 'user', user })} aria-label={`Edit ${user.displayName}`}>Edit</button>
                           <button type="button" className="btn btn-quiet btn-sm" onClick={() => setDialog({ kind: 'password', user })} aria-label={`Reset password for ${user.displayName}`}>Reset password</button>
+                          <a className="btn btn-quiet btn-sm" href={`#/audit?entityType=user&q=${encodeURIComponent(user.email)}`} aria-label={`Audit history for ${user.displayName}`}>History</a>
                           {user.id === session.user.id && <span className="muted small">You</span>}
                         </div>
                       </td>

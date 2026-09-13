@@ -2,7 +2,7 @@ const express = require('express');
 const { requirePermission } = require('../middleware/auth');
 const { validateBody, humanize } = require('../validation/ajv');
 const schemas = require('../validation/schemas');
-const { can, ROLES, ROLE_LABELS } = require('../security/permissions');
+const { can, ROLES, ROLE_LABELS, describeRole } = require('../security/permissions');
 const { scopeFor, scopeIssues, scopeRisks, inScope } = require('../security/scope');
 const { destroyUserSessions } = require('../security/sessions');
 const { conflict, notFound, validationError } = require('../errors');
@@ -407,7 +407,7 @@ module.exports = function governanceRoutes() {
 
   // ---- user administration ----
   router.get('/users', requirePermission('users.manage'), async (_req, res) => {
-    res.json({ items: await users.listUsers(), roles: ROLES.map((role) => ({ value: role, label: ROLE_LABELS[role] })) });
+    res.json({ items: await users.listUsers(), roles: ROLES.map((role) => ({ value: role, label: ROLE_LABELS[role], summary: describeRole(role) })) });
   });
 
   router.get('/users/assignable-owners', requirePermission('risk.acknowledge'), async (_req, res) => {
