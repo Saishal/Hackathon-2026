@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { keystoneApi } from '../api/keystone';
 import { useUrlFilters } from '../filters/useUrlFilters';
+import { useDataVersion } from '../live/dataChanged';
 import { GLOSSARY } from '../help/content';
 import { useT } from '../preferences/context';
 import { usePersistentState } from '../preferences/usePersistentState';
@@ -120,6 +121,7 @@ export default function Overview({ risks, quality, organization, onChanged }) {
     }
   }, []);
 
+  const version = useDataVersion();
   useEffect(() => {
     let active = true;
     keystoneApi.employeeRisks()
@@ -127,7 +129,7 @@ export default function Overview({ risks, quality, organization, onChanged }) {
       .catch(() => { if (active) setPeople(false); });
     loadAcknowledgements();
     return () => { active = false; };
-  }, [loadAcknowledgements]);
+  }, [loadAcknowledgements, version]);
 
   useEffect(() => {
     if (!canReview) return undefined;
@@ -136,7 +138,7 @@ export default function Overview({ risks, quality, organization, onChanged }) {
       .then((result) => { if (active) setPendingReviews(result.awaitingMyReview); })
       .catch(() => { if (active) setPendingReviews(null); });
     return () => { active = false; };
-  }, [canReview]);
+  }, [canReview, version]);
 
   async function exportRisks() {
     setExporting(true);

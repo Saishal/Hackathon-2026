@@ -124,10 +124,17 @@ async function getAuditEntry(id) {
   return row ? mapRow(row) : null;
 }
 
+// Id of the newest audit entry of any kind. The log is append-only and every official change, review,
+// acknowledgement and account change writes to it, so a moved id means "something changed" cheaply.
+async function latestAuditId() {
+  const row = await get('SELECT MAX(id) AS id FROM audit_log');
+  return row?.id ?? 0;
+}
+
 async function lastDataChange() {
   const placeholders = DATA_ENTITY_TYPES.map(() => '?').join(', ');
   const row = await get(`SELECT MAX(occurred_at) AS at FROM audit_log WHERE entity_type IN (${placeholders})`, DATA_ENTITY_TYPES);
   return row?.at ?? null;
 }
 
-module.exports = { recordAudit, auditContext, queryAudit, auditFacets, getAuditEntry, lastDataChange, sanitize, HIGH_SIGNAL };
+module.exports = { recordAudit, auditContext, queryAudit, auditFacets, getAuditEntry, lastDataChange, latestAuditId, sanitize, HIGH_SIGNAL };

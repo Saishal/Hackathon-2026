@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { keystoneApi } from '../api/keystone';
 import { useSession } from '../session';
+import { useDataChanged } from '../live/dataChanged';
 import EvidenceChangeDialog from './EvidenceChangeDialog';
 import { CHANGE_TYPE_LABELS, PROFICIENCY_LABELS, formatDate, formatDateTime, relativeTime } from './format';
 import Icon from './Icon';
@@ -39,6 +40,7 @@ export default function MyProfile({ onChanged, section }) {
   }, []);
 
   useEffect(() => { load(); }, [load]);
+  useDataChanged(load);
 
   async function act(request, action) {
     setBusy(request.id);

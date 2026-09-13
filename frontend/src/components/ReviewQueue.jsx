@@ -9,6 +9,7 @@ import FilterBar from './FilterBar';
 import { PagedList } from './Pagination';
 import { clearPageParam } from '../filters/usePagedList';
 import { useUrlFilters } from '../filters/useUrlFilters';
+import { useDataChanged } from '../live/dataChanged';
 
 const REVIEW_FILTERS = { type: '', status: '' };
 const REVIEW_LABELS = { type: 'Change type', status: 'Status' };
@@ -163,6 +164,7 @@ export default function ReviewQueue({ workforce, onChanged }) {
   }, []);
 
   useEffect(() => { load(); }, [load]);
+  useDataChanged(load);
 
   async function act(request, action) {
     setBusy(request.id);

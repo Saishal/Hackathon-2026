@@ -111,6 +111,10 @@ The frontend adds a "Help and glossary" group from static help content; it is no
 Rules are deterministic over data the user can already see: the same scoped workforce, risks, acknowledgements, data-quality issues and succession the pages use, with each source included only if the user holds its permission. A suggestion never changes data and never predicts; it restates a fact and links to where to act on it.
 
 `POST /api/keystone/suggestions/dismiss` and `POST /api/keystone/suggestions/restore` take `{key}`. Dismissals are stored per user in `suggestion_dismissals` (migration `governance-007-suggestions`) and are **not** audited. Keys are stable per rule and record, so a dismissal survives re-evaluation and the suggestion returns on its own if the underlying fact changes.
+## GET /api/keystone/activity-stamp
+
+A few bytes any signed-in user can poll: `{latestAuditId, dataUpdatedAt, at}`. `latestAuditId` is the id of the newest audit entry of any kind; because the log is append-only and every official change, review decision, risk acknowledgement and account change writes to it, a moved id means "something changed". `dataUpdatedAt` narrows that to official workforce data. The frontend polls it every 20 seconds and on tab focus, and only refetches pages when the id moved, so an open tab shows a colleague's approval or archive without a manual reload. Sent with `Cache-Control: no-store`; not audited.
+
 ## Saved views
 
 Every decision table (risk overview, key people, review queue, data quality, employee directory, accounts) keeps its filters in the URL hash query, for example `#/overview?coverage=single&owner=unowned` or `#/quality?severity=critical`. A filtered page can be bookmarked or pasted to a colleague; the recipient sees the same filters applied, still within their own scope. Charts, tables, counts and exports on a page read the same filter object, so they never disagree, and an empty table says that the filters excluded everything rather than looking like an all-clear.

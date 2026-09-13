@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { keystoneApi } from '../api/keystone';
 import { can, hrefForLink } from '../components/format';
 import { readStored, writeStored } from '../preferences/storage';
+import { useDataChanged } from '../live/dataChanged';
 import { isViewAllowed } from '../views';
 
 // The notification hub is built from what the signed-in person can already read: suggestions, changes waiting
@@ -102,6 +103,8 @@ export function useNotifications(session) {
   const [attempt, setAttempt] = useState(0);
   const lastLoadedAt = useRef(0);
   const refresh = useCallback(() => setAttempt((value) => value + 1), []);
+  // A change noticed by the activity poll refreshes the bell at once instead of on the next 90-second tick.
+  useDataChanged(refresh);
 
   const readsChanges = can(session, 'changes.submit', 'changes.review.people', 'changes.review.planning');
   const readsQuality = can(session, 'dataQuality.read.org', 'dataQuality.read.team');

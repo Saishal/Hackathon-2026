@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { keystoneApi } from '../api/keystone';
 import { useSession } from '../session';
 import { can, formatDate, plural } from './format';
@@ -7,6 +7,7 @@ import HelpTopic from './HelpTopic';
 import FilterBar from './FilterBar';
 import { PagedList } from './Pagination';
 import { useUrlFilters } from '../filters/useUrlFilters';
+import { useDataChanged } from '../live/dataChanged';
 import { ErrorState, ScoreMeter, Skeleton } from './ui';
 
 const PEOPLE_FILTERS = { department: '', role: '', sole: '' };
@@ -30,6 +31,7 @@ export default function KeystonePeople({ quality, params = {} }) {
   const [owners, setOwners] = useState([]);
   const [openId, setOpenId] = useState(Number(params.employee) > 0 ? Number(params.employee) : null);
   const [attempt, setAttempt] = useState(0);
+  useDataChanged(useCallback(() => setAttempt((value) => value + 1), []));
   const people = useUrlFilters(PEOPLE_FILTERS, { preserve: ['employee'] });
   const scrolled = useRef(false);
 

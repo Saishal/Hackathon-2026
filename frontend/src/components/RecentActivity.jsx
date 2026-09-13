@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { keystoneApi } from '../api/keystone';
+import { useDataVersion } from '../live/dataChanged';
 import { useT } from '../preferences/context';
 import Icon from './Icon';
 import { actionLabel, formatDateTime, relativeTime } from './format';
@@ -11,6 +12,7 @@ export default function RecentActivity({ embedded = false }) {
   const t = useT();
   const [items, setItems] = useState(null);
   const [error, setError] = useState(null);
+  const version = useDataVersion();
 
   useEffect(() => {
     let active = true;
@@ -18,7 +20,7 @@ export default function RecentActivity({ embedded = false }) {
       .then((result) => { if (active) setItems(result.items); })
       .catch((err) => { if (active) setError(err); });
     return () => { active = false; };
-  }, []);
+  }, [version]);
 
   const body = (
     <>

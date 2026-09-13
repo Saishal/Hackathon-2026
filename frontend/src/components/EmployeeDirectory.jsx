@@ -8,6 +8,7 @@ import { PagedList } from './Pagination';
 import { fieldMessages, formatDate, relativeTime } from './format';
 import { EmptyState, ErrorState, FieldError, FormError, Skeleton } from './ui';
 import { useUrlFilters } from '../filters/useUrlFilters';
+import { useDataChanged } from '../live/dataChanged';
 
 // Administrative directory: add, edit, archive and restore employee records. Every write goes through
 // the server's validation and audit; this screen's job is to make the consequences visible first.
@@ -351,6 +352,7 @@ export default function EmployeeDirectory({ workforce, onChanged }) {
     }
   }, []);
   useEffect(() => { load(); }, [load]);
+  useDataChanged(load);
 
   const activeFilterCount = activeFilters.length;
   const active = useMemo(() => (items ?? []).filter((item) => item.employmentStatus === 'active'), [items]);

@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { useDataChanged } from '../live/dataChanged';
 import { keystoneApi } from '../api/keystone';
 import { useT } from '../preferences/context';
 import Icon from './Icon';
@@ -23,6 +24,7 @@ export default function Suggestions({ refreshKey, embedded = false, onCount }) {
   const [busyKey, setBusyKey] = useState(null);
   const [attempt, setAttempt] = useState(0);
   const reload = () => setAttempt((value) => value + 1);
+  useDataChanged(useCallback(() => setAttempt((value) => value + 1), []));
 
   // Fetch whenever official data changes (refreshKey) or after a dismiss/restore (attempt).
   useEffect(() => {

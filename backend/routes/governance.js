@@ -7,7 +7,7 @@ const { scopeFor, scopeIssues, scopeRisks, scopeWorkforce, scopeSuccession, inSc
 const { destroyUserSessions } = require('../security/sessions');
 const { conflict, notFound, validationError } = require('../errors');
 const { withTransaction } = require('../data/transactions');
-const { recordAudit, auditContext, queryAudit, auditFacets, getAuditEntry, lastDataChange } = require('../data/audit');
+const { recordAudit, auditContext, queryAudit, auditFacets, getAuditEntry, lastDataChange, latestAuditId } = require('../data/audit');
 const users = require('../data/users');
 const organization = require('../data/organization');
 const changeRequests = require('../data/change-requests');
@@ -206,6 +206,13 @@ module.exports = function governanceRoutes() {
       return after;
     });
     res.json(updated);
+  });
+
+  // Live-update stamp: a few bytes any signed-in tab can poll to learn that something changed.
+  router.get('/activity-stamp', async (_req, res) => {
+    const [latest, dataUpdatedAt] = await Promise.all([latestAuditId(), lastDataChange()]);
+    res.setHeader('Cache-Control', 'no-store');
+    res.json({ latestAuditId: latest, dataUpdatedAt, at: new Date().toISOString() });
   });
 
   // ---- audit history ----

@@ -1,5 +1,7 @@
 import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import { keystoneApi } from '../api/keystone';
+import { notifyDataChanged } from '../live/dataChanged';
+import { useLiveUpdates } from '../live/useLiveUpdates';
 import { useSession } from '../session';
 import { isViewAllowed } from '../views';
 import { can } from './format';
@@ -70,7 +72,11 @@ export default function KeystoneStarter({ view, params }) {
   }, [loadWorkforce, loadQuality]);
 
   // After an approval or other official change, scores, records and data quality all refresh together.
-  const refreshAll = useCallback(() => Promise.all([loadWorkforce(), loadQuality()]), [loadWorkforce, loadQuality]);
+  // Changes made by someone else arrive through the activity poll below, which also tells every page
+  // that loads its own data to refetch.
+  const onRemoteChange = useCallback(() => { Promise.all([loadWorkforce(), loadQuality()]); notifyDataChanged(); }, [loadWorkforce, loadQuality]);
+  const { sync } = useLiveUpdates(onRemoteChange);
+  const refreshAll = useCallback(() => Promise.all([loadWorkforce(), loadQuality()]).then(sync), [loadWorkforce, loadQuality, sync]);
   const canOpen = (id) => isViewAllowed(session, id);
   const schedule = (item) => setInterventions((current) => [...current, item]);
 

@@ -6,6 +6,7 @@ import HelpTopic from './HelpTopic';
 import FilterBar from './FilterBar';
 import { PagedList } from './Pagination';
 import { useUrlFilters } from '../filters/useUrlFilters';
+import { useDataChanged } from '../live/dataChanged';
 import TrustLegend from './TrustLegend';
 import { can, fieldMessages, formatDateTime, hrefForLink, plural } from './format';
 import { EmptyState, ErrorState, FieldError, FormError, SeverityTag, Skeleton, StatusTag } from './ui';
@@ -73,6 +74,7 @@ export default function DataQuality({ session, canOpen, onChanged }) {
   }, [filters.status, filters.severity, filters.ruleCode]);
 
   useEffect(() => { load(); }, [load]);
+  useDataChanged(load);
 
   async function reopen(issue) {
     setBusy(issue.fingerprint);

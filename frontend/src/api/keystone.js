@@ -97,6 +97,7 @@ export const keystoneApi = {
   rejectFutureRequirement: (id, comment) => post(`/keystone/future-requirements/${id}/reject`, { comment }),
 
   organization: () => request('/keystone/organization'),
+  activityStamp: () => request('/keystone/activity-stamp'),
   search: (q) => request(`/keystone/search?q=${encodeURIComponent(q)}`),
   savedViews: (view) => request(`/keystone/saved-views?view=${encodeURIComponent(view)}`),
   saveView: (body) => post('/keystone/saved-views', body),

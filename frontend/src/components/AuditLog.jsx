@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { useDataChanged } from '../live/dataChanged';
 import { keystoneApi } from '../api/keystone';
 import Dialog from './Dialog';
 import Diff from './Diff';
@@ -29,6 +30,7 @@ export default function AuditLog({ workforce, params }) {
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(null);
   const [attempt, setAttempt] = useState(0);
+  useDataChanged(useCallback(() => setAttempt((value) => value + 1), []));
 
   useEffect(() => {
     let active = true;
