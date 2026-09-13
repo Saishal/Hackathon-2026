@@ -940,3 +940,20 @@
 **(c) Group chat message**
 
 > Member 3 — quiet sync #3 😴 Still no new team commits; everything green and current. Ping me when backend/work lands and I'll pick it up on the next cycle. Reminder: governance backend → main before demo for saved-views/suggestions. ✅
+
+## 2026-09-13 (02:40 CDT) — New branch: feature/ux-personalization (not adopted)
+
+**(a) What teammates changed**
+
+- Matias pushed a NEW branch `feature/ux-personalization` (`f0c3b03`, 02:16 CDT): "Add dark mode, Spanish, a notification hub, a simpler overview and skill map charts" — 233 files, ~51k insertions, built on top of `feature/p1-help`. It rewrites big parts of `frontend/src` (styles.css, new i18n en/es, preferences, notifications, views).
+- `main` and all other branches unchanged.
+
+**(b) What I adapted**
+
+- No changes needed to our API layer: the contract on that branch (`docs/API.md`, 189-line governance version) lists only endpoints our `frontend/src/api/keystone.js` already covers (saved-views, suggestions, succession, search, etc.). No new endpoints, no shape changes.
+- Deliberately did NOT adopt the ux-personalization frontend: it is an unmerged, 233-file in-progress branch that overlaps my whole frontend/ territory (including theming). Adopting it sight-unseen could clobber reviewed work. Flagged for owner/team decision instead.
+- Build passes (vite, no errors). Local commit only, no push, no tag (no real changes).
+
+**(c) Group chat message**
+
+> Member 3 👋 Heads up — @Matias just pushed `feature/ux-personalization` (dark mode, Spanish i18n, notification hub, simplified overview, skill map charts). Looks great but it's 233 files and it rewrites a lot of the same frontend I own on `feature/keystone-ui`, so I did NOT auto-merge it. Good news: it adds zero new API endpoints — everything it calls already exists in our API client. Suggest we review it together before merging, then I integrate it cleanly. Build stays green meanwhile ✅
