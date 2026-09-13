@@ -862,3 +862,24 @@
 **(c) Group chat message**
 
 > Team — Member 3 here 👋 Two updates: (1) The frontend got a full dashboard redesign — clean light theme with sidebar nav (Overview / People / Time Machine / AI Advisor / Workforce Data) and KPI cards up top. Same components underneath, new shell. (2) NEW: Activity Log tab 📜 — every commit from all our branches with who did it and exact date/time, auto-updating as we push. Check it out on feature/keystone-ui. If anything looks off after the restyle, ping me — build is green. 🚀
+
+## 2026-09-13 (01:50 CDT) — Adopt saved views + suggestions from p1-help
+
+**(a) What teammates changed**
+
+- `main` unchanged since last sync. `feature/p1-help` advanced (11b7fbe → 6bd1a78):
+  - `2c41d37` Add deterministic suggestions with per-user dismissal (rule-based next-step cards; dismiss/restore per user).
+  - `3087bb1` Record phases 1-4 and 6 as delivered in the project status (docs).
+  - `6bd1a78` Add URL-backed filters, chips and saved views to every decision table — filters live in the hash query (bookmarkable), shared FilterBar with removable chips, "Showing n of m" counts, empty-filter notice; saved views via `GET/POST/DELETE /api/keystone/saved-views`, private per user, not audited.
+- A parallel Member 3 session adopted the p1-help unified frontend at `6bc28d0` (login, roles, audit log, directory, search, help).
+
+**(b) What I adapted**
+
+- Adopted the frontend side of the two new p1-help commits into our branch (backend parts are Members 1/2/4's): new `FilterBar.jsx`, `Suggestions.jsx`, `filters/useUrlFilters.js`; updated `Overview`, `KeystonePeople`, `ReviewQueue`, `DataQuality`, `EmployeeDirectory`, `UsersAdmin`, `api/keystone.js` (new `savedViews`/`saveView`/`deleteSavedView` + `suggestions`/`dismissSuggestion`/`restoreSuggestion`), help content and styles. Verified `KeystonePeople` keeps the `skillBackups`/`successors` dual shape.
+- Regenerated `frontend/src/data/activity.json` (77 commits across all origin branches).
+- Contract check: `docs/API.md` on main unchanged; core endpoints (workforce, risks, employee-risks, simulate, strategy) untouched. Invariants kept: unknown values render as dashes, no Keystone score recomputation in frontend, no secrets, offline demo fallback stays labeled.
+- Build: `npm.cmd run build` passes (vite, 56 modules, no errors).
+
+**(c) Group chat message**
+
+> Team — Member 3 👋 Pulled in the latest p1-help frontend work: every decision table now has URL-backed filters with removable chips (you can bookmark or paste a filtered view to a colleague 🔗), plus private saved views per page. Also new: deterministic "Suggested next steps" cards on the overview — rule-based only, they never change data by themselves, and dismissing one is per-user. All of it needs the saved-views/suggestions endpoints live, so make sure the governance backend is running for the demo. Build green, pushed to feature/keystone-ui ✅

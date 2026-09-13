@@ -96,6 +96,12 @@ export const keystoneApi = {
 
   organization: () => request('/keystone/organization'),
   search: (q) => request(`/keystone/search?q=${encodeURIComponent(q)}`),
+  savedViews: (view) => request(`/keystone/saved-views?view=${encodeURIComponent(view)}`),
+  saveView: (body) => post('/keystone/saved-views', body),
+  deleteSavedView: (id) => request(`/keystone/saved-views/${id}`, { method: 'DELETE' }),
+  suggestions: () => request('/keystone/suggestions'),
+  dismissSuggestion: (key) => post('/keystone/suggestions/dismiss', { key }),
+  restoreSuggestion: (key) => post('/keystone/suggestions/restore', { key }),
   employees: () => request('/keystone/employees'),
   createEmployee: (body) => post('/keystone/employees', body),
   updateEmployee: (id, fields) => request(`/keystone/employees/${id}`, { method: 'PATCH', body: fields }),

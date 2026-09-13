@@ -121,6 +121,16 @@ export const GLOSSARY = {
     ],
     related: ['bus-factor', 'succession-readiness', 'user-roles'],
   },
+  'suggestions': {
+    term: 'Suggested next steps',
+    short: 'Practical actions derived from data already on screen. They never change anything by themselves.',
+    long: [
+      'Each suggestion comes from a fixed rule over existing data: a skill with one qualified holder, a risk with no owner, evidence that has gone stale, a scenario where development finishes after the gap opens, a candidate one requirement away from succession readiness. Nothing is predicted or invented.',
+      'The label on each card says what it is based on: current official data, an approved plan, a pending proposal, unverified evidence, or a Time Machine scenario. A suggestion based on a pending proposal or a scenario is not a statement about today.',
+      'Actions only open the relevant record, start a draft, or open a queue. Dismissing a suggestion hides it for you alone; it returns on its own if the underlying fact changes.',
+    ],
+    related: ['keystone-score', 'risk-acknowledgement', 'pending-vs-approved', 'time-machine-assumptions'],
+  },
   'succession-readiness': {
     term: 'Succession readiness',
     short: 'Whether someone could step into a role, judged against every skill that role requires.',
@@ -255,7 +265,7 @@ export const TASKS = {
 export const VIEW_HELP = {
   overview: {
     purpose: 'Where the organisation depends on too few people, at a glance. Start here, then open a page for detail.',
-    topics: ['keystone-score', 'bus-factor', 'coverage-target', 'risk-acknowledgement'],
+    topics: ['suggestions', 'keystone-score', 'bus-factor', 'coverage-target', 'risk-acknowledgement'],
     tasks: ['assign-risk-owner', 'export-report'],
   },
   people: {

@@ -4,6 +4,11 @@ import { useSession } from '../session';
 import { can, formatDate, plural } from './format';
 import Icon from './Icon';
 import HelpTopic from './HelpTopic';
+import FilterBar from './FilterBar';
+import { useUrlFilters } from '../filters/useUrlFilters';
+
+const PEOPLE_FILTERS = { department: '', role: '', sole: '' };
+const PEOPLE_LABELS = { department: 'Department', role: 'Role', sole: 'Coverage' };
 import { ErrorState, ScoreMeter, Skeleton } from './ui';
 
 const readiness = {
@@ -23,6 +28,7 @@ export default function KeystonePeople({ quality, params = {} }) {
   const [owners, setOwners] = useState([]);
   const [openId, setOpenId] = useState(Number(params.employee) > 0 ? Number(params.employee) : null);
   const [attempt, setAttempt] = useState(0);
+  const people = useUrlFilters(PEOPLE_FILTERS, { preserve: ['employee'] });
   const scrolled = useRef(false);
 
   useEffect(() => {
@@ -49,7 +55,18 @@ export default function KeystonePeople({ quality, params = {} }) {
   if (error) return <ErrorState error={error} title="Couldn't load key people" onRetry={() => setAttempt((value) => value + 1)} />;
   if (!data) return <div className="panel"><Skeleton lines={6} /></div>;
 
-  const top = data.employees.filter((employee) => employee.keystoneScore > 0).slice(0, 6);
+  // Everyone with a score is the pool; filters narrow it, and only the unfiltered view is cut to six.
+  const pool = data.employees.filter((employee) => employee.keystoneScore > 0);
+  const matched = pool.filter((employee) => {
+    const { department, role, sole } = people.filters;
+    if (department && employee.department !== department) return false;
+    if (role && employee.role !== role) return false;
+    if (sole === 'yes' && employee.newlyUncovered.length === 0) return false;
+    return true;
+  });
+  const top = people.active.length > 0 ? matched : matched.slice(0, 6);
+  const departments = [...new Set(pool.map((employee) => employee.department))].sort();
+  const roles = [...new Set(pool.map((employee) => employee.role))].sort();
   const linked = openId !== null && !top.some((employee) => employee.id === openId) ? data.employees.find((employee) => employee.id === openId) : null;
   const ranked = linked ? [...top, linked] : top;
   const soleHolders = data.soleCoverageHolders;
@@ -67,6 +84,23 @@ export default function KeystonePeople({ quality, params = {} }) {
           </p>
         </div>
       </div>
+      <FilterBar view="people" filters={people.filters} active={people.active} labels={PEOPLE_LABELS}
+        formatValue={(key, value) => (key === 'sole' ? 'only qualified holder of a skill' : value)}
+        onRemove={(key) => people.setFilter(key)('')} onReset={people.reset} onApply={people.replace}
+        total={pool.length} shown={matched.length} noun="people"
+        emptyHint="Nobody matches these filters. That says nothing about risk elsewhere.">
+        <label className="field field-inline">Department
+          <select value={people.filters.department} onChange={people.setFilter('department')}>
+            <option value="">Any</option>{departments.map((name) => <option key={name} value={name}>{name}</option>)}
+          </select>
+        </label>
+        <label className="field field-inline">Role
+          <select value={people.filters.role} onChange={people.setFilter('role')}>
+            <option value="">Any</option>{roles.map((name) => <option key={name} value={name}>{name}</option>)}
+          </select>
+        </label>
+        <label className="check"><input type="checkbox" checked={people.filters.sole === 'yes'} onChange={(event) => people.setFilter('sole')(event.target.checked ? 'yes' : '')} /> Only sole holders of a skill</label>
+      </FilterBar>
 
       {ranked.length === 0 ? (
         <div className="empty"><p>No skill depends on a single person on current evidence.</p></div>

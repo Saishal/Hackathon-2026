@@ -6,6 +6,7 @@ import Icon from './Icon';
 import HelpTopic, { HelpLink } from './HelpTopic';
 import { fieldMessages, formatDate, relativeTime } from './format';
 import { EmptyState, ErrorState, FieldError, FormError, Skeleton } from './ui';
+import { useUrlFilters } from '../filters/useUrlFilters';
 
 // Administrative directory: add, edit, archive and restore employee records. Every write goes through
 // the server's validation and audit; this screen's job is to make the consequences visible first.
@@ -336,7 +337,7 @@ function RestoreDialog({ employee, onClose, onDone }) {
 export default function EmployeeDirectory({ workforce, onChanged }) {
   const [items, setItems] = useState(null);
   const [error, setError] = useState(null);
-  const [filters, setFilters] = useState(EMPTY_FILTERS);
+  const { filters, setFilter, reset, active: activeFilters } = useUrlFilters(EMPTY_FILTERS);
   const [dialog, setDialog] = useState(null);
   const [message, setMessage] = useState(null);
 
@@ -350,8 +351,7 @@ export default function EmployeeDirectory({ workforce, onChanged }) {
   }, []);
   useEffect(() => { load(); }, [load]);
 
-  const setFilter = (field) => (event) => setFilters((current) => ({ ...current, [field]: event.target.value }));
-  const activeFilterCount = ['q', 'department', 'role'].filter((key) => filters[key] !== '').length + (filters.status !== 'active' ? 1 : 0);
+  const activeFilterCount = activeFilters.length;
   const active = useMemo(() => (items ?? []).filter((item) => item.employmentStatus === 'active'), [items]);
   const roles = useMemo(() => (workforce?.roles ?? []).map((role) => role.name).sort(), [workforce]);
   const departments = useMemo(() => [...new Set((items ?? []).map((item) => item.department))].sort(), [items]);
@@ -441,7 +441,7 @@ export default function EmployeeDirectory({ workforce, onChanged }) {
               </label>
               <span className="toolbar-summary" aria-live="polite">
                 Showing {visible.length} of {items.length}
-                {activeFilterCount > 0 && <> · <button type="button" className="btn-link" onClick={() => setFilters(EMPTY_FILTERS)}>Reset filters</button></>}
+                {activeFilterCount > 0 && <> · <button type="button" className="btn-link" onClick={reset}>Reset filters</button></>}
               </span>
             </form>
           )}
@@ -451,7 +451,7 @@ export default function EmployeeDirectory({ workforce, onChanged }) {
           {items && items.length > 0 && visible.length === 0 && (
             <EmptyState icon="search" title="No employees match these filters">
               {items.length} {items.length === 1 ? 'record exists' : 'records exist'}. An empty list here means the filters excluded everyone, not that nobody is at risk.{' '}
-              <button type="button" className="btn-link" onClick={() => setFilters(EMPTY_FILTERS)}>Reset filters</button>
+              <button type="button" className="btn-link" onClick={reset}>Reset filters</button>
             </EmptyState>
           )}
           {items && visible.length > 0 && (

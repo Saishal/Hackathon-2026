@@ -6,6 +6,13 @@ import Icon from './Icon';
 import HelpTopic from './HelpTopic';
 import RecentActivity from './RecentActivity';
 import RiskAcknowledgeDialog from './RiskAcknowledgeDialog';
+import Suggestions from './Suggestions';
+import FilterBar from './FilterBar';
+import { useUrlFilters } from '../filters/useUrlFilters';
+
+const RISK_FILTERS = { coverage: '', criticality: '', owner: '' };
+const RISK_LABELS = { coverage: 'Coverage', criticality: 'Criticality', owner: 'Owner' };
+const COVERAGE_WORDS = { uncovered: 'nobody qualified', single: 'one person', covered: 'two or more' };
 import { Coverage, FormError, ScoreMeter, Skeleton } from './ui';
 
 const HEALTH_LABELS = { good: 'Good', needs_attention: 'Needs attention', at_risk: 'At risk' };
@@ -76,6 +83,7 @@ export default function Overview({ risks, quality, organization, onChanged }) {
   const [message, setMessage] = useState('');
   const [exportError, setExportError] = useState(null);
   const [exporting, setExporting] = useState(false);
+  const risk = useUrlFilters(RISK_FILTERS);
   const canAcknowledge = can(session, 'risk.acknowledge');
 
   const loadAcknowledgements = useCallback(async () => {
@@ -113,8 +121,19 @@ export default function Overview({ risks, quality, organization, onChanged }) {
   const rows = showAll || atRisk.length === 0 ? skills : atRisk;
   const top = skills[0];
   const owners = new Map((acknowledgements ?? []).filter((item) => item.riskType === 'skill').map((item) => [item.entityId, item]));
-  const unowned = rows.filter((skill) => !owners.has(skill.id));
-  const owned = rows.filter((skill) => owners.has(skill.id));
+  // The same filtered list feeds the two tables and the count, so they never disagree.
+  const filtered = rows.filter((skill) => {
+    const { coverage, criticality, owner } = risk.filters;
+    if (coverage === 'uncovered' && skill.busFactor !== 0) return false;
+    if (coverage === 'single' && skill.busFactor !== 1) return false;
+    if (coverage === 'covered' && skill.busFactor <= 1) return false;
+    if (criticality && skill.criticality < Number(criticality)) return false;
+    if (owner === 'unowned' && owners.has(skill.id)) return false;
+    if (owner === 'owned' && !owners.has(skill.id)) return false;
+    return true;
+  });
+  const unowned = filtered.filter((skill) => !owners.has(skill.id));
+  const owned = filtered.filter((skill) => owners.has(skill.id));
   const topPeople = people ? people.employees.filter((employee) => employee.keystoneScore > 0).slice(0, 4) : [];
   const openDialog = (skill, existing) => setDialog({ risk: { type: 'skill', id: skill.id, name: skill.name }, existing });
 
@@ -139,6 +158,7 @@ export default function Overview({ risks, quality, organization, onChanged }) {
       </div>
       <FormError error={exportError} />
       {message && <p className="status-line" role="status"><Icon name="check" size={16} /><span>{message}</span></p>}
+      <Suggestions refreshKey={organization?.dataUpdatedAt ?? risks?.skills?.length} />
 
       <section className="stat-strip" aria-label="Summary">
         <div className="stat">
@@ -177,9 +197,30 @@ export default function Overview({ risks, quality, organization, onChanged }) {
                 </button>
               )}
             </div>
+            <FilterBar view="overview" filters={risk.filters} active={risk.active} labels={RISK_LABELS}
+              formatValue={(key, value) => (key === 'coverage' ? COVERAGE_WORDS[value] : key === 'criticality' ? `${value}/5 or higher` : value === 'unowned' ? 'no owner' : 'has an owner')}
+              onRemove={(key) => risk.setFilter(key)('')} onReset={risk.reset} onApply={risk.replace}
+              total={rows.length} shown={filtered.length} noun="skills"
+              emptyHint="Widen the filters or switch to all skills; an empty list is not an all-clear.">
+              <label className="field field-inline">Coverage
+                <select value={risk.filters.coverage} onChange={risk.setFilter('coverage')}>
+                  <option value="">Any</option><option value="uncovered">Nobody qualified</option><option value="single">One person</option><option value="covered">Two or more</option>
+                </select>
+              </label>
+              <label className="field field-inline">Criticality
+                <select value={risk.filters.criticality} onChange={risk.setFilter('criticality')}>
+                  <option value="">Any</option><option value="5">5 only</option><option value="4">4 or higher</option><option value="3">3 or higher</option>
+                </select>
+              </label>
+              <label className="field field-inline">Owner
+                <select value={risk.filters.owner} onChange={risk.setFilter('owner')}>
+                  <option value="">Any</option><option value="unowned">No owner</option><option value="owned">Has an owner</option>
+                </select>
+              </label>
+            </FilterBar>
             {ackError && <div className="pad-x"><FormError error={ackError} /></div>}
             {acknowledgements === null && !ackError && <div className="pad"><Skeleton lines={4} /></div>}
-            {acknowledgements !== null && unowned.length === 0 && <p className="empty-line pad">Every skill in this list has an owner.</p>}
+            {acknowledgements !== null && unowned.length === 0 && filtered.length > 0 && <p className="empty-line pad">Every skill in this list has an owner.</p>}
             {acknowledgements !== null && unowned.length > 0 && (
               <RiskTable rows={unowned} owners={owners} canAcknowledge={canAcknowledge} onAcknowledge={openDialog} />
             )}

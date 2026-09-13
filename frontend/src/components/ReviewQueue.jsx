@@ -5,6 +5,12 @@ import Dialog from './Dialog';
 import Diff from './Diff';
 import Icon from './Icon';
 import HelpTopic from './HelpTopic';
+import FilterBar from './FilterBar';
+import { useUrlFilters } from '../filters/useUrlFilters';
+
+const REVIEW_FILTERS = { type: '', status: '' };
+const REVIEW_LABELS = { type: 'Change type', status: 'Status' };
+const TYPE_WORDS = { employee_skill: 'skill evidence', future_requirement: 'future requirement', resource: 'learning resource' };
 import { CHANGE_TYPE_LABELS, ROLE_NAMES, can, fieldMessages, formatDateTime, plural, relativeTime } from './format';
 import { EmptyState, ErrorState, FieldError, FormError, Skeleton, StatusTag } from './ui';
 
@@ -130,6 +136,7 @@ export default function ReviewQueue({ workforce, onChanged }) {
   const [message, setMessage] = useState('');
   const [actionError, setActionError] = useState(null);
   const [busy, setBusy] = useState(null);
+  const review = useUrlFilters(REVIEW_FILTERS);
 
   const load = useCallback(async () => {
     try {
@@ -171,7 +178,8 @@ export default function ReviewQueue({ workforce, onChanged }) {
     ...(reviewer ? [['pending', 'Awaiting your review', pending], ['all', 'All visible changes', items]] : []),
     ['mine', 'Your submissions', mine],
   ];
-  const [, , shown] = tabs.find(([id]) => id === tab) ?? tabs[0];
+  const [, , inTab] = tabs.find(([id]) => id === tab) ?? tabs[0];
+  const shown = inTab.filter((request) => (!review.filters.type || request.type === review.filters.type) && (!review.filters.status || request.status === review.filters.status));
 
   return (
     <>
@@ -187,6 +195,22 @@ export default function ReviewQueue({ workforce, onChanged }) {
             </button>
           ))}
         </div>
+        <FilterBar view="reviews" filters={review.filters} active={review.active} labels={REVIEW_LABELS}
+          formatValue={(key, value) => (key === 'type' ? TYPE_WORDS[value] ?? value : value)}
+          onRemove={(key) => review.setFilter(key)('')} onReset={review.reset} onApply={review.replace}
+          total={inTab.length} shown={shown.length} noun="changes"
+          emptyHint="Nothing in this tab matches. Try another tab or widen the filters.">
+          <label className="field field-inline">Change type
+            <select value={review.filters.type} onChange={review.setFilter('type')}>
+              <option value="">Any</option><option value="employee_skill">Skill evidence</option><option value="future_requirement">Future requirement</option><option value="resource">Learning resource</option>
+            </select>
+          </label>
+          <label className="field field-inline">Status
+            <select value={review.filters.status} onChange={review.setFilter('status')}>
+              <option value="">Any</option><option value="draft">Draft</option><option value="submitted">Submitted</option><option value="approved">Approved</option><option value="rejected">Rejected</option><option value="cancelled">Cancelled</option>
+            </select>
+          </label>
+        </FilterBar>
         <div className="request-list" role="tabpanel">
           {shown.length === 0 ? (
             <EmptyState icon="inbox" title={tab === 'pending' ? 'Nothing is waiting for your review' : 'No changes to show'}>
